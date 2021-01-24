@@ -3,7 +3,7 @@ const checkEmail = (email) => {
   return rgExEmail.test(String(email).toLowerCase());
 };
 
-const checkString = (stringCheck) => {
+const checkEmpty = (stringCheck) => {
   if (stringCheck === null) {
     return false;
   }
@@ -16,4 +16,4 @@ const checkString = (stringCheck) => {
   return true;
 };
 
-export {checkEmail, checkString};
+export {checkEmail, checkEmpty};

@@ -5,7 +5,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
   Text,
   ToastAndroid,
   TouchableOpacity,
@@ -13,12 +12,14 @@ import {
   View,
 } from 'react-native';
 import {styles} from './styles';
+import {appScreens} from './../config-screen';
 
 import InputEmailComponent from './components/InputEmailComponent';
 import InputPasswordComponent from './components/InputPasswordComponent';
 
 import Toast from '../../components/Toast';
-import {checkEmail, checkString} from '../../common/validate';
+import {checkEmail, checkEmpty} from '../../common/validate';
+import {Navigation} from 'react-native-navigation';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -58,10 +59,10 @@ class LoginScreen extends Component {
   };
 
   _handleValidate = (email, password) => {
-    if (!checkString(email)) {
+    if (!checkEmpty(email)) {
       this._onToastAlert('Bạn chưa điền email !');
       return false;
-    } else if (!checkString(password)) {
+    } else if (!checkEmpty(password)) {
       this._onToastAlert('Bạn chưa điền mật khẩu !');
       return false;
     } else if (!checkEmail(email)) {
@@ -105,10 +106,18 @@ class LoginScreen extends Component {
     this.inputTextPassword.current.onSetFocusPassword();
   };
 
+  _onGoToScreen = (screen) => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        id: screen.id,
+        name: screen.name,
+      },
+    });
+  };
+
   render() {
     return (
       <>
-        {!isIOS && <StatusBar backgroundColor={'#00E4FF'} />}
         <TouchableWithoutFeedback onPress={this.dismissKeyboard}>
           <KeyboardAvoidingView
             behavior={isIOS ? 'padding' : 'height'}
@@ -139,7 +148,10 @@ class LoginScreen extends Component {
                 <Text style={styles.textForgert}>Quyên mật khẩu?</Text>
               </TouchableOpacity>
               <Text style={{textAlign: 'center', fontSize: 14}}>hoặc</Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this._onGoToScreen(appScreens.Register);
+                }}>
                 <Text style={styles.textRegister}>Đăng ký ngay?</Text>
               </TouchableOpacity>
             </View>
