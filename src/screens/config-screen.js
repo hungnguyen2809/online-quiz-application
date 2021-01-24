@@ -7,6 +7,10 @@ export const appScreens = {
     id: 'app.screen.Register',
     name: 'RegisterScreen',
   },
+  ForgetPassword: {
+    id: 'app.screen.ForgetPassword',
+    name: 'ForgetPassword',
+  },
 };
 
 export const screenNavigate = {

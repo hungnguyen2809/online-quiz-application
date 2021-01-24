@@ -123,6 +123,7 @@ class RegisterScreen extends Component {
               ref={this.inputEmailRef}
               icons={'email-outline'}
               returnKeyType={'go'}
+              keyboardType={'email-address'}
               maxLength={60}
               onChangeText={this._onChangeEmail}
               value={this.state.email}

@@ -1,11 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
+  KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -40,7 +39,9 @@ class InputCustomComponent extends Component {
 
   render() {
     return (
-      <View style={styles.wapper}>
+      <KeyboardAvoidingView
+        style={styles.wapper}
+        behavior={isIOS ? 'padding' : 'height'}>
         <View style={styles.wapperIcon}>
           <MCIcons name={this.props.icons} size={30} />
         </View>
@@ -56,9 +57,7 @@ class InputCustomComponent extends Component {
             style={styles.inputPassword}
             placeholder={this.props.placeholder}
             placeholderTextColor={'#2f3640'}
-            secureTextEntry={
-              this.props.password ? this.state.isShowPassword : false
-            }
+            secureTextEntry={this.state.isShowPassword}
             onFocus={this._onFocus}
             onBlur={this._onBlur}
             returnKeyType={this.props.returnKeyType}
@@ -67,16 +66,10 @@ class InputCustomComponent extends Component {
             onChangeText={this.props.onChangeText}
             value={this.props.value}
             maxLength={this.props.maxLength}
+            editable={this.props.editable}
           />
-          {this.props.password ? (
-            <TouchableOpacity
-              style={styles.btnShowPass}
-              onPress={this._handleChangeShowPassword}>
-              <Text>{this.state.isShowPassword ? 'Hiện' : 'Ẩn'}</Text>
-            </TouchableOpacity>
-          ) : null}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }

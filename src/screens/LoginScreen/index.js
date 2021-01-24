@@ -144,7 +144,10 @@ class LoginScreen extends Component {
                 onPress={this.onSubmit}>
                 <Text style={styles.textLogin}>Đăng nhập</Text>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this._onGoToScreen(appScreens.ForgetPassword);
+                }}>
                 <Text style={styles.textForgert}>Quyên mật khẩu?</Text>
               </TouchableOpacity>
               <Text style={{textAlign: 'center', fontSize: 14}}>hoặc</Text>
