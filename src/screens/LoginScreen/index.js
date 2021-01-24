@@ -17,8 +17,8 @@ import {styles} from './styles';
 import InputEmailComponent from './components/InputEmailComponent';
 import InputPasswordComponent from './components/InputPasswordComponent';
 
-import Toast from './../../components/Toast/';
-import {checkEmail, checkString} from './../../common/validate';
+import Toast from '../../components/Toast';
+import {checkEmail, checkString} from '../../common/validate';
 
 const isIOS = Platform.OS === 'ios';
 

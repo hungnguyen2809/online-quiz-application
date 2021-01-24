@@ -1,6 +1,6 @@
 import {Navigation} from 'react-native-navigation';
 import {appScreens} from './config-screen';
-import LoginScreen from './Login';
+import LoginScreen from './LoginScreen';
 
 const registerComponentWithoutRedux = (srceenName, ComponentProvider) => {
   Navigation.registerComponent(srceenName, () => ComponentProvider);
