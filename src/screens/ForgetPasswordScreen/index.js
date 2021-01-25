@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   Alert,
@@ -10,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import InputCustomComponent from './components/InputEmailCustom';
+import InputCustomComponent from './../../components/InputCustom';
 
 import {isInteger, trim} from 'lodash';
 import {checkEmail, checkEmpty} from './../../common/validate';
@@ -21,7 +20,6 @@ class ForgetPasswordScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editableInputCode: false,
       email: '',
       code: '',
     };
@@ -87,7 +85,6 @@ class ForgetPasswordScreen extends Component {
     if (this.state.editableInputCode === false) {
       if (this._onValidateEmail()) {
         console.log('Gửi code');
-        this.setState({editableInputCode: true});
       }
     } else {
       if (this._onValidateCode()) {
@@ -107,22 +104,6 @@ class ForgetPasswordScreen extends Component {
             keyboardType={'email-address'}
             maxLength={60}
             onChangeText={this._onChangeEmail}
-          />
-        </View>
-        <View
-          style={[
-            styles.wapperInput,
-            {opacity: this.state.editableInputCode ? 1 : 0.3},
-          ]}>
-          <Text style={styles.titleInput}>Mã xác minh:</Text>
-          <InputCustomComponent
-            icons={'key-wireless'}
-            returnKeyType={'send'}
-            keyboardType={'numeric'}
-            maxLength={6}
-            editable={this.state.editableInputCode}
-            onChangeText={this._onChangeCode}
-            onSubmitEditing={this._handleSubmit}
           />
         </View>
         <TouchableOpacity
@@ -145,11 +126,6 @@ const styles = StyleSheet.create({
   wapperInput: {
     marginTop: 20,
     marginHorizontal: '5%',
-  },
-  titleInput: {
-    fontSize: 18,
-    fontWeight: '500',
-    fontStyle: 'italic',
   },
   wapperButton: {
     marginTop: 25,

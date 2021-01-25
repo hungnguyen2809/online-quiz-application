@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import {styles} from './styles';
-import {appScreens} from './../config-screen';
+import {appScreens, screenMain} from './../config-screen';
 
 import InputEmailComponent from './components/InputEmailComponent';
 import InputPasswordComponent from './components/InputPasswordComponent';
@@ -74,17 +74,18 @@ class LoginScreen extends Component {
   };
 
   onSubmit = () => {
-    let email = this.state.email.trim();
-    let password = this.state.password.trim();
-    if (this._handleValidate(email, password)) {
-      // let infor = {
-      //   email,
-      //   password,
-      // };
-      // console.log('Infor: ', infor);
-      this.toast.current.onShowToast('Success');
-      this.dismissKeyboard();
-    }
+    // let email = this.state.email.trim();
+    // let password = this.state.password.trim();
+    // if (this._handleValidate(email, password)) {
+    //   // let infor = {
+    //   //   email,
+    //   //   password,
+    //   // };
+    //   // console.log('Infor: ', infor);
+    //   this.toast.current.onShowToast('Success');
+    //   this.dismissKeyboard();
+    // }
+    Navigation.setRoot(screenMain);
   };
 
   createEventKeyboard = () => {

@@ -57,7 +57,7 @@ class InputCustomComponent extends Component {
             style={styles.inputPassword}
             placeholder={this.props.placeholder}
             placeholderTextColor={'#2f3640'}
-            secureTextEntry={this.state.isShowPassword}
+            secureTextEntry={this.props.secureTextEntry}
             onFocus={this._onFocus}
             onBlur={this._onBlur}
             returnKeyType={this.props.returnKeyType}

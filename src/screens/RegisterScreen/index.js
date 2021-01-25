@@ -13,6 +13,10 @@ import InputCustomComponent from './components/InputCustom';
 
 import {isEqual, trim} from 'lodash';
 import {checkEmail, checkEmpty} from './../../common/validate';
+import ModalCodeComponent from '../../components/ModalCode';
+
+// import {showModalApp} from './../RegisterScreensComponent';
+// import {appScreens} from '../config-screen';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -23,6 +27,7 @@ class RegisterScreen extends Component {
     this.inputNameRef = React.createRef();
     this.inputPasswordRef = React.createRef();
     this.inputRePasswordRef = React.createRef();
+    this.modalCode = React.createRef();
 
     this.state = {
       email: '',
@@ -100,89 +105,99 @@ class RegisterScreen extends Component {
     return true;
   };
 
-  _onRegisterUser = () => {
-    const {email, name, password, repassword} = this.state;
-    const user = {
-      email: trim(email),
-      name: trim(name),
-      password: trim(password),
-      repassword: trim(repassword),
-    };
+  _onShowModalCode = () => {
+    const {email} = this.state;
     if (this._onValidateContent()) {
-      console.log(user);
+      this.modalCode.current.onShowModal(email);
     }
+  };
+
+  _handleSubmitRegisterUser = () => {
+    // const {email, name, password} = this.state;
+    // const user = {
+    //   email: trim(email),
+    //   name: trim(name),
+    //   password: trim(password),
+    // };
+    console.log('Register');
   };
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.wapperContent}>
-          <View>
-            <Text style={styles.titleInput}>Địa chỉ email:</Text>
-            <InputCustomComponent
-              ref={this.inputEmailRef}
-              icons={'email-outline'}
-              returnKeyType={'go'}
-              keyboardType={'email-address'}
-              maxLength={60}
-              onChangeText={this._onChangeEmail}
-              value={this.state.email}
-              onSubmitEditing={() => {
-                this._handleFocusInput(this.inputNameRef);
-              }}
-            />
+      <>
+        <ScrollView style={styles.container}>
+          <View style={styles.wapperContent}>
+            <View>
+              <Text style={styles.titleInput}>Địa chỉ email:</Text>
+              <InputCustomComponent
+                ref={this.inputEmailRef}
+                icons={'email-outline'}
+                returnKeyType={'go'}
+                keyboardType={'email-address'}
+                maxLength={60}
+                onChangeText={this._onChangeEmail}
+                value={this.state.email}
+                onSubmitEditing={() => {
+                  this._handleFocusInput(this.inputNameRef);
+                }}
+              />
+            </View>
+            <View>
+              <Text style={styles.titleInput}>Họ tên:</Text>
+              <InputCustomComponent
+                ref={this.inputNameRef}
+                icons={'account'}
+                returnKeyType={'go'}
+                maxLength={60}
+                onChangeText={this._onChangeName}
+                value={this.state.name}
+                onSubmitEditing={() => {
+                  this._handleFocusInput(this.inputPasswordRef);
+                }}
+              />
+            </View>
+            <View>
+              <Text style={styles.titleInput}>Mật khẩu:</Text>
+              <InputCustomComponent
+                ref={this.inputPasswordRef}
+                icons={'key-variant'}
+                password={true}
+                returnKeyType={'go'}
+                maxLength={20}
+                onChangeText={this._onChangePassword}
+                value={this.state.password}
+                onSubmitEditing={() => {
+                  this._handleFocusInput(this.inputRePasswordRef);
+                }}
+              />
+            </View>
+            <View>
+              <Text style={styles.titleInput}>Nhập lại mật khẩu:</Text>
+              <InputCustomComponent
+                ref={this.inputRePasswordRef}
+                icons={'key-change'}
+                password={true}
+                returnKeyType={'done'}
+                maxLength={20}
+                onChangeText={this._onChangeRePassword}
+                value={this.state.repassword}
+                onSubmitEditing={this._onShowModalCode}
+              />
+            </View>
           </View>
-          <View>
-            <Text style={styles.titleInput}>Họ tên:</Text>
-            <InputCustomComponent
-              ref={this.inputNameRef}
-              icons={'account'}
-              returnKeyType={'go'}
-              maxLength={60}
-              onChangeText={this._onChangeName}
-              value={this.state.name}
-              onSubmitEditing={() => {
-                this._handleFocusInput(this.inputPasswordRef);
-              }}
-            />
+          <View style={styles.wapperBottom}>
+            <TouchableOpacity
+              style={styles.wapperButton}
+              onPress={this._onShowModalCode}>
+              <Text style={styles.titleButton}>Đăng ký ngay</Text>
+            </TouchableOpacity>
           </View>
-          <View>
-            <Text style={styles.titleInput}>Mật khẩu:</Text>
-            <InputCustomComponent
-              ref={this.inputPasswordRef}
-              icons={'key-variant'}
-              password={true}
-              returnKeyType={'go'}
-              maxLength={20}
-              onChangeText={this._onChangePassword}
-              value={this.state.password}
-              onSubmitEditing={() => {
-                this._handleFocusInput(this.inputRePasswordRef);
-              }}
-            />
-          </View>
-          <View>
-            <Text style={styles.titleInput}>Nhập lại mật khẩu:</Text>
-            <InputCustomComponent
-              ref={this.inputRePasswordRef}
-              icons={'key-change'}
-              password={true}
-              returnKeyType={'done'}
-              maxLength={20}
-              onChangeText={this._onChangeRePassword}
-              value={this.state.repassword}
-              onSubmitEditing={this._onRegisterUser}
-            />
-          </View>
-        </View>
-        <View style={styles.wapperBottom}>
-          <TouchableOpacity
-            style={styles.wapperButton}
-            onPress={this._onRegisterUser}>
-            <Text style={styles.titleButton}>Đăng ký ngay</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+        </ScrollView>
+        <ModalCodeComponent
+          ref={this.modalCode}
+          onHandleEventSuccess={this._handleSubmitRegisterUser}
+        />
+      </>
     );
   }
 }

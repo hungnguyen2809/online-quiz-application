@@ -187,6 +187,12 @@ android {
 
         }
     }
+
+    //react-native-smtp-mailer
+    packagingOptions {
+		exclude 'META-INF/mimetypes.default'
+		exclude 'META-INF/mailcap.default'
+	}
 }
 
 dependencies {

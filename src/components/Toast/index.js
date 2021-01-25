@@ -62,6 +62,8 @@ class Toast extends Component {
           {
             backgroundColor: this.props.backgroundColor,
             opacity: this.animateOpacityValue,
+            left: this.props.left,
+            right: this.props.right,
           },
           this.props.position === 'bottom' ? {bottom: bottom} : {top: top},
         ]}>

@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-modal": "^11.6.1",
     "react-native-navigation": "^7.8.4",
+    "react-native-smtp-mailer": "^1.2.4",
     "react-native-vector-icons": "^8.0.0"
   },
   "devDependencies": {
