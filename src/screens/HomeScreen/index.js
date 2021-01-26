@@ -1,16 +1,45 @@
 import React, {Component} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Navigation} from 'react-native-navigation';
+import HeadTopBar from '../../components/HeadTopBar';
+import AchievementUser from './components/AchievementUser';
+import RatingUser from './components/RatingUser';
 
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
   }
 
+  _handleOpenMemu = () => {
+    Navigation.mergeOptions(this.props.componentId, {
+      sideMenu: {
+        left: {
+          visible: true,
+        },
+      },
+    });
+  };
+
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text> textInComponent </Text>
-      </SafeAreaView>
+      <View style={styles.container}>
+        <HeadTopBar onPressMenu={this._handleOpenMemu} />
+        <ScrollView>
+          <View style={styles.content}>
+            <View style={styles.card}>
+              <Text style={styles.titleCard}>Bảng xếp hạng:</Text>
+              <RatingUser rate={1} />
+              <RatingUser rate={2} />
+              <RatingUser rate={3} />
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.titleCard}>Thành tích:</Text>
+              <AchievementUser name={'Toán học'} process={0.3} />
+              <AchievementUser name={'Tiếng anh'} process={0.9} />
+            </View>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -20,6 +49,21 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#dfe4ea',
+  },
+  content: {
+    padding: 10,
+  },
+  card: {
     backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  titleCard: {
+    fontSize: 18,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
 });
