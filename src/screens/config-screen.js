@@ -1,4 +1,7 @@
 export const appScreens = {
+  Navigate: {
+    id: 'app.navigate.main',
+  },
   Login: {
     id: 'app.screen.Login',
     name: 'LoginScreen',
@@ -9,7 +12,7 @@ export const appScreens = {
   },
   ForgetPassword: {
     id: 'app.screen.ForgetPassword',
-    name: 'ForgetPassword',
+    name: 'ForgetPasswordScreen',
   },
   ModalCode: {
     id: 'app.modal.ModalCode',
@@ -23,6 +26,14 @@ export const appScreens = {
     id: 'app.screen.Home',
     name: 'HomeScreen',
   },
+  ChooseQiuz: {
+    id: 'app.screen.ChooseQuiz',
+    name: 'ChooseQuizScreen',
+  },
+  ExamQuestions: {
+    id: 'app.screen.ExamQuestions',
+    name: 'ExamQuestionsScreen',
+  },
 };
 
 export const screenNavigate = {
@@ -31,7 +42,6 @@ export const screenNavigate = {
       children: [
         {
           component: {
-            id: appScreens.Login.id,
             name: appScreens.Login.name,
           },
         },
@@ -56,10 +66,10 @@ export const screenMain = {
       },
       center: {
         stack: {
+          id: appScreens.Navigate.id,
           children: [
             {
               component: {
-                id: appScreens.Home.id,
                 name: appScreens.Home.name,
               },
             },

@@ -15,9 +15,6 @@ import {isEqual, trim} from 'lodash';
 import {checkEmail, checkEmpty} from './../../common/validate';
 import ModalCodeComponent from '../../components/ModalCode';
 
-// import {showModalApp} from './../RegisterScreensComponent';
-// import {appScreens} from '../config-screen';
-
 const isIOS = Platform.OS === 'ios';
 
 class RegisterScreen extends Component {

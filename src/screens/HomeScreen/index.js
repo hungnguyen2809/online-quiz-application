@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Navigation} from 'react-native-navigation';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import HeadTopBar from '../../components/HeadTopBar';
 import AchievementUser from './components/AchievementUser';
 import RatingUser from './components/RatingUser';
+
+import {openMenuLeft} from './../MethodScreen';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -11,13 +12,7 @@ class HomeScreen extends Component {
   }
 
   _handleOpenMemu = () => {
-    Navigation.mergeOptions(this.props.componentId, {
-      sideMenu: {
-        left: {
-          visible: true,
-        },
-      },
-    });
+    openMenuLeft(this.props.componentId);
   };
 
   render() {

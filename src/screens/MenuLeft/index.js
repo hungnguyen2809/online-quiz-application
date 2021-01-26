@@ -11,9 +11,30 @@ import {
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {screenNavigate} from './../config-screen';
+
+import {screenNavigate, appScreens} from './../config-screen';
+import {
+  goToScreen,
+  goToScreenWithPassProps,
+  closeMenuLeft,
+} from './../MethodScreen';
 
 const isIOS = Platform.OS === 'ios';
+
+const pages = {
+  home: {
+    id: 'home',
+    name: 'Trang chủ',
+  },
+  math: {
+    id: 'math',
+    name: 'Toán học',
+  },
+  english: {
+    id: 'english',
+    name: 'Tiếng anh',
+  },
+};
 
 const ButtonMenu = (props) => {
   const {actived, title, onPress, available} = props;
@@ -37,42 +58,57 @@ class MenuLeftScreen extends Component {
       pageMath: false,
       pageEnglish: false,
     };
-
-    this.pages = {
-      home: {
-        id: 1,
-        name: 'Trang chủ',
-      },
-      math: {
-        id: 2,
-        name: 'Toán học',
-      },
-      english: {
-        id: 3,
-        name: 'Tiếng anh',
-      },
-    };
   }
 
   _onGoToPage = (pageId) => {
-    if (pageId === this.pages.home.id) {
-      this.setState({
-        pageHome: true,
-        pageMath: false,
-        pageEnglish: false,
-      });
-    } else if (pageId === this.pages.math.id) {
-      this.setState({
-        pageHome: false,
-        pageMath: true,
-        pageEnglish: false,
-      });
-    } else if (pageId === this.pages.english.id) {
-      this.setState({
-        pageHome: false,
-        pageMath: false,
-        pageEnglish: true,
-      });
+    if (pageId === pages.home.id) {
+      this.setState(
+        {
+          pageHome: true,
+          pageMath: false,
+          pageEnglish: false,
+        },
+        () => {
+          goToScreen(appScreens.Navigate.id, appScreens.Home);
+          closeMenuLeft(appScreens.MenuLeft.id);
+        },
+      );
+    } else if (pageId === pages.math.id) {
+      this.setState(
+        {
+          pageHome: false,
+          pageMath: true,
+          pageEnglish: false,
+        },
+        () => {
+          goToScreenWithPassProps(
+            appScreens.Navigate.id,
+            appScreens.ChooseQiuz,
+            {
+              page: pages.math,
+            },
+          );
+          closeMenuLeft(appScreens.MenuLeft.id);
+        },
+      );
+    } else if (pageId === pages.english.id) {
+      this.setState(
+        {
+          pageHome: false,
+          pageMath: false,
+          pageEnglish: true,
+        },
+        () => {
+          goToScreenWithPassProps(
+            appScreens.Navigate.id,
+            appScreens.ChooseQiuz,
+            {
+              page: pages.english,
+            },
+          );
+          closeMenuLeft(appScreens.MenuLeft.id);
+        },
+      );
     }
   };
 
@@ -110,27 +146,27 @@ class MenuLeftScreen extends Component {
         </View>
         <View style={styles.actions}>
           <ButtonMenu
-            title={this.pages.home.name}
+            title={pages.home.name}
             actived={this.state.pageHome}
             onPress={() => {
-              this._onGoToPage(this.pages.home.id);
+              this._onGoToPage(pages.home.id);
             }}
           />
           <View style={{height: 20}} />
           <ButtonMenu
-            title={this.pages.math.name}
+            title={pages.math.name}
             actived={this.state.pageMath}
             available={true}
             onPress={() => {
-              this._onGoToPage(this.pages.math.id);
+              this._onGoToPage(pages.math.id);
             }}
           />
           <ButtonMenu
-            title={this.pages.english.name}
+            title={pages.english.name}
             actived={this.state.pageEnglish}
             available={true}
             onPress={() => {
-              this._onGoToPage(this.pages.english.id);
+              this._onGoToPage(pages.english.id);
             }}
           />
         </View>
