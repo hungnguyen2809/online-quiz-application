@@ -33,10 +33,6 @@ class ChooseQiuzScreen extends Component {
     return (
       <View style={styles.container}>
         <HeadTopBar onPressMenu={this._handleOpenMemu} />
-        <Text style={styles.title}>
-          {' '}
-          Lĩnh vực: {this.props.page && this.props.page.name}{' '}
-        </Text>
         <FlatList
           style={{margin: 10}}
           data={[1, 2, 3]}

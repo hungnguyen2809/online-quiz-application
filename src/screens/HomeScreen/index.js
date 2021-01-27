@@ -28,9 +28,9 @@ class HomeScreen extends Component {
               <RatingUser rate={3} />
             </View>
             <View style={styles.card}>
-              <Text style={styles.titleCard}>Thành tích:</Text>
+              <Text style={styles.titleCard}>Hoàn thành:</Text>
               <AchievementUser name={'Toán học'} process={0.3} />
-              <AchievementUser name={'Tiếng anh'} process={0.9} />
+              <AchievementUser name={'Tiếng anh'} process={0.8} />
             </View>
           </View>
         </ScrollView>

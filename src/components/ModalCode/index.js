@@ -75,7 +75,7 @@ class ModalCodeComponent extends Component {
   };
 
   _sendEmailCode = () => {
-    sendOTPCode(this.codeAuthencation, 'hungnguyen99.nvh@gmail.com')
+    sendOTPCode(this.codeAuthencation, this.state.emailSendCode)
       .then((seccess) => {
         this.toast.current.onShowToast(
           'Mã xác thực đã được gửi đến email của bạn.',

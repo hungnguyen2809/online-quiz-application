@@ -20,6 +20,7 @@ import InputPasswordComponent from './components/InputPasswordComponent';
 import Toast from '../../components/Toast';
 import {checkEmail, checkEmpty} from '../../common/validate';
 import {Navigation} from 'react-native-navigation';
+import NetInfo from '@react-native-community/netinfo';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -31,11 +32,21 @@ class LoginScreen extends Component {
       password: '',
     };
 
+    this.isConnectedInternet = false;
+
     this.toast = React.createRef();
     this.inputTextPassword = React.createRef();
 
     this.showKeyboard = false;
     this.createEventKeyboard();
+  }
+
+  componentDidMount() {
+    this.unsubscribeEventNetInfo = NetInfo.addEventListener((state) => {
+      // console.log('Connection type', state.type);
+      // console.log('Is connected?', state.isConnected);
+      this.isConnectedInternet = state.isConnected;
+    });
   }
 
   onChangeEmail = (email) => {
@@ -85,7 +96,11 @@ class LoginScreen extends Component {
     //   this.toast.current.onShowToast('Success');
     //   this.dismissKeyboard();
     // }
-    Navigation.setRoot(screenMain);
+    if (this.isConnectedInternet) {
+      Navigation.setRoot(screenMain);
+    } else {
+      this._onToastAlert('Không có kết nối internet.');
+    }
   };
 
   createEventKeyboard = () => {
@@ -108,12 +123,15 @@ class LoginScreen extends Component {
   };
 
   _onGoToScreen = (screen) => {
-    Navigation.push(this.props.componentId, {
-      component: {
-        id: screen.id,
-        name: screen.name,
-      },
-    });
+    if (this.isConnectedInternet) {
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: screen.name,
+        },
+      });
+    } else {
+      this._onToastAlert('Không có kết nối internet.');
+    }
   };
 
   render() {
@@ -169,6 +187,7 @@ class LoginScreen extends Component {
   componentWillUnmount() {
     Keyboard.removeListener(this.eventHideKeyboard);
     Keyboard.removeListener(this.eventShowKeyboard);
+    this.unsubscribeEventNetInfo && this.unsubscribeEventNetInfo();
   }
 }
 
