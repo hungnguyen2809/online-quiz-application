@@ -52,13 +52,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 20,
-    padding: 7,
-    textDecorationLine: 'underline',
-    textDecorationColor: '#1e90ff',
-    fontWeight: '500',
-  },
   itemExam: {
     width: SCREEN_WIDTH / 2 - 30,
     height: 100,

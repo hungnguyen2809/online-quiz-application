@@ -21,6 +21,7 @@ import Toast from '../../components/Toast';
 import {checkEmail, checkEmpty} from '../../common/validate';
 import {Navigation} from 'react-native-navigation';
 import NetInfo from '@react-native-community/netinfo';
+import {Encript, Decript} from './../../common/encoding';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -85,19 +86,22 @@ class LoginScreen extends Component {
   };
 
   onSubmit = () => {
-    // let email = this.state.email.trim();
-    // let password = this.state.password.trim();
-    // if (this._handleValidate(email, password)) {
-    //   // let infor = {
-    //   //   email,
-    //   //   password,
-    //   // };
-    //   // console.log('Infor: ', infor);
-    //   this.toast.current.onShowToast('Success');
-    //   this.dismissKeyboard();
-    // }
     if (this.isConnectedInternet) {
-      Navigation.setRoot(screenMain);
+      // Navigation.setRoot(screenMain);
+      let email = this.state.email.trim();
+      let password = this.state.password.trim();
+      if (this._handleValidate(email, password)) {
+        const token = Encript(email + '-' + password);
+        const user = {
+          email: email,
+          token: token,
+        };
+        Navigation.setRoot(screenMain);
+
+        console.log('User: ', JSON.stringify(user));
+        // this.toast.current.onShowToast('Success');
+        this.dismissKeyboard();
+      }
     } else {
       this._onToastAlert('Không có kết nối internet.');
     }
@@ -163,19 +167,21 @@ class LoginScreen extends Component {
                 onPress={this.onSubmit}>
                 <Text style={styles.textLogin}>Đăng nhập</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  this._onGoToScreen(appScreens.ForgetPassword);
-                }}>
-                <Text style={styles.textForgert}>Quyên mật khẩu?</Text>
-              </TouchableOpacity>
-              <Text style={{textAlign: 'center', fontSize: 14}}>hoặc</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  this._onGoToScreen(appScreens.Register);
-                }}>
-                <Text style={styles.textRegister}>Đăng ký ngay?</Text>
-              </TouchableOpacity>
+              <View style={{alignItems: 'center'}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this._onGoToScreen(appScreens.ForgetPassword);
+                  }}>
+                  <Text style={styles.textForgert}>Quyên mật khẩu?</Text>
+                </TouchableOpacity>
+                <Text style={{textAlign: 'center', fontSize: 14}}>hoặc</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    this._onGoToScreen(appScreens.Register);
+                  }}>
+                  <Text style={styles.textRegister}>Đăng ký ngay?</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
