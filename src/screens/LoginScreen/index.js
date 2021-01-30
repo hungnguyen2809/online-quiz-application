@@ -16,12 +16,20 @@ import {appScreens, screenMain} from './../config-screen';
 
 import InputEmailComponent from './components/InputEmailComponent';
 import InputPasswordComponent from './components/InputPasswordComponent';
+import Spinner from 'react-native-loading-spinner-overlay';
 
-import Toast from '../../components/Toast';
 import {checkEmail, checkEmpty} from '../../common/validate';
 import {Navigation} from 'react-native-navigation';
 import NetInfo from '@react-native-community/netinfo';
-import {Encript, Decript} from './../../common/encoding';
+import {Encript} from './../../common/encoding';
+
+import {POST} from './../../constants/api';
+import {URL_LOGIN} from './../../constants/urlApi';
+
+import {
+  getAccountToStorage,
+  setAccountToStorage,
+} from './../../common/asyncStorage';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -31,11 +39,11 @@ class LoginScreen extends Component {
     this.state = {
       email: '',
       password: '',
+      loading: false,
     };
 
     this.isConnectedInternet = false;
 
-    this.toast = React.createRef();
     this.inputTextPassword = React.createRef();
 
     this.showKeyboard = false;
@@ -44,10 +52,9 @@ class LoginScreen extends Component {
 
   componentDidMount() {
     this.unsubscribeEventNetInfo = NetInfo.addEventListener((state) => {
-      // console.log('Connection type', state.type);
-      // console.log('Is connected?', state.isConnected);
-      this.isConnectedInternet = state.isConnected;
+      this.isConnectedInternet = state.isInternetReachable;
     });
+    this._handleExistsAccount();
   }
 
   onChangeEmail = (email) => {
@@ -80,27 +87,69 @@ class LoginScreen extends Component {
     } else if (!checkEmail(email)) {
       this._onToastAlert('Email không đúng định dạng !');
       return false;
+    } else if (password.length < 5) {
+      this._onToastAlert('Mật khẩu tối thiểu 5 ký tự.');
+      return false;
     } else {
       return true;
     }
   };
 
+  _handleExistsAccount = async () => {
+    const result = await getAccountToStorage();
+    this.setState({loading: true});
+    if (result) {
+      setTimeout(() => {
+        Navigation.setRoot(screenMain);
+        this.setState({loading: false});
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        this.setState({loading: false});
+      }, 1500);
+    }
+  };
+
+  _handleLogin = async (email, token) => {
+    try {
+      const result = await POST(URL_LOGIN, {email, token});
+      // console.log(result.data);
+      setAccountToStorage(result.data.payload);
+      setTimeout(() => {
+        this.setState({loading: false}, () => {
+          Navigation.setRoot(screenMain);
+        });
+      }, 1500);
+    } catch (error) {
+      // console.log(error.response);
+      const {status} = error.response;
+      if (status === 404) {
+        this._onToastAlert('Tài khoản không tồn tại.');
+      } else if (status === 403) {
+        this._onToastAlert('Thông tin email hoặc mật khẩu không chính xác.');
+      } else if (status === 406) {
+        this._onToastAlert('Tài khoản hiện tại đang bị khoá.');
+      } else {
+        this._onToastAlert(
+          'Hiện tại không thể thực hiện. Vui lòng thử lại sau.',
+        );
+      }
+      setTimeout(() => {
+        this.setState({loading: false});
+      }, 1500);
+    }
+  };
+
   onSubmit = () => {
+    this.dismissKeyboard();
+
     if (this.isConnectedInternet) {
-      // Navigation.setRoot(screenMain);
       let email = this.state.email.trim();
       let password = this.state.password.trim();
       if (this._handleValidate(email, password)) {
-        const token = Encript(email + '-' + password);
-        const user = {
-          email: email,
-          token: token,
-        };
-        Navigation.setRoot(screenMain);
-
-        console.log('User: ', JSON.stringify(user));
-        // this.toast.current.onShowToast('Success');
-        this.dismissKeyboard();
+        const token = Encript(email, password);
+        this.setState({loading: true});
+        this._handleLogin(email, token);
       }
     } else {
       this._onToastAlert('Không có kết nối internet.');
@@ -185,7 +234,7 @@ class LoginScreen extends Component {
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
-        <Toast ref={this.toast} position={'bottom'} />
+        <Spinner visible={this.state.loading} />
       </>
     );
   }

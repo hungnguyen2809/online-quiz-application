@@ -10,10 +10,21 @@ import {
 } from 'react-native';
 import {styles} from './styles';
 import InputCustomComponent from './components/InputCustom';
-
 import {isEqual, trim} from 'lodash';
 import {checkEmail, checkEmpty} from './../../common/validate';
 import ModalCodeComponent from '../../components/ModalCode';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+import {
+  getAccountToStorage,
+  setAccountToStorage,
+} from './../../common/asyncStorage';
+import {Encript} from './../../common/encoding';
+import {GET2, POST} from './../../constants/api';
+import {URL_REGISTER, URL_HASEMAIL} from './../../constants/urlApi';
+
+import {setRootScreen} from './../MethodScreen';
+import {screenMain} from './../config-screen';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -31,6 +42,7 @@ class RegisterScreen extends Component {
       name: '',
       password: '',
       repassword: '',
+      loading: false,
     };
   }
 
@@ -92,6 +104,9 @@ class RegisterScreen extends Component {
     } else if (!checkEmpty(trim(password))) {
       this._onToastAlert('Bạn chưa điền mật khẩu.');
       return false;
+    } else if (password.trim().length < 5) {
+      this._onToastAlert('Mật khẩu tối thiểu 5 ký tự.');
+      return false;
     } else if (!checkEmpty(trim(repassword))) {
       this._onToastAlert('Bạn chưa nhập lại mật khẩu.');
       return false;
@@ -102,21 +117,55 @@ class RegisterScreen extends Component {
     return true;
   };
 
-  _onShowModalCode = () => {
+  _onShowModalCode = async () => {
     const {email} = this.state;
     if (this._onValidateContent()) {
-      this.modalCode.current.onShowModal(email);
+      try {
+        const result = await GET2(URL_HASEMAIL, {email});
+        // console.log(result.data);
+        if (result.status === 200) {
+          this.modalCode.current.onShowModal(email);
+        }
+      } catch (error) {
+        const {status} = error.response;
+        // console.log(status);
+        if (status === 400) {
+          this._onToastAlert('Địa chỉ email đã tồn tại.');
+        } else {
+          this._onToastAlert('Hiện không thể thao tác. Vui lòng thử lại sau.');
+        }
+      }
     }
   };
 
-  _handleSubmitRegisterUser = () => {
-    // const {email, name, password} = this.state;
-    // const user = {
-    //   email: trim(email),
-    //   name: trim(name),
-    //   password: trim(password),
-    // };
-    console.log('Register');
+  _handleSubmitRegisterUser = async () => {
+    const {email, name, password} = this.state;
+    this.setState({loading: true});
+    const body = {
+      email: trim(email),
+      name: trim(name),
+      token: Encript(email, password),
+    };
+    // console.log('Register', user);
+    try {
+      const result = await POST(URL_REGISTER, body);
+      if (result.status === 201) {
+        const user = result.data.payload;
+        await setAccountToStorage(user);
+        const userInfo = await getAccountToStorage();
+        setTimeout(() => {
+          this.setState({loading: false}, () => {
+            if (userInfo) {
+              setRootScreen(screenMain);
+            } else {
+              this._onToastAlert('Lỗi lưu dữ liệu. Vui lòng thử lại sau.');
+            }
+          });
+        }, 2000);
+      }
+    } catch (error) {
+      this._onToastAlert('Hiện không thể thao tác. Vui lòng thử lại sau.');
+    }
   };
 
   render() {
@@ -194,6 +243,7 @@ class RegisterScreen extends Component {
           ref={this.modalCode}
           onHandleEventSuccess={this._handleSubmitRegisterUser}
         />
+        <Spinner visible={this.state.loading} />
       </>
     );
   }

@@ -61,6 +61,7 @@ class InputCustomComponent extends Component {
             }
             onFocus={this._onFocus}
             onBlur={this._onBlur}
+            onEndEditing={this.props.onEndEditing}
             returnKeyType={this.props.returnKeyType}
             keyboardType={this.props.keyboardType}
             onSubmitEditing={this.props.onSubmitEditing}

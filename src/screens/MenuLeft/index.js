@@ -14,10 +14,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {screenNavigate, appScreens} from './../config-screen';
 import {
-  goToScreen,
+  backScreenToRoot,
   goToScreenWithPassProps,
   closeMenuLeft,
 } from './../MethodScreen';
+
+import {
+  getAccountToStorage,
+  deleteAccountToStorage,
+} from './../../common/asyncStorage';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -57,6 +62,7 @@ class MenuLeftScreen extends Component {
       pageHome: true,
       pageMath: false,
       pageEnglish: false,
+      user: null,
     };
   }
 
@@ -69,7 +75,8 @@ class MenuLeftScreen extends Component {
           pageEnglish: false,
         },
         () => {
-          goToScreen(appScreens.Navigate.id, appScreens.Home);
+          // goToScreen(appScreens.Navigate.id, appScreens.Home);
+          backScreenToRoot(appScreens.Navigate.id);
           closeMenuLeft(appScreens.MenuLeft.id);
         },
       );
@@ -118,6 +125,7 @@ class MenuLeftScreen extends Component {
         text: 'Đồng ý',
         style: 'destructive',
         onPress: () => {
+          deleteAccountToStorage();
           Navigation.setRoot(screenNavigate);
         },
       },
@@ -129,20 +137,36 @@ class MenuLeftScreen extends Component {
     ]);
   };
 
+  componentDidMount() {
+    this.getAccountInfo();
+  }
+
+  getAccountInfo = async () => {
+    const result = await getAccountToStorage();
+    // console.log(result);
+    this.setState({user: result});
+  };
+
   render() {
-    return (
+    const {user} = this.state;
+    // console.log(user);
+    return user ? (
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Image
               style={styles.avatar}
-              source={require('./../../assets/icons/user-non-avatar.png')}
+              source={
+                user.image
+                  ? {uri: user.image}
+                  : require('./../../assets/icons/user-non-avatar.png')
+              }
             />
             <TouchableOpacity>
               <Ionicons name={'settings'} size={25} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.nameUser}>Nguyễn Văn Hùng</Text>
+          <Text style={styles.nameUser}>{user.name}</Text>
         </View>
         <View style={styles.actions}>
           <ButtonMenu
@@ -176,7 +200,7 @@ class MenuLeftScreen extends Component {
           </TouchableOpacity>
         </View>
       </View>
-    );
+    ) : null;
   }
 }
 
