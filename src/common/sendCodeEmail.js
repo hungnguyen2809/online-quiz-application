@@ -1,5 +1,9 @@
 import {Platform} from 'react-native';
 import RNSmtpMailer from 'react-native-smtp-mailer';
+
+// Your email and password
+import {EMAIL, PASS} from './../../keyHostEmail';
+
 const isIOS = Platform.OS === 'ios';
 
 const sendOTPCode = (code, emailSend) => {
@@ -8,8 +12,8 @@ const sendOTPCode = (code, emailSend) => {
     mailhost: 'smtp.gmail.com',
     port: '465',
     ssl: ssl,
-    username: 'hungnguyensatthu9x@gmail.com',
-    password: 'hungnguyen99',
+    username: EMAIL,
+    password: PASS,
     fromName: 'OTP',
     subject: 'Xác thực tài khoản',
     recipients: emailSend,

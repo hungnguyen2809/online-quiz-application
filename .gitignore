@@ -59,3 +59,6 @@ buck-out/
 /ios/Pods/
 
 /.vscode
+
+# uncheck Email and Pass
+keyHostEmail.js
