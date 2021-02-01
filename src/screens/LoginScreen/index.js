@@ -110,9 +110,9 @@ class LoginScreen extends Component {
     }
   };
 
-  _handleLogin = async (email, token) => {
+  _handleLogin = async (email, password) => {
     try {
-      const result = await POST(URL_LOGIN, {email, token});
+      const result = await POST(URL_LOGIN, {email, password});
       // console.log(result.data);
       setAccountToStorage(result.data.payload);
       setTimeout(() => {
@@ -149,12 +149,12 @@ class LoginScreen extends Component {
     this.dismissKeyboard();
 
     if (this.isConnectedInternet) {
-      let email = this.state.email.trim();
-      let password = this.state.password.trim();
+      const email = this.state.email.trim();
+      const password = this.state.password.trim();
       if (this._handleValidate(email, password)) {
-        const token = Encript(email, password);
+        const passwordHas = Encript(email, password);
         this.setState({loading: true});
-        this._handleLogin(email, token);
+        this._handleLogin(email, passwordHas);
       }
     } else {
       this._onToastAlert('Không có kết nối internet.');

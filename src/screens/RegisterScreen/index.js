@@ -143,15 +143,16 @@ class RegisterScreen extends Component {
   };
 
   _handleSubmitRegisterUser = async () => {
-    const {email, name, password} = this.state;
-    this.setState({loading: true});
-    const body = {
-      email: trim(email),
-      name: trim(name),
-      token: Encript(email, password),
-    };
     // console.log('Register', user);
     try {
+      const {email, name, password} = this.state;
+      this.setState({loading: true});
+      const body = {
+        email: trim(email),
+        name: trim(name),
+        password: Encript(email, password),
+      };
+
       const result = await POST(URL_REGISTER, body);
       if (result.status === 201) {
         const user = result.data.payload;
