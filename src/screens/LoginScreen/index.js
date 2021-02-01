@@ -122,18 +122,23 @@ class LoginScreen extends Component {
       }, 1500);
     } catch (error) {
       // console.log(error.response);
-      const {status} = error.response;
-      if (status === 404) {
-        this._onToastAlert('Tài khoản không tồn tại.');
-      } else if (status === 403) {
-        this._onToastAlert('Thông tin email hoặc mật khẩu không chính xác.');
-      } else if (status === 406) {
-        this._onToastAlert('Tài khoản hiện tại đang bị khoá.');
+      if (error.response) {
+        const {status} = error.response;
+        if (status === 404) {
+          this._onToastAlert('Tài khoản không tồn tại.');
+        } else if (status === 403) {
+          this._onToastAlert('Thông tin email hoặc mật khẩu không chính xác.');
+        } else if (status === 406) {
+          this._onToastAlert('Tài khoản hiện tại đang bị khoá.');
+        } else {
+          this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+        }
       } else {
         this._onToastAlert(
           'Hiện tại không thể thực hiện. Vui lòng thử lại sau.',
         );
       }
+
       setTimeout(() => {
         this.setState({loading: false});
       }, 1500);

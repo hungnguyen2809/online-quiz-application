@@ -127,12 +127,16 @@ class RegisterScreen extends Component {
           this.modalCode.current.onShowModal(email);
         }
       } catch (error) {
-        const {status} = error.response;
-        // console.log(status);
-        if (status === 400) {
-          this._onToastAlert('Địa chỉ email đã tồn tại.');
+        if (error.response) {
+          const {status} = error.response;
+          // console.log(status);
+          if (status === 400) {
+            this._onToastAlert('Địa chỉ email đã tồn tại.');
+          } else {
+            this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+          }
         } else {
-          this._onToastAlert('Hiện không thể thao tác. Vui lòng thử lại sau.');
+          this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
         }
       }
     }
@@ -164,7 +168,7 @@ class RegisterScreen extends Component {
         }, 2000);
       }
     } catch (error) {
-      this._onToastAlert('Hiện không thể thao tác. Vui lòng thử lại sau.');
+      this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
     }
   };
 
