@@ -23,12 +23,14 @@ import {Navigation} from 'react-native-navigation';
 import NetInfo from '@react-native-community/netinfo';
 import {Encript} from './../../common/encoding';
 
-import {POST} from './../../constants/api';
-import {URL_LOGIN} from './../../constants/urlApi';
+import {LOGIN} from './../../constants/api/loginRegister';
+import {URL_LOGIN, URL_USERS} from './../../constants/api/urlApi';
+import {GET2} from './../../constants/api/auth';
 
 import {
   getAccountToStorage,
   setAccountToStorage,
+  deleteAccountToStorage,
 } from './../../common/asyncStorage';
 
 const isIOS = Platform.OS === 'ios';
@@ -97,12 +99,34 @@ class LoginScreen extends Component {
 
   _handleExistsAccount = async () => {
     const result = await getAccountToStorage();
+    // console.log('ket qua', result);
     this.setState({loading: true});
     if (result) {
-      setTimeout(() => {
-        Navigation.setRoot(screenMain);
-        this.setState({loading: false});
-      }, 1500);
+      try {
+        const id = result.id;
+        const token = result.token;
+        await GET2(URL_USERS, {id}, token);
+        setTimeout(() => {
+          Navigation.setRoot(screenMain);
+          this.setState({loading: false});
+        }, 1500);
+      } catch (error) {
+        if (error.response) {
+          const {status} = error.response;
+          if (status === 400 || status === 401) {
+            this._onToastAlert('Phiên hết hạn. Vui lòng đăng nhập lại.');
+            deleteAccountToStorage();
+            setTimeout(() => {
+              this.setState({loading: false});
+            }, 1500);
+          }
+        } else {
+          this._onToastAlert('Hiện tại không thể thực hiện. Vui lòng thử lại.');
+          setTimeout(() => {
+            this.setState({loading: false});
+          }, 1500);
+        }
+      }
     } else {
       setTimeout(() => {
         this.setState({loading: false});
@@ -112,7 +136,7 @@ class LoginScreen extends Component {
 
   _handleLogin = async (email, password) => {
     try {
-      const result = await POST(URL_LOGIN, {email, password});
+      const result = await LOGIN(URL_LOGIN, {email, password});
       // console.log(result.data);
       setAccountToStorage(result.data.payload);
       setTimeout(() => {

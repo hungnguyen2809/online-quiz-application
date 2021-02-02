@@ -17,6 +17,7 @@ import {
   backScreenToRoot,
   goToScreenWithPassProps,
   closeMenuLeft,
+  goToScreen,
 } from './../MethodScreen';
 
 import {
@@ -137,6 +138,18 @@ class MenuLeftScreen extends Component {
     ]);
   };
 
+  _onGoToProfile = () => {
+    const options = {
+      sideMenu: {
+        left: {
+          enabled: false,
+        },
+      },
+    };
+    goToScreen(appScreens.Navigate.id, appScreens.Profile, options);
+    closeMenuLeft(appScreens.MenuLeft.id);
+  };
+
   componentDidMount() {
     this.getAccountInfo();
   }
@@ -162,7 +175,7 @@ class MenuLeftScreen extends Component {
                   : require('./../../assets/icons/user-non-avatar.png')
               }
             />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this._onGoToProfile}>
               <Ionicons name={'settings'} size={25} />
             </TouchableOpacity>
           </View>

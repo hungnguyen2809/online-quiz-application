@@ -7,6 +7,7 @@ import LoginScreen from './LoginScreen';
 import MenuLeftScreen from './MenuLeft';
 import RegisterScreen from './RegisterScreen';
 import ExamQuestionsScreen from './ExamQuestionsScreen';
+import ProfileScreen from './ProfileScreen';
 
 const registerComponentWithoutRedux = (srceenName, ComponentProvider) => {
   Navigation.registerComponent(srceenName, () => ComponentProvider);
@@ -26,6 +27,7 @@ const RegisterScreenComponent = () => {
     appScreens.ExamQuestions.name,
     ExamQuestionsScreen,
   );
+  registerComponentWithoutRedux(appScreens.Profile.name, ProfileScreen);
 };
 
 export default RegisterScreenComponent;

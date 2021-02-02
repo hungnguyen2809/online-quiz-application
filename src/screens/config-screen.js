@@ -34,6 +34,10 @@ export const appScreens = {
     id: 'app.screen.ExamQuestions',
     name: 'ExamQuestionsScreen',
   },
+  Profile: {
+    id: 'app.screen.Profile',
+    name: 'ProfileScreen',
+  },
 };
 
 export const screenNavigate = {

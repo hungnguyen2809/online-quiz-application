@@ -17,7 +17,6 @@ import {dataSet} from './../../assets/data/dataSet';
 import {fill, isEqual, upperCase} from 'lodash';
 
 const isIOS = Platform.OS === 'ios';
-let potions = 0;
 class ExamQuestionsScreen extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +24,7 @@ class ExamQuestionsScreen extends Component {
 
     this.arrAnsers = fill(Array(dataSet.length), -1);
     this.questions = dataSet;
+    this.potions = 0;
   }
 
   _onFinishExam = () => {
@@ -45,17 +45,17 @@ class ExamQuestionsScreen extends Component {
   };
 
   _onPressPrev = () => {
-    if (potions <= 0) return;
-    potions--;
+    if (this.potions <= 0) return;
+    this.potions--;
     // console.log('Potions: ', potions);
-    this.viewQuestions.current.scrollToIndex({index: potions});
+    this.viewQuestions.current.scrollToIndex({index: this.potions});
   };
 
   _onPressNext = () => {
-    if (potions >= dataSet.length - 1) return;
-    potions++;
+    if (this.potions >= dataSet.length - 1) return;
+    this.potions++;
     // console.log('Potions: ', potions);
-    this.viewQuestions.current.scrollToIndex({index: potions});
+    this.viewQuestions.current.scrollToIndex({index: this.potions});
   };
 
   _handleCheckAnswer = () => {
@@ -89,7 +89,7 @@ class ExamQuestionsScreen extends Component {
                   question={item}
                   index={index}
                   onPressChooseAnswer={(value) =>
-                    (this.arrAnsers[potions] = value)
+                    (this.arrAnsers[this.potions] = value)
                   }
                 />
               );

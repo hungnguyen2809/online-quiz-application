@@ -4,10 +4,11 @@ export const setRootScreen = async (layout) => {
   await Navigation.setRoot(layout);
 };
 
-export const goToScreen = async (componentId, screen) => {
+export const goToScreen = async (componentId, screen, options = null) => {
   await Navigation.push(componentId, {
     component: {
       name: screen.name,
+      options: options,
     },
   });
 };
@@ -16,11 +17,13 @@ export const goToScreenWithPassProps = async (
   componentId,
   screen,
   passProps,
+  options,
 ) => {
   await Navigation.push(componentId, {
     component: {
       name: screen.name,
       passProps: passProps,
+      options: options,
     },
   });
 };

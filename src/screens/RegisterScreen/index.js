@@ -20,8 +20,8 @@ import {
   setAccountToStorage,
 } from './../../common/asyncStorage';
 import {Encript} from './../../common/encoding';
-import {GET2, POST} from './../../constants/api';
-import {URL_REGISTER, URL_HASEMAIL} from './../../constants/urlApi';
+import {REGISTER, HASEMAIL} from './../../constants/api/loginRegister';
+import {URL_REGISTER, URL_HASEMAIL} from '../../constants/api/urlApi';
 
 import {setRootScreen} from './../MethodScreen';
 import {screenMain} from './../config-screen';
@@ -121,7 +121,7 @@ class RegisterScreen extends Component {
     const {email} = this.state;
     if (this._onValidateContent()) {
       try {
-        const result = await GET2(URL_HASEMAIL, {email});
+        const result = await HASEMAIL(URL_HASEMAIL, {email});
         // console.log(result.data);
         if (result.status === 200) {
           this.modalCode.current.onShowModal(email);
@@ -153,7 +153,7 @@ class RegisterScreen extends Component {
         password: Encript(email, password),
       };
 
-      const result = await POST(URL_REGISTER, body);
+      const result = await REGISTER(URL_REGISTER, body);
       if (result.status === 201) {
         const user = result.data.payload;
         await setAccountToStorage(user);
