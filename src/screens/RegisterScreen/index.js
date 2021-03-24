@@ -20,8 +20,6 @@ import {
   setAccountToStorage,
 } from './../../common/asyncStorage';
 import {Encript} from './../../common/encoding';
-import {REGISTER, HASEMAIL} from './../../constants/api/loginRegister';
-import {URL_REGISTER, URL_HASEMAIL} from '../../constants/api/urlApi';
 
 import {setRootScreen} from './../MethodScreen';
 import {screenMain} from './../config-screen';
@@ -118,59 +116,58 @@ class RegisterScreen extends Component {
   };
 
   _onShowModalCode = async () => {
-    const {email} = this.state;
-    if (this._onValidateContent()) {
-      try {
-        const result = await HASEMAIL(URL_HASEMAIL, {email});
-        // console.log(result.data);
-        if (result.status === 200) {
-          this.modalCode.current.onShowModal(email);
-        }
-      } catch (error) {
-        if (error.response) {
-          const {status} = error.response;
-          // console.log(status);
-          if (status === 400) {
-            this._onToastAlert('Địa chỉ email đã tồn tại.');
-          } else {
-            this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-          }
-        } else {
-          this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-        }
-      }
-    }
+    // const {email} = this.state;
+    // if (this._onValidateContent()) {
+    //   try {
+    //     const result = await HASEMAIL(URL_HASEMAIL, {email});
+    //     // console.log(result.data);
+    //     if (result.status === 200) {
+    //       this.modalCode.current.onShowModal(email);
+    //     }
+    //   } catch (error) {
+    //     if (error.response) {
+    //       const {status} = error.response;
+    //       // console.log(status);
+    //       if (status === 400) {
+    //         this._onToastAlert('Địa chỉ email đã tồn tại.');
+    //       } else {
+    //         this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+    //       }
+    //     } else {
+    //       this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+    //     }
+    //   }
+    // }
   };
 
   _handleSubmitRegisterUser = async () => {
     // console.log('Register', user);
-    try {
-      const {email, name, password} = this.state;
-      this.setState({loading: true});
-      const body = {
-        email: trim(email),
-        name: trim(name),
-        password: Encript(email, password),
-      };
-
-      const result = await REGISTER(URL_REGISTER, body);
-      if (result.status === 201) {
-        const user = result.data.payload;
-        await setAccountToStorage(user);
-        const userInfo = await getAccountToStorage();
-        setTimeout(() => {
-          this.setState({loading: false}, () => {
-            if (userInfo) {
-              setRootScreen(screenMain);
-            } else {
-              this._onToastAlert('Lỗi lưu dữ liệu. Vui lòng thử lại sau.');
-            }
-          });
-        }, 2000);
-      }
-    } catch (error) {
-      this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-    }
+    // try {
+    //   const {email, name, password} = this.state;
+    //   this.setState({loading: true});
+    //   const body = {
+    //     email: trim(email),
+    //     name: trim(name),
+    //     password: Encript(email, password),
+    //   };
+    //   const result = await REGISTER(URL_REGISTER, body);
+    //   if (result.status === 201) {
+    //     const user = result.data.payload;
+    //     await setAccountToStorage(user);
+    //     const userInfo = await getAccountToStorage();
+    //     setTimeout(() => {
+    //       this.setState({loading: false}, () => {
+    //         if (userInfo) {
+    //           setRootScreen(screenMain);
+    //         } else {
+    //           this._onToastAlert('Lỗi lưu dữ liệu. Vui lòng thử lại sau.');
+    //         }
+    //       });
+    //     }, 2000);
+    //   }
+    // } catch (error) {
+    //   this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+    // }
   };
 
   render() {

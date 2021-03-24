@@ -16,18 +16,18 @@ class ModalDateTime extends Component {
     };
   }
 
-  onDismissModal = () => {
-    this.setState({visible: false});
-  };
-
   onOpenModal = () => {
     this.setState({visible: true, valueDate: this.props.date});
   };
 
-  onSubmitDate = () => {
+  _onDismissModal = () => {
+    this.setState({visible: false});
+  };
+
+  _onSubmitDate = () => {
     // console.log(this.state.valueDate);
     this.props.onDateChange(this.state.valueDate);
-    this.onDismissModal();
+    this._onDismissModal();
   };
 
   render() {
@@ -36,7 +36,9 @@ class ModalDateTime extends Component {
         isVisible={this.state.visible}
         backdropOpacity={0.5}
         swipeDirection={['down']}
-        onSwipeComplete={this.onDismissModal}>
+        useNativeDriver={!isIOS}
+        useNativeDriverForBackdrop={!isIOS}
+        onSwipeComplete={this._onDismissModal}>
         <View style={styles.container}>
           <View style={styles.wapperDateTime}>
             <RNDateTimePicker
@@ -52,12 +54,12 @@ class ModalDateTime extends Component {
               }}
             />
             <View style={styles.wapperBtn}>
-              <TouchableOpacity onPress={this.onDismissModal}>
+              <TouchableOpacity onPress={this._onDismissModal}>
                 <Text style={[styles.titleText, {color: Colors.CLEAR_CHILL}]}>
                   Hủy
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.onSubmitDate}>
+              <TouchableOpacity onPress={this._onSubmitDate}>
                 <Text style={[styles.titleText, {color: Colors.WATERMELON}]}>
                   Đồng ý
                 </Text>

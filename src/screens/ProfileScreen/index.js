@@ -1,147 +1,245 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   Alert,
   Image,
-  ImageBackground,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-
-import LinearGradient from 'react-native-linear-gradient';
-import {isEqual} from 'lodash';
-import {backToLastScreen} from './../MethodScreen';
-import {getAccountToStorage} from './../../common/asyncStorage';
-import FieldInfo from './components/FieldInfo';
-import {convertDate} from './../../common/formatDate';
-import ModalDateTime from '../../components/ModalDateTime';
+import {connect} from 'react-redux';
+import {
+  deleteAccountToStorage,
+  getAccountToStorage,
+} from './../../common/asyncStorage';
+import {Navigation} from 'react-native-navigation';
+import {appScreens, screenAuth} from './../config-screen';
 import {styles} from './styles';
+import {formatPhone} from './../../common/format';
+import {
+  LogoutAccountAction,
+  LoginAccountAction,
+} from './../../redux/Account/actions';
+import DocumentPicker from 'react-native-document-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ItemInfo from './components/ItemInfo';
+import {createStructuredSelector} from 'reselect';
+import {LoginAccountActionSuccess} from './../../redux/Account/actions';
+import {getAccountSelector} from './../../redux/Account/selectors';
+import {get} from 'lodash';
 
 class ProfileScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      profile: null,
+  static options(props) {
+    return {
+      topBar: {
+        visible: false,
+      },
+      bottomTab: {
+        text: 'Tài khoản',
+        icon: require('./../../assets/icons/ic-profile-32.png'),
+      },
+      statusBar: {
+        drawBehind: true,
+        backgroundColor: 'transparent',
+      },
     };
-    this.oldProfile = null;
-
-    this.modelDateTime = React.createRef();
   }
 
-  _onGoBack = () => {
-    backToLastScreen(this.props.componentId);
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      account: {},
+    };
+  }
+
+  componentDidMount() {
+    if (get(this.props.account, 'size') !== 0) {
+      this.setState({account: this.props.account});
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props !== nextProps) {
+      if (this.props.account !== nextProps.account) {
+        this.setState({account: nextProps.account});
+      }
+    }
+  }
+
+  _handleChooseImage = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 1,
+      },
+      (response) => {
+        if (response.didCancel) {
+          return;
+        }
+        Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
+          {
+            text: 'Hủy',
+            style: 'destructive',
+            onPress: () => {},
+          },
+          {
+            text: 'Đồng ý',
+            style: 'default',
+            onPress: () => this._handleSaveChangeAvatar(response),
+          },
+        ]);
+      },
+    );
   };
 
-  _getAccountInfoStorage = async () => {
-    const account = await getAccountToStorage();
-    if (account) {
-      this.oldProfile = {...account};
-      this.setState({profile: account});
+  _handleSaveChangeAvatar = async (fileImage) => {
+    try {
+      // const image = await DocumentPicker.pick({
+      //   type: [DocumentPicker.types.images],
+      // });
+      // // console.log(image.name);
+      // Alert.alert('Thông báo', 'Bạn có chắc muốn thay đổi ảnh đại diện ?', [
+      //   {
+      //     text: 'Đồng ý',
+      //     style: 'destructive',
+      //     onPress: () => {
+      //       const data = new FormData();
+      //       data.append('id', this.state.profile.id);
+      //       data.append('image', image);
+      //       // console.log('Imgae: ', image);
+      //       // console.log("Data: ", data);
+      //       this.setState({loading: true}, () => {
+      //         setTimeout(async () => {
+      //           const result = await POST2(
+      //             URL_USER_AVATAR,
+      //             data,
+      //             this.state.profile.token,
+      //           );
+      //           // console.log(result.data.payload);
+      //           await deleteAccountToStorage();
+      //           await setAccountToStorage(result.data.payload);
+      //           this.setState({loading: false}, () => {
+      //             this._getAccountInfoStorage();
+      //           });
+      //         }, 2100);
+      //       });
+      //     },
+      //   },
+      //   {
+      //     text: 'Hủy',
+      //     style: 'cancel',
+      //     onPress: () => null,
+      //   },
+      // ]);
+      const formData = new FormData();
+      formData.append('id', this.state.account.id);
+      formData.append('image', fileImage);
+    } catch (error) {
+      // if (DocumentPicker.isCancel(error)) {
+      //   return;
+      // }
+      this.setState({loading: false}, () => {
+        Alert.alert(
+          'Thông báo !',
+          'Lỗi không thể thực hiện. Vui lòng thử lại !',
+        );
+      });
     }
   };
 
-  _onDateChange = (date) => {
-    // console.log('Date', date);
-    this.setState((prevState) => {
-      return {
-        profile: {...prevState.profile, birtday: date},
-      };
+  _goToScreen = () => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: appScreens.ProfileDetails.name,
+        passProps: {
+          parentComponentId: this.props.componentId,
+        },
+      },
     });
   };
 
-  componentDidMount() {
-    this._getAccountInfoStorage();
-  }
-
-  _handleSaveChangeProfile = () => {
-    if (isEqual(this.state.profile, this.oldProfile)) {
-      Alert.alert('Thông báo !', 'Không có sự thay đổi mới nào !.');
-    }
+  _handleLogout = () => {
+    Alert.alert('Thông báo', 'Bạn có chắc muốn đăng xuất ?', [
+      {
+        text: 'Đồng ý',
+        style: 'destructive',
+        onPress: async () => {
+          await deleteAccountToStorage();
+          await Navigation.setRoot(screenAuth);
+          LogoutAccountAction();
+        },
+      },
+      {
+        text: 'Hủy',
+        style: 'cancel',
+        onPress: () => {},
+      },
+    ]);
   };
 
   render() {
-    const {profile} = this.state;
-    return profile ? (
+    // console.log('data: ', this.props.account);
+    return (
       <View style={styles.container}>
-        <View style={styles.content}>
-          <ImageBackground
-            style={styles.backgroundImage}
-            source={require('./../../assets/images/photo-background.jpeg')}>
-            <View
-              style={{
-                alignItems: 'flex-start',
-                flex: 1,
-                paddingLeft: 10,
-              }}>
-              <TouchableOpacity onPress={this._onGoBack}>
-                <Image
-                  style={{width: 35, height: 35}}
-                  source={require('./../../assets/icons/arrow.png')}
-                />
+        <View>
+          <Image
+            style={styles.imageBackground}
+            source={require('./../../assets/images/background-1.jpg')}
+          />
+          <View style={styles.wrapAvatar}>
+            <Image
+              style={styles.avatar}
+              source={require('./../../assets/icons/avatar/5.jpg')}
+            />
+            <View style={styles.btnChangeAvatar}>
+              <TouchableOpacity onPress={this._handleChooseImage}>
+                <MaterialIcons name={'edit'} size={20} />
               </TouchableOpacity>
             </View>
-            <LinearGradient style={{flex: 1}} colors={['transparent', 'gray']}>
-              <View style={styles.wapperinfo}>
-                <Image
-                  style={styles.avatar}
-                  source={require('./../../assets/icons/user-non-avatar.png')}
-                />
-                <Text style={styles.titleName}>{profile.name}</Text>
-              </View>
-            </LinearGradient>
-          </ImageBackground>
+          </View>
         </View>
-        <View style={styles.wapperEdit}>
-          <ScrollView contentContainerStyle={{paddingBottom: 30}}>
-            {/* <FieldInfo
-              title={'Họ tên:'}
-              placeholder={'Nội dung ...'}
-              value={profile.name}
-            /> */}
-            <FieldInfo
-              title={'Email:'}
-              placeholder={'Nội dung ...'}
-              editable={false}
-              value={profile.email}
+        <View style={styles.content}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <ItemInfo
+              onPress={this._goToScreen}
+              iconName={'person'}
+              text={'Nguyễn Văn Hùng'}
             />
-            <FieldInfo
-              title={'Số điện thoại:'}
-              placeholder={'Nội dung ...'}
-              value={profile.phone}
-              maxLength={20}
-              keyboardType={'numeric'}
+            <ItemInfo
+              onPress={this._goToScreen}
+              iconName={'smartphone'}
+              text={formatPhone('0988258361')}
             />
-            <FieldInfo
-              title={'Ngày sinh:'}
-              placeholder={'Nội dung ...'}
-              datetime={true}
-              value={convertDate(profile.birtday)}
-              onOpenModalDate={() => this.modelDateTime.current.onOpenModal()}
+            <ItemInfo
+              onPress={this._goToScreen}
+              iconName={'email'}
+              text={'email'}
             />
-            <FieldInfo
-              title={'Địa chỉ'}
-              placeholder={'Nội dung ...'}
-              value={profile.address}
-            />
-            <TouchableOpacity
-              style={styles.btnSave}
-              onPress={this._handleSaveChangeProfile}>
-              <Text style={styles.titleSave}>Lưu thay đổi</Text>
-            </TouchableOpacity>
           </ScrollView>
         </View>
-        <ModalDateTime
-          ref={this.modelDateTime}
-          date={new Date(profile.birtday)}
-          mode={'date'}
-          locale={'vi'}
-          onDateChange={this._onDateChange}
-        />
+        <View style={styles.wrapFooter}>
+          <TouchableOpacity
+            style={styles.btnLogout}
+            activeOpacity={0.7}
+            onPress={this._handleLogout}>
+            <Text style={styles.titleLogout}>Đăng xuất</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    ) : null;
+    );
   }
 }
 
-export default ProfileScreen;
+const mapStateToProps = createStructuredSelector({
+  account: getAccountSelector(),
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

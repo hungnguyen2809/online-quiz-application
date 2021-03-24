@@ -2,7 +2,7 @@ import {Platform} from 'react-native';
 import RNSmtpMailer from 'react-native-smtp-mailer';
 
 // Your email and password
-import {EMAIL, PASS} from './../../keyHostEmail';
+import {EMAIL, PASS} from './../../keyHost';
 
 const isIOS = Platform.OS === 'ios';
 

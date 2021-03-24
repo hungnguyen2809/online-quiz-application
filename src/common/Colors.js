@@ -5,6 +5,8 @@ const Colors = {
   CLEAR_CHILL: '#1e90ff',
   WHITE: '#fff',
   WATERMELON: '#ff4757',
+  HINT_OF_PENSIVE: '#dcdde1',
+  PEACE: '#a4b0be',
 };
 
 export {Colors};

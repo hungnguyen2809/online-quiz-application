@@ -11,26 +11,26 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {styles} from './styles';
-import {appScreens, screenMain} from './../config-screen';
-
-import InputEmailComponent from './components/InputEmailComponent';
-import InputPasswordComponent from './components/InputPasswordComponent';
+import {connect} from 'react-redux';
+import NetInfo from '@react-native-community/netinfo';
+import {Navigation} from 'react-native-navigation';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+import {styles} from './styles';
+import {appScreens, screenMain} from './../config-screen';
+import InputEmailComponent from './components/InputEmailComponent';
+import InputPasswordComponent from './components/InputPasswordComponent';
 import {checkEmail, checkEmpty} from '../../common/validate';
-import {Navigation} from 'react-native-navigation';
-import NetInfo from '@react-native-community/netinfo';
 import {Encript} from './../../common/encoding';
 
-import {LOGIN} from './../../constants/api/loginRegister';
-import {URL_LOGIN, URL_USERS} from './../../constants/api/urlApi';
-import {GET2} from './../../constants/api/auth';
+import {
+  LoginAccountAction,
+  LoginAccountActionSuccess,
+} from './../../redux/Account/actions';
 
 import {
   getAccountToStorage,
   setAccountToStorage,
-  deleteAccountToStorage,
 } from './../../common/asyncStorage';
 
 const isIOS = Platform.OS === 'ios';
@@ -45,9 +45,7 @@ class LoginScreen extends Component {
     };
 
     this.isConnectedInternet = false;
-
     this.inputTextPassword = React.createRef();
-
     this.showKeyboard = false;
     this.createEventKeyboard();
   }
@@ -72,7 +70,7 @@ class LoginScreen extends Component {
       ? Alert.alert('Thông báo', msg)
       : ToastAndroid.showWithGravityAndOffset(
           msg,
-          ToastAndroid.SHORT,
+          ToastAndroid.LONG,
           ToastAndroid.BOTTOM,
           25,
           20,
@@ -98,90 +96,62 @@ class LoginScreen extends Component {
   };
 
   _handleExistsAccount = async () => {
-    const result = await getAccountToStorage();
-    // console.log('ket qua', result);
     this.setState({loading: true});
-    if (result) {
-      try {
-        const id = result.id;
-        const token = result.token;
-        await GET2(URL_USERS, {id}, token);
-        setTimeout(() => {
-          Navigation.setRoot(screenMain);
-          this.setState({loading: false});
-        }, 1500);
-      } catch (error) {
-        if (error.response) {
-          const {status} = error.response;
-          if (status === 400 || status === 401) {
-            this._onToastAlert('Phiên hết hạn. Vui lòng đăng nhập lại.');
-            deleteAccountToStorage();
-            setTimeout(() => {
-              this.setState({loading: false});
-            }, 1500);
-          }
-        } else {
-          this._onToastAlert('Hiện tại không thể thực hiện. Vui lòng thử lại.');
-          setTimeout(() => {
-            this.setState({loading: false});
-          }, 1500);
-        }
-      }
-    } else {
-      setTimeout(() => {
-        this.setState({loading: false});
-      }, 1500);
+    const result = await getAccountToStorage();
+    if (result !== null) {
+      Navigation.setRoot(screenMain);
+      this.props.dispatch(LoginAccountActionSuccess(result));
     }
+    this.setState({loading: false});
   };
 
-  _handleLogin = async (email, password) => {
-    try {
-      const result = await LOGIN(URL_LOGIN, {email, password});
-      // console.log(result.data);
-      setAccountToStorage(result.data.payload);
-      setTimeout(() => {
+  _handleSubmitLogin = (email, passwordHas) => {
+    const body = {
+      email,
+      password: passwordHas,
+    };
+    this.props.doHandleLoginAccount(body, {
+      callbacksOnSuccess: (account) => {
+        setAccountToStorage(account);
         this.setState({loading: false}, () => {
           Navigation.setRoot(screenMain);
         });
-      }, 1500);
-    } catch (error) {
-      // console.log(error.response);
-      if (error.response) {
-        const {status} = error.response;
-        if (status === 404) {
-          this._onToastAlert('Tài khoản không tồn tại.');
-        } else if (status === 403) {
-          this._onToastAlert('Thông tin email hoặc mật khẩu không chính xác.');
-        } else if (status === 406) {
-          this._onToastAlert('Tài khoản hiện tại đang bị khoá.');
+      },
+      callbacksOnFail: (errorCode) => {
+        if (errorCode !== -1) {
+          if (errorCode === 404) {
+            this._onToastAlert('Tài khoản không tồn tại.');
+          } else if (errorCode === 403) {
+            this._onToastAlert(
+              'Thông tin email hoặc mật khẩu không chính xác.',
+            );
+          } else if (errorCode === 406) {
+            this._onToastAlert('Tài khoản hiện tại đang bị khoá.');
+          } else {
+            this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+          }
         } else {
-          this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+          this._onToastAlert(
+            'Hiện tại không thể thực hiện. Vui lòng thử lại sau.',
+          );
         }
-      } else {
-        this._onToastAlert(
-          'Hiện tại không thể thực hiện. Vui lòng thử lại sau.',
-        );
-      }
-
-      setTimeout(() => {
         this.setState({loading: false});
-      }, 1500);
-    }
+      },
+    });
   };
 
   onSubmit = () => {
     this.dismissKeyboard();
-
     if (this.isConnectedInternet) {
       const email = this.state.email.trim();
       const password = this.state.password.trim();
       if (this._handleValidate(email, password)) {
         const passwordHas = Encript(email, password);
         this.setState({loading: true});
-        this._handleLogin(email, passwordHas);
+        this._handleSubmitLogin(email, passwordHas);
       }
     } else {
-      this._onToastAlert('Không có kết nối internet.');
+      this._onToastAlert('Không có kết nối internet. Vui lòng kiểm tra lại.');
     }
   };
 
@@ -275,4 +245,18 @@ class LoginScreen extends Component {
   }
 }
 
-export default LoginScreen;
+const mapStateToProps = (state) => {
+  // console.log("account: ", state.account);
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch,
+    doHandleLoginAccount: (data, callbacks) => {
+      dispatch(LoginAccountAction(data, callbacks));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

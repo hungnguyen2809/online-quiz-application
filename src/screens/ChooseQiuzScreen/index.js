@@ -7,6 +7,22 @@ import {appScreens} from './../config-screen';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 
 class ChooseQiuzScreen extends Component {
+  static options(props) {
+    return {
+      topBar: {
+        visible: false,
+      },
+      bottomTab: {
+        text: 'Làm bài',
+        icon: require('./../../assets/icons/ic-edit_property.png'),
+      },
+      statusBar: {
+        drawBehind: true,
+        backgroundColor: 'transparent'
+      }
+    }
+  }
+
   constructor(props) {
     super(props);
   }

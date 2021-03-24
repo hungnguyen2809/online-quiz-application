@@ -1,14 +1,6 @@
 import React, {Component} from 'react';
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-
-const isIOS = Platform.OS === 'ios';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
 
 class HeadTopBar extends Component {
   constructor(props) {
@@ -17,18 +9,24 @@ class HeadTopBar extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={this.props.onPressMenu}>
+      <View style={[styles.wrapHeader, {paddingTop: getStatusBarHeight()}]}>
+        <View style={styles.container}>
+          {this.props.onPressButtonLeft ? (
+            <TouchableOpacity
+              style={{marginRight: 22}}
+              onPress={this.props.onPressButtonLeft}>
+              <Image
+                style={styles.iconsMenu}
+                source={require('./../../assets/icons/menu.png')}
+              />
+            </TouchableOpacity>
+          ) : null}
           <Image
-            style={styles.iconsMenu}
-            source={require('./../../assets/icons/menu.png')}
+            style={styles.logo}
+            source={require('./../../assets/icons/question_mark.png')}
           />
-        </TouchableOpacity>
-        <Image
-          style={styles.logo}
-          source={require('./../../assets/icons/question_mark.png')}
-        />
-        <Text style={styles.title}>Online Quiz</Text>
+          <Text style={styles.title}>Online Quiz</Text>
+        </View>
       </View>
     );
   }
@@ -37,12 +35,12 @@ class HeadTopBar extends Component {
 export default HeadTopBar;
 
 const styles = StyleSheet.create({
+  wrapHeader: {
+    backgroundColor: '#18dcff',
+  },
   container: {
-    paddingTop: isIOS ? 45 : 5,
-    padding: 5,
     paddingLeft: 15,
     flexDirection: 'row',
-    backgroundColor: '#18dcff',
     alignItems: 'center',
   },
   iconsMenu: {
@@ -52,7 +50,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 45,
     height: 45,
-    marginLeft: 22,
   },
   title: {
     fontSize: 20,

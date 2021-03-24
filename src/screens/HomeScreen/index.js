@@ -4,21 +4,32 @@ import HeadTopBar from '../../components/HeadTopBar';
 import AchievementUser from './components/AchievementUser';
 import RatingUser from './components/RatingUser';
 
-import {openMenuLeft} from './../MethodScreen';
 
 class HomeScreen extends Component {
+  static options(props) {
+    return {
+      topBar: {
+        visible: false,
+      },
+      bottomTab: {
+        text: 'Trang chủ',
+        icon: require('./../../assets/icons/ic-home.png'),
+      },
+      statusBar: {
+        drawBehind: true,
+        backgroundColor: 'transparent'
+      }
+    };
+  }
+
   constructor(props) {
     super(props);
   }
 
-  _handleOpenMemu = () => {
-    openMenuLeft(this.props.componentId);
-  };
-
   render() {
     return (
       <View style={styles.container}>
-        <HeadTopBar onPressMenu={this._handleOpenMemu} />
+        <HeadTopBar />
         <ScrollView>
           <View style={styles.content}>
             <View style={styles.card}>

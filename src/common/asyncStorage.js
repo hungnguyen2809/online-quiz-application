@@ -8,7 +8,7 @@ const setAccountToStorage = async (userInfo) => {
     await AsyncStorage.setItem(KEY_ACCOUNT, user);
     return true;
   } catch (error) {
-    return false;
+    return null;
   }
 };
 
@@ -17,7 +17,7 @@ const getAccountToStorage = async () => {
     let user = await AsyncStorage.getItem(KEY_ACCOUNT);
     return user !== null ? JSON.parse(user) : null;
   } catch (error) {
-    return false;
+    return null;
   }
 };
 

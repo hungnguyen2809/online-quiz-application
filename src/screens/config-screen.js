@@ -38,9 +38,13 @@ export const appScreens = {
     id: 'app.screen.Profile',
     name: 'ProfileScreen',
   },
+  ProfileDetails: {
+    id: 'app.screen.ProfileDetails',
+    name: 'ProfileDetailsScreen',
+  },
 };
 
-export const screenNavigate = {
+export const screenAuth = {
   root: {
     stack: {
       children: [
@@ -61,30 +65,59 @@ export const screenNavigate = {
 
 export const screenMain = {
   root: {
-    sideMenu: {
-      left: {
-        component: {
-          id: appScreens.MenuLeft.id,
-          name: appScreens.MenuLeft.name,
-        },
-      },
-      center: {
-        stack: {
-          id: appScreens.Navigate.id,
-          children: [
-            {
-              component: {
-                name: appScreens.Home.name,
+    bottomTabs: {
+      children: [
+        {
+          stack: {
+            children: [
+              {
+                component: {
+                  name: 'HomeScreen',
+                },
               },
-            },
-          ],
-          options: {
-            topBar: {
-              visible: false,
-            },
+            ],
           },
         },
-      },
+        {
+          stack: {
+            children: [
+              {
+                component: {
+                  name: 'ChooseQuizScreen',
+                },
+              },
+            ],
+          },
+        },
+        {
+          stack: {
+            children: [
+              {
+                component: {
+                  name: 'ChooseQuizScreen',
+                  options: {
+                    bottomTab: {
+                      text: 'Thành tích',
+                      icon: require('./../assets/icons/ic-star_half_empty.png'),
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+        {
+          stack: {
+            children: [
+              {
+                component: {
+                  name: 'ProfileScreen',
+                },
+              },
+            ],
+          },
+        },
+      ],
     },
   },
 };

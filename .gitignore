@@ -61,4 +61,4 @@ buck-out/
 /.vscode
 
 # uncheck Email and Pass
-keyHostEmail.js
+keyHost.js

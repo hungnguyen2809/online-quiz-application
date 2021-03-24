@@ -1,13 +1,18 @@
 import {Navigation} from 'react-native-navigation';
+import {screenAuth} from './config-screen';
+
+export const switchScreen = async () => {
+  await Navigation.setRoot(screenAuth);
+};
 
 export const setRootScreen = async (layout) => {
   await Navigation.setRoot(layout);
 };
 
-export const goToScreen = async (componentId, screen, options = null) => {
+export const goToScreen = async (componentId, nameScreen, options = null) => {
   await Navigation.push(componentId, {
     component: {
-      name: screen.name,
+      name: nameScreen,
       options: options,
     },
   });
@@ -15,13 +20,13 @@ export const goToScreen = async (componentId, screen, options = null) => {
 
 export const goToScreenWithPassProps = async (
   componentId,
-  screen,
+  nameScreen,
   passProps,
-  options,
+  options = null,
 ) => {
   await Navigation.push(componentId, {
     component: {
-      name: screen.name,
+      name: nameScreen,
       passProps: passProps,
       options: options,
     },

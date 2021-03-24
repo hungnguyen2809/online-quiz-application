@@ -1,5 +1,9 @@
-import {appScreens} from './config-screen';
+import React from 'react';
 import {Navigation} from 'react-native-navigation';
+import {Provider} from 'react-redux';
+import stores from './../redux/stores';
+import {appScreens} from './config-screen';
+
 import ChooseQiuzScreen from './ChooseQiuzScreen';
 import ForgetPasswordScreen from './ForgetPasswordScreen';
 import HomeScreen from './HomeScreen';
@@ -8,13 +12,26 @@ import MenuLeftScreen from './MenuLeft';
 import RegisterScreen from './RegisterScreen';
 import ExamQuestionsScreen from './ExamQuestionsScreen';
 import ProfileScreen from './ProfileScreen';
+import ProfileDetailsScreen from './ProfileDetailsScreen';
 
 const registerComponentWithoutRedux = (srceenName, ComponentProvider) => {
   Navigation.registerComponent(srceenName, () => ComponentProvider);
 };
 
+const registerComponentWithRedux = (srceenName, ComponentProvider, store) => {
+  Navigation.registerComponent(
+    srceenName,
+    () => (props) => (
+      <Provider store={store}>
+        <ComponentProvider {...props} />
+      </Provider>
+    ),
+    () => ComponentProvider,
+  );
+};
+
 const RegisterScreenComponent = () => {
-  registerComponentWithoutRedux(appScreens.Login.name, LoginScreen);
+  registerComponentWithRedux(appScreens.Login.name, LoginScreen, stores);
   registerComponentWithoutRedux(appScreens.Register.name, RegisterScreen);
   registerComponentWithoutRedux(
     appScreens.ForgetPassword.name,
@@ -27,7 +44,11 @@ const RegisterScreenComponent = () => {
     appScreens.ExamQuestions.name,
     ExamQuestionsScreen,
   );
-  registerComponentWithoutRedux(appScreens.Profile.name, ProfileScreen);
+  registerComponentWithRedux(appScreens.Profile.name, ProfileScreen, stores);
+  registerComponentWithoutRedux(
+    appScreens.ProfileDetails.name,
+    ProfileDetailsScreen,
+  );
 };
 
 export default RegisterScreenComponent;
