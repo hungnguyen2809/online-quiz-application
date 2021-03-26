@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {getAccountToStorage} from './../../common/asyncStorage';
-import {IP_HOST, IP_PORT} from './../../../keyHost';
+import {getAccountToStorage} from './../common/asyncStorage';
+import {IP_HOST, IP_PORT} from './../../keyHost';
 const SERVER = `http://${IP_HOST}:${IP_PORT}/api`;
 
 const instance = axios.create({

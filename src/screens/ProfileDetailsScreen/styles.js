@@ -78,6 +78,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 6,
   },
+  btnCancel: {
+    backgroundColor: Colors.RED_ORANGE,
+    height: 46,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 6,
+    marginTop: 20,
+  },
   textSubmit: {
     fontSize: 17,
     fontWeight: '600',

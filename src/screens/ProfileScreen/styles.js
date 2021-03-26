@@ -78,6 +78,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '500',
   },
+  textEmptry: {
+    color: Colors.PEACE,
+    opacity: 1,
+    fontStyle: 'italic',
+    marginHorizontal: 10,
+    fontSize: 15,
+  },
 });
 
 export {styles};

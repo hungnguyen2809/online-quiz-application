@@ -1,7 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {Text, View, TextInput, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import moment from 'moment';
 import {styles} from './../styles';
 
 class ItemEdit extends Component {
@@ -12,7 +13,7 @@ class ItemEdit extends Component {
 
   focus = () => {
     this.refInput.current.focus();
-  }
+  };
 
   render() {
     return (
@@ -32,11 +33,11 @@ class ItemEdit extends Component {
                 style={{
                   fontSize: 17,
                   padding: 5,
-                  color: this.props.value.length > 0 ? '#414141' : '#AAAAAA',
+                  color: this.props.value === null ? '#AAAAAA' : '#414141',
                 }}>
-                {this.props.value.length > 0
-                  ? this.props.value
-                  : this.props.placeholder}
+                {this.props.value === null
+                  ? this.props.placeholder
+                  : moment(this.props.value).format('DD-MM-YYYY')}
               </Text>
             </TouchableOpacity>
           </View>

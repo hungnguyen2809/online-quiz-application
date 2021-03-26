@@ -9,20 +9,21 @@ import {
   View,
 } from 'react-native';
 import {styles} from './styles';
+import {connect} from 'react-redux';
 import InputCustomComponent from './components/InputCustom';
 import {isEqual, trim} from 'lodash';
 import {checkEmail, checkEmpty} from './../../common/validate';
+import {Encript} from './../../common/encoding';
 import ModalCodeComponent from '../../components/ModalCode';
 import Spinner from 'react-native-loading-spinner-overlay';
-
-import {
-  getAccountToStorage,
-  setAccountToStorage,
-} from './../../common/asyncStorage';
-import {Encript} from './../../common/encoding';
+import Toast from './../../components/Toast';
 
 import {setRootScreen} from './../MethodScreen';
 import {screenMain} from './../config-screen';
+import {
+  registerAccountAction,
+  hasEmailAccountAction,
+} from './../../redux/Account/actions';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -115,59 +116,43 @@ class RegisterScreen extends Component {
     return true;
   };
 
-  _onShowModalCode = async () => {
-    // const {email} = this.state;
-    // if (this._onValidateContent()) {
-    //   try {
-    //     const result = await HASEMAIL(URL_HASEMAIL, {email});
-    //     // console.log(result.data);
-    //     if (result.status === 200) {
-    //       this.modalCode.current.onShowModal(email);
-    //     }
-    //   } catch (error) {
-    //     if (error.response) {
-    //       const {status} = error.response;
-    //       // console.log(status);
-    //       if (status === 400) {
-    //         this._onToastAlert('Địa chỉ email đã tồn tại.');
-    //       } else {
-    //         this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-    //       }
-    //     } else {
-    //       this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-    //     }
-    //   }
-    // }
+  _onShowModalCode = () => {
+    const {email} = this.state;
+    if (this._onValidateContent()) {
+      const payload = {
+        email: email,
+      };
+      this.props.doHasEmailAccount(payload, {
+        callbacksOnSuccess: () => {
+          this.modalCode.current.onShowModal(email);
+        },
+        callbacksOnFail: (erCode) => {
+          if (erCode === 400) {
+            this._onToastAlert('Địa chỉ email đã tồn tại.');
+          } else {
+            this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+          }
+        },
+      });
+    }
   };
 
-  _handleSubmitRegisterUser = async () => {
-    // console.log('Register', user);
-    // try {
-    //   const {email, name, password} = this.state;
-    //   this.setState({loading: true});
-    //   const body = {
-    //     email: trim(email),
-    //     name: trim(name),
-    //     password: Encript(email, password),
-    //   };
-    //   const result = await REGISTER(URL_REGISTER, body);
-    //   if (result.status === 201) {
-    //     const user = result.data.payload;
-    //     await setAccountToStorage(user);
-    //     const userInfo = await getAccountToStorage();
-    //     setTimeout(() => {
-    //       this.setState({loading: false}, () => {
-    //         if (userInfo) {
-    //           setRootScreen(screenMain);
-    //         } else {
-    //           this._onToastAlert('Lỗi lưu dữ liệu. Vui lòng thử lại sau.');
-    //         }
-    //       });
-    //     }, 2000);
-    //   }
-    // } catch (error) {
-    //   this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-    // }
+  _handleSubmitRegisterUser = () => {
+    const {email, name, password} = this.state;
+    const body = {
+      email: trim(email),
+      name: trim(name),
+      password: Encript(email, password),
+    };
+
+    this.props.doRegisterAccount(body, {
+      callbacksOnSuccess: () => {
+        setRootScreen(screenMain);
+      },
+      callbacksOnFail: (erCode) => {
+        this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+      },
+    });
   };
 
   render() {
@@ -245,10 +230,25 @@ class RegisterScreen extends Component {
           ref={this.modalCode}
           onHandleEventSuccess={this._handleSubmitRegisterUser}
         />
-        <Spinner visible={this.state.loading} />
       </>
     );
   }
 }
 
-export default RegisterScreen;
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch,
+    doRegisterAccount: (payload, callbacks) => {
+      dispatch(registerAccountAction(payload, callbacks));
+    },
+    doHasEmailAccount: (payload, callbacks) => {
+      dispatch(hasEmailAccountAction(payload, callbacks));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterScreen);

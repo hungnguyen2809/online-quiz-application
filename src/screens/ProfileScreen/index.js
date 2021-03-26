@@ -181,18 +181,33 @@ class ProfileScreen extends Component {
 
   render() {
     // console.log('data: ', this.props.account);
+    const {account} = this.state;
     return (
       <View style={styles.container}>
         <View>
-          <Image
-            style={styles.imageBackground}
-            source={require('./../../assets/images/background-1.jpg')}
-          />
-          <View style={styles.wrapAvatar}>
+          {get(account, 'image') ? (
             <Image
-              style={styles.avatar}
-              source={require('./../../assets/icons/avatar/5.jpg')}
+              style={styles.imageBackground}
+              source={{uri: get(account, 'image')}}
             />
+          ) : (
+            <Image
+              style={styles.imageBackground}
+              source={require('./../../assets/images/background-1.jpg')}
+            />
+          )}
+          <View style={styles.wrapAvatar}>
+            {get(account, 'image') ? (
+              <Image
+                style={styles.avatar}
+                source={{uri: get(account, 'image')}}
+              />
+            ) : (
+              <Image
+                style={styles.avatar}
+                source={require('./../../assets/icons/avatar/5.jpg')}
+              />
+            )}
             <View style={styles.btnChangeAvatar}>
               <TouchableOpacity onPress={this._handleChooseImage}>
                 <MaterialIcons name={'edit'} size={20} />
@@ -205,17 +220,17 @@ class ProfileScreen extends Component {
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'person'}
-              text={'Nguyễn Văn Hùng'}
+              text={get(account, 'name', '')}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'smartphone'}
-              text={formatPhone('0988258361')}
+              text={formatPhone(get(account, 'phone', ''))}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'email'}
-              text={'email'}
+              text={get(account, 'email', '')}
             />
           </ScrollView>
         </View>

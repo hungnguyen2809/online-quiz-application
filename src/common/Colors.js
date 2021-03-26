@@ -7,6 +7,9 @@ const Colors = {
   WATERMELON: '#ff4757',
   HINT_OF_PENSIVE: '#dcdde1',
   PEACE: '#a4b0be',
+  NASTURC_FLOWER: '#e84118',
+  TOMATO_RED: '#eb2f06',
+  RED_ORANGE: '#ff3f34',
 };
 
 export {Colors};

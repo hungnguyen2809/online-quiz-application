@@ -14,9 +14,9 @@ import ExamQuestionsScreen from './ExamQuestionsScreen';
 import ProfileScreen from './ProfileScreen';
 import ProfileDetailsScreen from './ProfileDetailsScreen';
 
-const registerComponentWithoutRedux = (srceenName, ComponentProvider) => {
-  Navigation.registerComponent(srceenName, () => ComponentProvider);
-};
+// const registerComponentWithoutRedux = (srceenName, ComponentProvider) => {
+//   Navigation.registerComponent(srceenName, () => ComponentProvider);
+// };
 
 const registerComponentWithRedux = (srceenName, ComponentProvider, store) => {
   Navigation.registerComponent(
@@ -32,22 +32,29 @@ const registerComponentWithRedux = (srceenName, ComponentProvider, store) => {
 
 const RegisterScreenComponent = () => {
   registerComponentWithRedux(appScreens.Login.name, LoginScreen, stores);
-  registerComponentWithoutRedux(appScreens.Register.name, RegisterScreen);
-  registerComponentWithoutRedux(
+  registerComponentWithRedux(appScreens.Register.name, RegisterScreen, stores);
+  registerComponentWithRedux(
     appScreens.ForgetPassword.name,
     ForgetPasswordScreen,
+    stores,
   );
-  registerComponentWithoutRedux(appScreens.Home.name, HomeScreen);
-  registerComponentWithoutRedux(appScreens.MenuLeft.name, MenuLeftScreen);
-  registerComponentWithoutRedux(appScreens.ChooseQiuz.name, ChooseQiuzScreen);
-  registerComponentWithoutRedux(
+  registerComponentWithRedux(appScreens.Home.name, HomeScreen, stores);
+  registerComponentWithRedux(appScreens.MenuLeft.name, MenuLeftScreen);
+  registerComponentWithRedux(
+    appScreens.ChooseQiuz.name,
+    ChooseQiuzScreen,
+    stores,
+  );
+  registerComponentWithRedux(
     appScreens.ExamQuestions.name,
     ExamQuestionsScreen,
+    stores,
   );
   registerComponentWithRedux(appScreens.Profile.name, ProfileScreen, stores);
-  registerComponentWithoutRedux(
+  registerComponentWithRedux(
     appScreens.ProfileDetails.name,
     ProfileDetailsScreen,
+    stores,
   );
 };
 

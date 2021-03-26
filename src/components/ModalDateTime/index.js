@@ -11,7 +11,7 @@ class ModalDateTime extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      valueDate: '',
+      valueDate: new Date(),
       visible: false,
     };
   }

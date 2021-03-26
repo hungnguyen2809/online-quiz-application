@@ -93,7 +93,7 @@ class ModalCodeComponent extends Component {
     this._genegateCode();
     this._sendEmailCode();
     this.eventTimeOutCode = setInterval(() => {
-      console.log('interval is running.');
+      // console.log('interval is running.');
       this.setState(
         (prevState) => {
           return {

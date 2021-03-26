@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+export const dateFormat = 'DD-MM-YYYY';
+
 export const convertDate = (date) => {
   // console.log(date);
   let dt = new Date(date);

@@ -1,5 +1,9 @@
 import {fromJS} from 'immutable';
-import {ACCOUNT_LOGIN_SUCCESS, ACCOUNT_LOGOUT} from './constants';
+import {
+  ACCOUNT_LOGIN_SUCCESS,
+  ACCOUNT_LOGOUT,
+  ACCOUNT_REGISTER_SUCCESS,
+} from './constants';
 
 const initState = fromJS({
   accountInfo: {},
@@ -11,6 +15,8 @@ export default function (state = initState, action) {
       return state.set('accountInfo', action.payload.data);
     case ACCOUNT_LOGOUT:
       return state.set('accountInfo', {});
+    case ACCOUNT_REGISTER_SUCCESS:
+      return state.set('accountInfo', action.payload.data);
     default:
       return state;
   }

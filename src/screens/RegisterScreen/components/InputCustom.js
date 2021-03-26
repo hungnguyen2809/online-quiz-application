@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -73,7 +74,11 @@ class InputCustomComponent extends Component {
             <TouchableOpacity
               style={styles.btnShowPass}
               onPress={this._handleChangeShowPassword}>
-              <Text>{this.state.isShowPassword ? 'Hiện' : 'Ẩn'}</Text>
+              <Ionicons
+                name={this.state.isShowPassword ? 'eye' : 'eye-off'}
+                size={20}
+                color={'#414141'}
+              />
             </TouchableOpacity>
           ) : null}
         </View>
