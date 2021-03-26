@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-mount-set-state */
 import React, {Component} from 'react';
 import {
   Alert,
@@ -6,28 +7,28 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {
-  deleteAccountToStorage,
-  getAccountToStorage,
-} from './../../common/asyncStorage';
+import {createStructuredSelector} from 'reselect';
+// import DocumentPicker from 'react-native-document-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {get} from 'lodash';
+import {deleteAccountToStorage} from './../../common/asyncStorage';
 import {Navigation} from 'react-native-navigation';
 import {appScreens, screenAuth} from './../config-screen';
 import {styles} from './styles';
 import {formatPhone} from './../../common/format';
 import {
   LogoutAccountAction,
-  LoginAccountAction,
+  updateAvatarAction,
 } from './../../redux/Account/actions';
-import DocumentPicker from 'react-native-document-picker';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {getAccountSelector} from './../../redux/Account/selectors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ItemInfo from './components/ItemInfo';
-import {createStructuredSelector} from 'reselect';
-import {LoginAccountActionSuccess} from './../../redux/Account/actions';
-import {getAccountSelector} from './../../redux/Account/selectors';
-import {get} from 'lodash';
+import Toast from './../../components/Toast';
+
+const isIOS = Platform.OS === 'ios';
 
 class ProfileScreen extends Component {
   static options(props) {
@@ -52,6 +53,8 @@ class ProfileScreen extends Component {
     this.state = {
       account: {},
     };
+
+    this.refToast = React.createRef();
   }
 
   componentDidMount() {
@@ -94,52 +97,23 @@ class ProfileScreen extends Component {
     );
   };
 
-  _handleSaveChangeAvatar = async (fileImage) => {
+  _handleSaveChangeAvatar = (fileImage) => {
     try {
-      // const image = await DocumentPicker.pick({
-      //   type: [DocumentPicker.types.images],
-      // });
-      // // console.log(image.name);
-      // Alert.alert('Thông báo', 'Bạn có chắc muốn thay đổi ảnh đại diện ?', [
-      //   {
-      //     text: 'Đồng ý',
-      //     style: 'destructive',
-      //     onPress: () => {
-      //       const data = new FormData();
-      //       data.append('id', this.state.profile.id);
-      //       data.append('image', image);
-      //       // console.log('Imgae: ', image);
-      //       // console.log("Data: ", data);
-      //       this.setState({loading: true}, () => {
-      //         setTimeout(async () => {
-      //           const result = await POST2(
-      //             URL_USER_AVATAR,
-      //             data,
-      //             this.state.profile.token,
-      //           );
-      //           // console.log(result.data.payload);
-      //           await deleteAccountToStorage();
-      //           await setAccountToStorage(result.data.payload);
-      //           this.setState({loading: false}, () => {
-      //             this._getAccountInfoStorage();
-      //           });
-      //         }, 2100);
-      //       });
-      //     },
-      //   },
-      //   {
-      //     text: 'Hủy',
-      //     style: 'cancel',
-      //     onPress: () => null,
-      //   },
-      // ]);
       const formData = new FormData();
       formData.append('id', this.state.account.id);
-      formData.append('image', fileImage);
+      formData.append('file', {
+        name: fileImage.fileName,
+        type: fileImage.type,
+        uri: isIOS ? fileImage.uri.replace('file://', '') : fileImage.uri,
+      });
+
+      this.props.doUpdateAvatar(formData, {
+        callbacksOnSuccess: () => {
+          this.refToast.current.onShowToast('Cập nhật thành công !', 2000);
+        },
+        callbacksOnFail: () => {},
+      });
     } catch (error) {
-      // if (DocumentPicker.isCancel(error)) {
-      //   return;
-      // }
       this.setState({loading: false}, () => {
         Alert.alert(
           'Thông báo !',
@@ -242,6 +216,7 @@ class ProfileScreen extends Component {
             <Text style={styles.titleLogout}>Đăng xuất</Text>
           </TouchableOpacity>
         </View>
+        <Toast ref={this.refToast} />
       </View>
     );
   }
@@ -254,6 +229,9 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch,
+    doUpdateAvatar: (data, callbacks) => {
+      dispatch(updateAvatarAction(data, callbacks));
+    },
   };
 };
 

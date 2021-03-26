@@ -1,7 +1,7 @@
 import {Navigation} from 'react-native-navigation';
 import {screenAuth} from './config-screen';
 
-export const switchScreen = async () => {
+export const switchScreenLogin = async () => {
   await Navigation.setRoot(screenAuth);
 };
 

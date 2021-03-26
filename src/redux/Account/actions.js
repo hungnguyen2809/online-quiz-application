@@ -5,6 +5,8 @@ import {
   ACCOUNT_REGISTER,
   ACCOUNT_REGISTER_SUCCESS,
   ACCOUNT_HAS_EMAIL,
+  ACCOUNT_UPDATE_AVATAR,
+  ACCOUNT_UPDATE_AVATAR_SUCCESS,
 } from './constants.js';
 
 export const LoginAccountAction = (
@@ -64,6 +66,28 @@ export const registerAccountAction = (
 export const registerAccountActionSuccess = (data) => {
   return {
     type: ACCOUNT_REGISTER_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const updateAvatarAction = (
+  data,
+  callbacks = {callbacksOnSuccess: () => {}, callbacksOnFail: () => {}},
+) => {
+  return {
+    type: ACCOUNT_UPDATE_AVATAR,
+    payload: {
+      data,
+    },
+    callbacks,
+  };
+};
+
+export const updateAvatarActionSuccess = (data) => {
+  return {
+    type: ACCOUNT_UPDATE_AVATAR_SUCCESS,
     payload: {
       data,
     },

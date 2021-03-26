@@ -1,5 +1,10 @@
 import {apis} from './createApiService';
-import {API_LOGIN, API_HASEMAIL, API_REGISTER} from './constantsApis';
+import {
+  API_LOGIN,
+  API_HASEMAIL,
+  API_REGISTER,
+  API_USER_AVATAR,
+} from './constantsApis';
 
 export const LoginApi = (args) => {
   return apis.makeNonAuthRequest({
@@ -21,5 +26,16 @@ export const registerAccountAPI = (agrs) => {
     url: API_REGISTER,
     method: 'POST',
     data: agrs,
+  });
+};
+
+export const updateAvatarAccountAPI = (agrs) => {
+  return apis.makeAuthRequest({
+    url: API_USER_AVATAR,
+    method: 'POST',
+    data: agrs,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
