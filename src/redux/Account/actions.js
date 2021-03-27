@@ -7,6 +7,8 @@ import {
   ACCOUNT_HAS_EMAIL,
   ACCOUNT_UPDATE_AVATAR,
   ACCOUNT_UPDATE_AVATAR_SUCCESS,
+  ACCOUNT_UPDATE_INFO,
+  ACCOUNT_UPDATE_INFO_SUCCESS,
 } from './constants.js';
 
 export const LoginAccountAction = (
@@ -88,6 +90,28 @@ export const updateAvatarAction = (
 export const updateAvatarActionSuccess = (data) => {
   return {
     type: ACCOUNT_UPDATE_AVATAR_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const updateInfoAccountAction = (
+  data,
+  callbacks = {callbacksOnSuccess: () => {}, callbacksOnFail: () => {}},
+) => {
+  return {
+    type: ACCOUNT_UPDATE_INFO,
+    payload: {
+      data,
+    },
+    callbacks,
+  };
+};
+
+export const updateInfoAccountActionSuccess = (data) => {
+  return {
+    type: ACCOUNT_UPDATE_INFO_SUCCESS,
     payload: {
       data,
     },

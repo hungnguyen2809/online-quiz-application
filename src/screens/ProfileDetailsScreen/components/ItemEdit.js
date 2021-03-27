@@ -4,6 +4,7 @@ import {Text, View, TextInput, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import {styles} from './../styles';
+import {dateFormat} from './../../../common/formatDate';
 
 class ItemEdit extends Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class ItemEdit extends Component {
             <TouchableOpacity
               onPress={this.props.onPressDate}
               activeOpacity={0.6}
+              disabled={this.props.disabled}
               style={{flex: 1, height: 46, justifyContent: 'center'}}>
               <Text
                 style={{
@@ -37,7 +39,7 @@ class ItemEdit extends Component {
                 }}>
                 {this.props.value === null
                   ? this.props.placeholder
-                  : moment(this.props.value).format('DD-MM-YYYY')}
+                  : moment(this.props.value).format(dateFormat)}
               </Text>
             </TouchableOpacity>
           </View>
@@ -58,6 +60,7 @@ class ItemEdit extends Component {
               onChangeText={this.props.onChangeText}
               value={this.props.value}
               maxLength={this.props.maxLength}
+              editable={!this.props.disabled}
             />
           </View>
         )}

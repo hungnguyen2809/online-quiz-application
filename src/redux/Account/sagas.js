@@ -4,17 +4,20 @@ import {
   hasEmailAccountAPI,
   registerAccountAPI,
   updateAvatarAccountAPI,
+  updateInfoAccountAPI,
 } from './../../api/ApiAccount';
 import {
   ACCOUNT_LOGIN,
   ACCOUNT_REGISTER,
   ACCOUNT_HAS_EMAIL,
   ACCOUNT_UPDATE_AVATAR,
+  ACCOUNT_UPDATE_INFO,
 } from './constants';
 import {
   LoginAccountActionSuccess,
   registerAccountActionSuccess,
   updateAvatarActionSuccess,
+  updateInfoAccountActionSuccess,
 } from './actions';
 import _ from 'lodash';
 import {Alert} from 'react-native';
@@ -111,7 +114,7 @@ function* WorkUpdateAvatar(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(updateAvatarAccountAPI, action.payload.data);
-    console.log(response);
+    // console.log(response);
     if (response.error === false && response.status === 200) {
       yield put(updateAvatarActionSuccess(response.payload));
       yield setAccountToStorage(response.payload);
@@ -147,9 +150,51 @@ function* WatcherUpdateAvatar() {
   yield takeLatest(ACCOUNT_UPDATE_AVATAR, WorkUpdateAvatar);
 }
 
+function* WorkUpdateInfoAccount(action) {
+  // console.log('ACTION: ', action);
+  const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
+  try {
+    const response = yield call(updateInfoAccountAPI, action.payload.data);
+    console.log(response);
+    if (response.error === false && response.status === 200) {
+      yield put(updateInfoAccountActionSuccess(response.payload));
+      yield setAccountToStorage(response.payload);
+      yield callbacksOnSuccess();
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo !', 'Cập nhật thất bại');
+    }
+  } catch (error) {
+    if (error.response) {
+      const {status, data} = error.response;
+      if (_.get(data, 'token_invalid') === true) {
+        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
+          {
+            text: 'OK',
+            style: 'destructive',
+            onPress: async () => {
+              await deleteAccountToStorage();
+              await deleteTokenToStorage();
+              await switchScreenLogin();
+            },
+          },
+        ]);
+      }
+      yield callbacksOnFail(status);
+    } else {
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
+  }
+}
+
+function* WatcherUpdateInfoAccount() {
+  yield takeLatest(ACCOUNT_UPDATE_INFO, WorkUpdateInfoAccount);
+}
+
 export default function* AccountSagas() {
   yield fork(WatchLoginAccount);
   yield fork(WatcherRegisterAccount);
   yield fork(WatcherHasEmailAccount);
   yield fork(WatcherUpdateAvatar);
+  yield fork(WatcherUpdateInfoAccount);
 }

@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/no-did-mount-set-state */
 import React, {Component} from 'react';
 import {
   Text,
@@ -7,6 +9,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {styles} from './styles';
@@ -16,8 +19,11 @@ import ModalDate from './../../components/ModalDateTime';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {getAccountSelector} from '../../redux/Account/selectors';
-import {debounce, get, isEmpty, trim} from 'lodash';
+import {debounce, get, trim} from 'lodash';
 import moment from 'moment';
+import {dateFormat} from './../../common/formatDate';
+import {updateInfoAccountAction} from '../../redux/Account/actions';
+import Toast from './../../components/Toast';
 
 class ProfileDetailsScreen extends Component {
   static options(props) {
@@ -41,12 +47,14 @@ class ProfileDetailsScreen extends Component {
     this.eventKeybroadHide = null;
     this.refModalDate = React.createRef();
     this.refInputName = React.createRef();
+    this.refToast = React.createRef();
 
     this.state = {
       keyboardShow: false,
       showModalDate: false,
       account: {},
       accountUpdating: {},
+      isDisabled: true,
     };
   }
 
@@ -118,8 +126,52 @@ class ProfileDetailsScreen extends Component {
     this.setState({accountUpdating: dataUpdate});
   };
 
+  onBegineditInfo = () => {
+    this.setState({isDisabled: false}, () => {
+      this.refInputName.current.focus();
+    });
+  };
+
   onCancelUpdate = () => {
-    this.setState({accountUpdating: this.state.account});
+    this.setState({accountUpdating: this.state.account, isDisabled: true});
+  };
+
+  onSubmitSaveChangeInfo = () => {
+    // console.log('Acount: ', this.state.accountUpdating);
+    const body = {
+      id: get(this.state.accountUpdating, 'id'),
+      name: trim(get(this.state.accountUpdating, 'name')),
+      phone: trim(get(this.state.accountUpdating, 'phone')),
+      birtday: moment(get(this.state.accountUpdating, 'birtday')).format(
+        dateFormat,
+      ),
+      address: trim(get(this.state.accountUpdating, 'address')),
+    };
+    // console.log('Body: ', body);
+
+    Alert.alert('Thông báo', 'Bạn có chắc muốn cập nhật thông tin mới ?', [
+      {
+        text: 'Đồng ý',
+        style: 'cancel',
+        onPress: () => {
+          this.props.doUpdateAccountInfo(body, {
+            callbacksOnSuccess: () => {
+              this.refToast.current.onShowToast(
+                'Cập nhật thông tin thành công.',
+                1000,
+              );
+              this.setState({isDisabled: true});
+            },
+            callbacksOnFail: () => {},
+          });
+        },
+      },
+      {
+        text: 'Hủy bỏ',
+        style: 'destructive',
+        onPress: () => {},
+      },
+    ]);
   };
 
   render() {
@@ -156,6 +208,8 @@ class ProfileDetailsScreen extends Component {
                   onChangeText={(text) =>
                     this.onChangeName(text, accountUpdating)
                   }
+                  maxLength={50}
+                  disabled={this.state.isDisabled}
                 />
                 <ItemEdit
                   iconName={'smartphone'}
@@ -165,6 +219,8 @@ class ProfileDetailsScreen extends Component {
                   onChangeText={(text) =>
                     this.onChangePhone(text, accountUpdating)
                   }
+                  maxLength={15}
+                  disabled={this.state.isDisabled}
                 />
                 <ItemEdit
                   modedate={true}
@@ -172,6 +228,7 @@ class ProfileDetailsScreen extends Component {
                   placeholder={'Ngày sinh'}
                   value={get(accountUpdating, 'birtday', null)}
                   onPressDate={() => this.refModalDate.current.onOpenModal()}
+                  disabled={this.state.isDisabled}
                 />
                 <ItemEdit
                   iconName={'location-on'}
@@ -180,21 +237,37 @@ class ProfileDetailsScreen extends Component {
                   onChangeText={(text) =>
                     this.onChangeAddress(text, accountUpdating)
                   }
+                  maxLength={100}
+                  disabled={this.state.isDisabled}
                 />
               </ScrollView>
             </View>
-            {!this.state.keyboardShow ? (
+            {this.state.isDisabled ? (
               <View style={styles.footer}>
-                <TouchableOpacity style={styles.btnSubmit}>
-                  <Text style={styles.textSubmit}>Xác nhận</Text>
-                </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.btnCancel}
-                  onPress={debounce(this.onCancelUpdate, 200)}>
-                  <Text style={styles.textSubmit}>Hủy bỏ</Text>
+                  style={styles.btnSubmit}
+                  onPress={debounce(this.onBegineditInfo, 200)}>
+                  <Text style={styles.textSubmit}>Cập nhật</Text>
                 </TouchableOpacity>
               </View>
-            ) : null}
+            ) : (
+              <>
+                {!this.state.keyboardShow ? (
+                  <View style={styles.footer}>
+                    <TouchableOpacity
+                      style={styles.btnSubmit}
+                      onPress={debounce(this.onSubmitSaveChangeInfo, 200)}>
+                      <Text style={styles.textSubmit}>Xác nhận</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.btnCancel}
+                      onPress={debounce(this.onCancelUpdate, 200)}>
+                      <Text style={styles.textSubmit}>Hủy bỏ</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+              </>
+            )}
           </View>
         </TouchableWithoutFeedback>
         <ModalDate
@@ -210,6 +283,7 @@ class ProfileDetailsScreen extends Component {
             this.onChangeBirthDay(newDate, accountUpdating)
           }
         />
+        <Toast ref={this.refToast} />
       </View>
     );
   }
@@ -227,6 +301,9 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch,
+    doUpdateAccountInfo: (data, callbacks) => {
+      dispatch(updateInfoAccountAction(data, callbacks));
+    },
   };
 };
 

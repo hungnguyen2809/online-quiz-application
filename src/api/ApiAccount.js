@@ -4,6 +4,7 @@ import {
   API_HASEMAIL,
   API_REGISTER,
   API_USER_AVATAR,
+  API_USER_INFO,
 } from './constantsApis';
 
 export const LoginApi = (args) => {
@@ -37,5 +38,13 @@ export const updateAvatarAccountAPI = (agrs) => {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  });
+};
+
+export const updateInfoAccountAPI = (agrs) => {
+  return apis.makeAuthRequest({
+    url: API_USER_INFO,
+    method: 'POST',
+    data: agrs,
   });
 };
