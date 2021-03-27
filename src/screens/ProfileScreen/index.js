@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 // import DocumentPicker from 'react-native-document-picker';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {get} from 'lodash';
+import {get, isEmpty, toString} from 'lodash';
 import {deleteAccountToStorage} from './../../common/asyncStorage';
 import {Navigation} from 'react-native-navigation';
 import {appScreens, screenAuth} from './../config-screen';
@@ -154,8 +154,8 @@ class ProfileScreen extends Component {
   };
 
   render() {
-    // console.log('data: ', this.props.account);
     const {account} = this.state;
+    // console.log('data: ', account);
     return (
       <View style={styles.container}>
         <View>
@@ -194,17 +194,17 @@ class ProfileScreen extends Component {
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'person'}
-              text={get(account, 'name', '')}
+              text={get(account, 'name', ' ')}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'smartphone'}
-              text={formatPhone(get(account, 'phone', ''))}
+              text={formatPhone(get(account, 'phone', ' '))}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'email'}
-              text={get(account, 'email', '')}
+              text={get(account, 'email', ' ')}
             />
           </ScrollView>
         </View>

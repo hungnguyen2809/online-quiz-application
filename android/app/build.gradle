@@ -82,6 +82,7 @@ project.ext.react = [
 ]
 apply from: "../../node_modules/react-native/react.gradle"
 
+//config font app
 project.ext.vectoricons = [
     iconFontNames: [ 
         'FontAwesome.ttf', 
@@ -91,6 +92,14 @@ project.ext.vectoricons = [
     ] 
 ]
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
+// config react native config read file dot env
+project.ext.envConfigFiles = [
+    debug: ".env",
+    release: ".env.production",
+]
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 
 /**
  * Set this to true to create two separate APKs instead of one:

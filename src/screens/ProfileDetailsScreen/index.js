@@ -181,7 +181,7 @@ class ProfileDetailsScreen extends Component {
       <View style={styles.container}>
         <HeaderBar
           onPressButtonLeft={this._goBackScreen}
-          title={'Cập nhật thông tin'}
+          title={'Thông tin tài khoản'}
         />
         <TouchableWithoutFeedback onPress={this._onDismissKeybroad}>
           <View style={styles.content}>
@@ -247,7 +247,7 @@ class ProfileDetailsScreen extends Component {
                 <TouchableOpacity
                   style={styles.btnSubmit}
                   onPress={debounce(this.onBegineditInfo, 200)}>
-                  <Text style={styles.textSubmit}>Cập nhật</Text>
+                  <Text style={styles.textSubmit}>Chỉnh sửa</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -257,7 +257,7 @@ class ProfileDetailsScreen extends Component {
                     <TouchableOpacity
                       style={styles.btnSubmit}
                       onPress={debounce(this.onSubmitSaveChangeInfo, 200)}>
-                      <Text style={styles.textSubmit}>Xác nhận</Text>
+                      <Text style={styles.textSubmit}>Cập nhật</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.btnCancel}

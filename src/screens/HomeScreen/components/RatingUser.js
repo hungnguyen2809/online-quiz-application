@@ -25,7 +25,7 @@ class RatingUser extends Component {
           }}>
           <Image
             style={styles.avatar}
-            source={require('./../../../assets/icons/user-non-avatar.png')}
+            source={require('./../../../assets/icons/avatar/5.jpg')}
           />
           <Text
             style={[

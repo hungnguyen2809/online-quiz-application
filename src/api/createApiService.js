@@ -1,7 +1,8 @@
 import axios from 'axios';
+import Config from 'react-native-config';
 import {getTokenToStorage} from './../common/asyncStorage';
-import {IP_HOST, IP_PORT} from './../../keyHost';
-const SERVER = `http://${IP_HOST}:${IP_PORT}/api`;
+
+const SERVER = `http://${Config.IP_HOST}:${Config.IP_PORT}/api`;
 
 const instance = axios.create({
   baseURL: SERVER,

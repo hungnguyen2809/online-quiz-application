@@ -155,7 +155,7 @@ function* WorkUpdateInfoAccount(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(updateInfoAccountAPI, action.payload.data);
-    console.log(response);
+    // console.log(response);
     if (response.error === false && response.status === 200) {
       yield put(updateInfoAccountActionSuccess(response.payload));
       yield setAccountToStorage(response.payload);
