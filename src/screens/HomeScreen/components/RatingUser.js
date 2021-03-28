@@ -27,16 +27,19 @@ class RatingUser extends Component {
             style={styles.avatar}
             source={require('./../../../assets/icons/avatar/5.jpg')}
           />
-          <Text
-            style={[
-              styles.nameUser,
-              {
-                color:
-                  rate === 1 ? '#eb2f06' : rate === 2 ? '#4cd137' : '#e1b12c',
-              },
-            ]}>
-            Nguyễn Văn Hùng
-          </Text>
+          <View>
+            <Text
+              style={[
+                styles.nameUser,
+                {
+                  color:
+                    rate === 1 ? '#eb2f06' : rate === 2 ? '#4cd137' : '#e1b12c',
+                },
+              ]}>
+              Nguyễn Văn Hùng
+            </Text>
+            <Text style={styles.point}>Điểm số: 1234</Text>
+          </View>
         </View>
         <View style={{flex: 1}}>
           <Image
@@ -82,5 +85,9 @@ const styles = StyleSheet.create({
   iconsRate: {
     width: 25,
     height: 25,
+  },
+  point: {
+    marginLeft: 10,
+    marginTop: 5,
   },
 });

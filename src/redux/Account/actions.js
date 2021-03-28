@@ -9,6 +9,8 @@ import {
   ACCOUNT_UPDATE_AVATAR_SUCCESS,
   ACCOUNT_UPDATE_INFO,
   ACCOUNT_UPDATE_INFO_SUCCESS,
+  ACCOUNT_FORGET_PASSWORD,
+  ACCOUNT_FORGET_PASSWORD_SUCCESS,
 } from './constants.js';
 
 export const LoginAccountAction = (
@@ -112,6 +114,28 @@ export const updateInfoAccountAction = (
 export const updateInfoAccountActionSuccess = (data) => {
   return {
     type: ACCOUNT_UPDATE_INFO_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const forgetPasswordAccountAction = (
+  data,
+  callbacks = {callbacksOnSuccess: () => {}, callbacksOnFail: () => {}},
+) => {
+  return {
+    type: ACCOUNT_FORGET_PASSWORD,
+    payload: {
+      data,
+    },
+    callbacks,
+  };
+};
+
+export const forgetPasswordAccountActionSuccess = (data) => {
+  return {
+    type: ACCOUNT_FORGET_PASSWORD_SUCCESS,
     payload: {
       data,
     },

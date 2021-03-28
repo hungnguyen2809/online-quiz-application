@@ -7,3 +7,4 @@ export const API_HASEMAIL = '/hasemail';
 export const API_USERS = '/users';
 export const API_USER_INFO = '/users-infor';
 export const API_USER_AVATAR = '/users-avatar';
+export const API_USER_FORGET_PASSWORD = '/foget-password';

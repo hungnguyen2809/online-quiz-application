@@ -12,10 +12,13 @@ const sendOTPCode = (code, emailSend) => {
     ssl: ssl,
     username: Config.EMAIL,
     password: Config.PASS,
-    fromName: 'OTP',
+    fromName: 'Online Quiz',
     subject: 'Xác thực tài khoản',
     recipients: emailSend,
-    htmlBody: `<h2>Mã OTP: ${code}</h2>`,
+    htmlBody: `
+    <h3>Cám ơn bạn đã sử dụng ứng dụng. Mọi thắc mắc xin vui lòng liện hệ: cskh.onlinequiz@gmail.com</h3>
+    <h3>Mã OTP: ${code}</h3>
+    <p>Trân thành cám ơn !.</p>`,
   });
 };
 

@@ -26,7 +26,7 @@ class TimeClock extends React.Component {
 
   componentDidMount() {
     this.eventTime = setInterval(() => {
-      console.log('time is runing.');
+      // console.log('time is runing.');
       this.setState(
         (prevState) => {
           return {

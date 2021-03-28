@@ -123,13 +123,15 @@ class RegisterScreen extends Component {
         email: email,
       };
       this.props.doHasEmailAccount(payload, {
-        callbacksOnSuccess: () => {
-          this.modalCode.current.onShowModal(email);
+        callbacksOnSuccess: ({exists}) => {
+          if (exists === true) {
+            this._onToastAlert('Địa chỉ email đã tồn tại!');
+          } else {
+            this.modalCode.current.onShowModal(email);
+          }
         },
         callbacksOnFail: (erCode) => {
-          if (erCode === 400) {
-            this._onToastAlert('Địa chỉ email đã tồn tại.');
-          } else {
+          if (erCode === -1) {
             this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
           }
         },

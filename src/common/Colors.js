@@ -10,6 +10,10 @@ const Colors = {
   NASTURC_FLOWER: '#e84118',
   TOMATO_RED: '#eb2f06',
   RED_ORANGE: '#ff3f34',
+  ANTI_FLASH_WHITE: '#f1f2f6',
+  LEVEL_H: '#eb2f06',
+  LEVEL_M: '#e1b12c',
+  LEVEL_E: '#4cd137',
 };
 
 export {Colors};

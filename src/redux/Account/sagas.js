@@ -5,6 +5,7 @@ import {
   registerAccountAPI,
   updateAvatarAccountAPI,
   updateInfoAccountAPI,
+  forgetPasswordAccountAPI,
 } from './../../api/ApiAccount';
 import {
   ACCOUNT_LOGIN,
@@ -12,12 +13,14 @@ import {
   ACCOUNT_HAS_EMAIL,
   ACCOUNT_UPDATE_AVATAR,
   ACCOUNT_UPDATE_INFO,
+  ACCOUNT_FORGET_PASSWORD,
 } from './constants';
 import {
   LoginAccountActionSuccess,
   registerAccountActionSuccess,
   updateAvatarActionSuccess,
   updateInfoAccountActionSuccess,
+  forgetPasswordAccountActionSuccess,
 } from './actions';
 import _ from 'lodash';
 import {Alert} from 'react-native';
@@ -61,19 +64,14 @@ function* WorkHasEmailAccount(action) {
   try {
     const response = yield call(hasEmailAccountAPI, action.payload.data);
     // console.log('DATA: ', response);
-    if (response.error === false && response.status === 200) {
-      yield callbacksOnSuccess();
+    if (response.payload.exists === true) {
+      yield callbacksOnSuccess(response.payload);
     } else {
-      Alert.alert('Có lỗi !', response.message);
+      yield callbacksOnSuccess(response.payload);
     }
   } catch (error) {
-    // console.log('Error: ', error.response);
-    if (error.response) {
-      const {status} = error.response;
-      yield callbacksOnFail(status);
-    } else {
-      yield callbacksOnFail(-1);
-    }
+    // console.log('DATA: ', error.response);
+    yield callbacksOnFail(-1);
   }
 }
 
@@ -191,10 +189,52 @@ function* WatcherUpdateInfoAccount() {
   yield takeLatest(ACCOUNT_UPDATE_INFO, WorkUpdateInfoAccount);
 }
 
+function* WorkForgetPassAccount(action) {
+  // console.log('ACTION: ', action);
+  const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
+  try {
+    const response = yield call(forgetPasswordAccountAPI, action.payload.data);
+    // console.log(response);
+    if (response.error === false && response.status === 200) {
+      yield put(forgetPasswordAccountActionSuccess(response.payload));
+      yield setAccountToStorage(response.payload);
+      yield callbacksOnSuccess();
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo !', 'Cập nhật thất bại');
+    }
+  } catch (error) {
+    if (error.response) {
+      const {status, data} = error.response;
+      if (_.get(data, 'token_invalid') === true) {
+        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
+          {
+            text: 'OK',
+            style: 'destructive',
+            onPress: async () => {
+              await deleteAccountToStorage();
+              await deleteTokenToStorage();
+              await switchScreenLogin();
+            },
+          },
+        ]);
+      }
+      yield callbacksOnFail(status);
+    } else {
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
+  }
+}
+
+function* WatcherForgetPassAccount() {
+  yield takeLatest(ACCOUNT_FORGET_PASSWORD, WorkForgetPassAccount);
+}
+
 export default function* AccountSagas() {
   yield fork(WatchLoginAccount);
   yield fork(WatcherRegisterAccount);
   yield fork(WatcherHasEmailAccount);
   yield fork(WatcherUpdateAvatar);
   yield fork(WatcherUpdateInfoAccount);
+  yield fork(WatcherForgetPassAccount);
 }

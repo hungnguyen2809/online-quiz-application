@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontStyle: 'italic',
     margin: 5,
+    marginLeft: 10,
   },
   wapperContent: {
     margin: 10,

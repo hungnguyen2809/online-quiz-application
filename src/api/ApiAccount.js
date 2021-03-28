@@ -5,6 +5,7 @@ import {
   API_REGISTER,
   API_USER_AVATAR,
   API_USER_INFO,
+  API_USER_FORGET_PASSWORD,
 } from './constantsApis';
 
 export const LoginApi = (args) => {
@@ -44,6 +45,14 @@ export const updateAvatarAccountAPI = (agrs) => {
 export const updateInfoAccountAPI = (agrs) => {
   return apis.makeAuthRequest({
     url: API_USER_INFO,
+    method: 'POST',
+    data: agrs,
+  });
+};
+
+export const forgetPasswordAccountAPI = (agrs) => {
+  return apis.makeAuthRequest({
+    url: API_USER_FORGET_PASSWORD,
     method: 'POST',
     data: agrs,
   });

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   Image,
@@ -20,6 +21,12 @@ class Header extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.time}>
+          <TouchableOpacity onPress={this.props.onPressLeft}>
+            <Image
+              style={{width: 26, height: 26}}
+              source={require('./../../../assets/icons/icons-left.png')}
+            />
+          </TouchableOpacity>
           <Image
             style={styles.iconClock}
             source={require('./../../../assets/icons/clock.png')}
@@ -49,6 +56,7 @@ const styles = StyleSheet.create({
     height: 35,
     width: 35,
     tintColor: '#fff',
+    marginLeft: 20,
   },
   time: {
     flexDirection: 'row',

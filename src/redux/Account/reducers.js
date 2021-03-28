@@ -1,5 +1,6 @@
 import {fromJS} from 'immutable';
 import {
+  ACCOUNT_FORGET_PASSWORD_SUCCESS,
   ACCOUNT_LOGIN_SUCCESS,
   ACCOUNT_LOGOUT,
   ACCOUNT_REGISTER_SUCCESS,
@@ -22,6 +23,8 @@ export default function (state = initState, action) {
     case ACCOUNT_UPDATE_AVATAR_SUCCESS:
       return state.set('accountInfo', action.payload.data);
     case ACCOUNT_UPDATE_INFO_SUCCESS:
+      return state.set('accountInfo', action.payload.data);
+    case ACCOUNT_FORGET_PASSWORD_SUCCESS:
       return state.set('accountInfo', action.payload.data);
     default:
       return state;

@@ -15,7 +15,7 @@ class HeaderBar extends Component {
           <TouchableOpacity onPress={this.props.onPressButtonLeft}>
             <Image
               style={styles.icon}
-              source={require('./../../../assets/icons/arrow.png')}
+              source={require('./../../assets/icons/arrow.png')}
             />
           </TouchableOpacity>
         </View>

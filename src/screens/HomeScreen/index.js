@@ -4,7 +4,6 @@ import HeadTopBar from '../../components/HeadTopBar';
 import AchievementUser from './components/AchievementUser';
 import RatingUser from './components/RatingUser';
 
-
 class HomeScreen extends Component {
   static options(props) {
     return {
@@ -17,8 +16,8 @@ class HomeScreen extends Component {
       },
       statusBar: {
         drawBehind: true,
-        backgroundColor: 'transparent'
-      }
+        backgroundColor: 'transparent',
+      },
     };
   }
 

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {styles} from './styles';
-import HeaderBar from './components/HeaderBar';
+import HeaderBar from './../../components/HeaderBar';
 import ItemEdit from './components/ItemEdit';
 import ModalDate from './../../components/ModalDateTime';
 import {connect} from 'react-redux';

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Navigation} from 'react-native-navigation';
+import {backToLastScreen} from './../MethodScreen';
 import ExecExam from './components/ExecExam';
 import Header from './components/Header';
 import {dataSet} from './../../assets/data/dataSet';
@@ -18,6 +18,21 @@ import {fill, isEqual, upperCase} from 'lodash';
 
 const isIOS = Platform.OS === 'ios';
 class ExamQuestionsScreen extends Component {
+  static options(prosp) {
+    return {
+      topBar: {
+        visible: false,
+      },
+      bottomTabs: {
+        visible: false,
+      },
+      statusBar: {
+        drawBehind: true,
+        backgroundColor: 'transparent',
+      },
+    };
+  }
+
   constructor(props) {
     super(props);
     this.viewQuestions = React.createRef();
@@ -36,12 +51,41 @@ class ExamQuestionsScreen extends Component {
           text: 'OK',
           style: 'destructive',
           onPress: () => {
-            Navigation.pop(this.props.componentId);
+            backToLastScreen(this.props.componentId);
           },
         },
       ],
     );
     console.log('Ans', this.arrAnsers);
+  };
+
+  onSubmitFinishExam = () => {
+    Alert.alert('Thông báo', 'Bạn có chắc muốn nộp bài ?', [
+      {
+        text: 'Đồng ý',
+        style: 'default',
+        onPress: () => {
+          this._onFinishExam();
+        },
+      },
+      {
+        text: 'Hủy',
+        style: 'destructive',
+        onPress: () => {},
+      },
+    ]);
+  };
+
+  onSubmitFinishEndTimeExam = () => {
+    Alert.alert('Thông báo', 'Thời gian làm bài đã hết !', [
+      {
+        text: 'Đồng ý',
+        style: 'default',
+        onPress: () => {
+          this._onFinishExam();
+        },
+      },
+    ]);
   };
 
   _onPressPrev = () => {
@@ -68,12 +112,34 @@ class ExamQuestionsScreen extends Component {
     return count;
   };
 
+  goBackScreen = () => {
+    Alert.alert(
+      'Thông báo !',
+      'Bạn có chắc muốn thoát ? Bài làm hiện tại sẽ không được tính ?',
+      [
+        {
+          text: 'Đồng ý',
+          onPress: () => {
+            backToLastScreen(this.props.componentId);
+          },
+          style: 'default',
+        },
+        {
+          text: 'Hủy',
+          onPress: () => {},
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <Header
-          onPressFinish={this._onFinishExam}
-          onFinishTime={this._onFinishExam}
+          onPressLeft={this.goBackScreen}
+          onPressFinish={this.onSubmitFinishExam}
+          onFinishTime={this.onSubmitFinishEndTimeExam}
         />
         <View style={styles.content}>
           <FlatList
@@ -125,6 +191,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    paddingTop: 10,
     backgroundColor: '#dfe4ea',
   },
   wapperFooter: {

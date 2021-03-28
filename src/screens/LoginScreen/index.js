@@ -36,6 +36,14 @@ import {
 const isIOS = Platform.OS === 'ios';
 
 class LoginScreen extends Component {
+  static options(props) {
+    return {
+      topBar: {
+        visible: false,
+      },
+    };
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -174,9 +182,9 @@ class LoginScreen extends Component {
     this.inputTextPassword.current.onSetFocusPassword();
   };
 
-  _onGoToScreen = (screen) => {
+  _onGoToScreen = async (screen) => {
     if (this.isConnectedInternet) {
-      Navigation.push(this.props.componentId, {
+      await Navigation.push(this.props.componentId, {
         component: {
           name: screen.name,
         },

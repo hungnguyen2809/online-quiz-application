@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
     elevation: 6,
-    // fontFamily: fonts.OpenSans,
   },
   top: {
     flex: 2.2,

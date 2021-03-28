@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   itemExam: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 100,
+    height: 80,
     margin: 10,
     backgroundColor: '#dfe4ea',
     borderRadius: 5,
@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   imageLabel: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 5,
   },
 });

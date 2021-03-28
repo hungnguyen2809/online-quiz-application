@@ -46,6 +46,10 @@ export const appScreens = {
     id: 'app.screen.ChooseQuestionScreen',
     name: 'ChooseQuestionScreen',
   },
+  ForumScreen: {
+    id: 'app.screen.ForumScreen',
+    name: 'ForumScreen',
+  },
 };
 
 export const screenAuth = {
@@ -58,11 +62,6 @@ export const screenAuth = {
           },
         },
       ],
-      options: {
-        topBar: {
-          visible: false,
-        },
-      },
     },
   },
 };
@@ -76,7 +75,7 @@ export const screenMain = {
             children: [
               {
                 component: {
-                  name: 'HomeScreen',
+                  name: appScreens.Home.name,
                 },
               },
             ],
@@ -87,7 +86,7 @@ export const screenMain = {
             children: [
               {
                 component: {
-                  name: 'ChooseQuizScreen',
+                  name: appScreens.ChooseQiuz.name,
                 },
               },
             ],
@@ -98,13 +97,7 @@ export const screenMain = {
             children: [
               {
                 component: {
-                  name: 'ChooseQuizScreen',
-                  options: {
-                    bottomTab: {
-                      text: 'Thành tích',
-                      icon: require('./../assets/icons/ic-star_half_empty.png'),
-                    },
-                  },
+                  name: appScreens.ForumScreen.name,
                 },
               },
             ],
@@ -115,7 +108,7 @@ export const screenMain = {
             children: [
               {
                 component: {
-                  name: 'ProfileScreen',
+                  name: appScreens.Profile.name,
                 },
               },
             ],
