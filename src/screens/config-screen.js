@@ -42,6 +42,10 @@ export const appScreens = {
     id: 'app.screen.ProfileDetails',
     name: 'ProfileDetailsScreen',
   },
+  ChooseQuestionScreen: {
+    id: 'app.screen.ChooseQuestionScreen',
+    name: 'ChooseQuestionScreen',
+  },
 };
 
 export const screenAuth = {

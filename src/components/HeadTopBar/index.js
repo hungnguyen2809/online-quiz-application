@@ -1,6 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import _ from 'lodash';
 
 class HeadTopBar extends Component {
   constructor(props) {
@@ -8,28 +10,35 @@ class HeadTopBar extends Component {
   }
 
   render() {
+    const {title, subComponentButtonLeft} = this.props;
     return (
       <View style={[styles.wrapHeader, {paddingTop: getStatusBarHeight()}]}>
         <View style={styles.container}>
-          {this.props.onPressButtonLeft ? (
-            <TouchableOpacity
-              style={{marginRight: 22}}
-              onPress={this.props.onPressButtonLeft}>
-              <Image
-                style={styles.iconsMenu}
-                source={require('./../../assets/icons/menu.png')}
-              />
-            </TouchableOpacity>
-          ) : null}
+          {subComponentButtonLeft
+            ? _.map(subComponentButtonLeft, (item) => {
+                return item;
+              })
+            : null}
           <Image
-            style={styles.logo}
+            style={[styles.logo, {marginLeft: subComponentButtonLeft ? 22 : 0}]}
             source={require('./../../assets/icons/question_mark.png')}
           />
-          <Text style={styles.title}>Online Quiz</Text>
+          <Text style={styles.title}>{title ? title : 'Online Quiz'}</Text>
         </View>
       </View>
     );
   }
+}
+
+{
+  /* <TouchableOpacity
+  style={{marginRight: 22}}
+  onPress={this.props.onPressButtonLeft}>
+  <Image
+    style={styles.iconsMenu}
+    source={require('./../../assets/icons/menu.png')}
+  />
+</TouchableOpacity>; */
 }
 
 export default HeadTopBar;

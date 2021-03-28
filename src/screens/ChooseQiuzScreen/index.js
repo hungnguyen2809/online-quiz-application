@@ -1,10 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import HeadTopBar from '../../components/HeadTopBar';
-import {openMenuLeft, goToScreen} from './../MethodScreen';
+import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
-import {SCREEN_WIDTH} from './../../common/dimensionScreen';
+import field from './fieldOfImplementation';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Colors} from './../../common/Colors';
 
 class ChooseQiuzScreen extends Component {
   static options(props) {
@@ -18,28 +27,39 @@ class ChooseQiuzScreen extends Component {
       },
       statusBar: {
         drawBehind: true,
-        backgroundColor: 'transparent'
-      }
-    }
+        backgroundColor: 'transparent',
+      },
+    };
   }
 
   constructor(props) {
     super(props);
   }
 
-  _handleOpenMemu = () => {
-    openMenuLeft(this.props.componentId);
-  };
-
-  _startExam = () => {
-    goToScreen(this.props.componentId, appScreens.ExamQuestions);
+  _startExam = (data) => {
+    goToScreenWithPassProps(
+      this.props.componentId,
+      appScreens.ChooseQuestionScreen.name,
+      {
+        dataPass: data,
+        parentComponentId: this.props.componentId,
+      },
+    );
   };
 
   renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={this._startExam}>
+      <TouchableOpacity onPress={() => this._startExam(item)}>
         <View style={styles.itemExam}>
-          <Text style={styles.titleExam}>Đề số: {index + 1}</Text>
+          <Image style={styles.imageLabel} source={{uri: item.image}} />
+          <View style={styles.wrapLabel}>
+            <Text style={styles.titleExam}>{item.label}</Text>
+          </View>
+          <MaterialIcons
+            name={'chevron-right'}
+            size={30}
+            color={Colors.PEACE}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -48,12 +68,11 @@ class ChooseQiuzScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <HeadTopBar onPressMenu={this._handleOpenMemu} />
+        <HeadTopBar />
         <FlatList
           style={{margin: 10}}
-          data={[1, 2, 3]}
+          data={field}
           renderItem={this.renderItem}
-          numColumns={2}
           keyExtractor={(item, index) => index.toString()}
         />
       </View>
@@ -69,12 +88,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   itemExam: {
-    width: SCREEN_WIDTH / 2 - 30,
+    flexDirection: 'row',
+    alignItems: 'center',
     height: 100,
     margin: 10,
     backgroundColor: '#dfe4ea',
-    justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 5,
     shadowColor: '#dcdcdc',
     shadowOffset: {
@@ -83,8 +101,18 @@ const styles = StyleSheet.create({
     },
     elevation: 5,
   },
+  wrapLabel: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   titleExam: {
-    fontSize: 18,
+    fontSize: 20,
+    marginHorizontal: 20,
     fontWeight: 'bold',
+  },
+  imageLabel: {
+    width: 100,
+    height: 100,
+    borderRadius: 5,
   },
 });

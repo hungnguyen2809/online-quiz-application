@@ -13,6 +13,7 @@ import RegisterScreen from './RegisterScreen';
 import ExamQuestionsScreen from './ExamQuestionsScreen';
 import ProfileScreen from './ProfileScreen';
 import ProfileDetailsScreen from './ProfileDetailsScreen';
+import ChooseQuestionScreen from './ChooseQuestionScreen';
 
 // const registerComponentWithoutRedux = (srceenName, ComponentProvider) => {
 //   Navigation.registerComponent(srceenName, () => ComponentProvider);
@@ -54,6 +55,11 @@ const RegisterScreenComponent = () => {
   registerComponentWithRedux(
     appScreens.ProfileDetails.name,
     ProfileDetailsScreen,
+    stores,
+  );
+  registerComponentWithRedux(
+    appScreens.ChooseQuestionScreen.name,
+    ChooseQuestionScreen,
     stores,
   );
 };
