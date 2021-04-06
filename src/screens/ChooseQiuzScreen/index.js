@@ -3,7 +3,8 @@ import React, {Component} from 'react';
 import {
   FlatList,
   Image,
-  StyleSheet,
+  RefreshControl,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -11,9 +12,14 @@ import {
 import HeadTopBar from '../../components/HeadTopBar';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
-import field from './fieldOfImplementation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from './../../common/Colors';
+import {styles} from './styles';
+import {createStructuredSelector} from 'reselect';
+import {getAllTopicsAction} from './../../redux/Topics/actions';
+import {listTopicsSelector} from './../../redux/Topics/selectors';
+import {connect} from 'react-redux';
+import _ from 'lodash';
 
 class ChooseQiuzScreen extends Component {
   static options(props) {
@@ -34,6 +40,25 @@ class ChooseQiuzScreen extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      listTopis: [],
+      loading: false,
+    };
+  }
+
+  componentDidMount() {
+    if (!!this.props.listTopis) {
+      this.setState({listTopis: this.props.listTopis});
+    } else {
+      this.props.doGetListTopics();
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.listTopis !== nextProps.listTopis) {
+      this.setState({listTopis: nextProps.listTopis, loading: false});
+    }
   }
 
   _startExam = (data) => {
@@ -41,7 +66,7 @@ class ChooseQiuzScreen extends Component {
       this.props.componentId,
       appScreens.ChooseQuestionScreen.name,
       {
-        dataPass: data,
+        topic: data,
         parentComponentId: this.props.componentId,
       },
     );
@@ -51,9 +76,15 @@ class ChooseQiuzScreen extends Component {
     return (
       <TouchableOpacity onPress={() => this._startExam(item)}>
         <View style={styles.itemExam}>
-          <Image style={styles.imageLabel} source={{uri: item.image}} />
+          <Image
+            style={styles.imageLabel}
+            source={{uri: _.get(item, 'image')}}
+          />
           <View style={styles.wrapLabel}>
-            <Text style={styles.titleExam}>{item.label}</Text>
+            <Text style={styles.titleExam}>{_.get(item, 'name')}</Text>
+            <Text numberOfLines={2} style={styles.desExam}>
+              {_.get(item, 'description')}
+            </Text>
           </View>
           <MaterialIcons
             name={'chevron-right'}
@@ -65,54 +96,72 @@ class ChooseQiuzScreen extends Component {
     );
   };
 
+  _renderListNonData = () => {
+    return (
+      <View style={{flex: 1}}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.onRefreshTopic}
+            />
+          }
+          contentContainerStyle={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Image
+            style={{width: 150, height: 150}}
+            source={require('./../../assets/images/no_data.png')}
+          />
+          <Text>Không có dữ liệu</Text>
+        </ScrollView>
+      </View>
+    );
+  };
+
+  onRefreshTopic = () => {
+    this.setState({loading: true}, () => {
+      this.props.doGetListTopics();
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <HeadTopBar />
-        <FlatList
-          style={{margin: 10}}
-          data={field}
-          renderItem={this.renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        {this.state.listTopis.length > 0 ? (
+          <FlatList
+            style={{margin: 10}}
+            data={this.state.listTopis}
+            renderItem={this.renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.loading}
+                onRefresh={this.onRefreshTopic}
+              />
+            }
+          />
+        ) : (
+          this._renderListNonData()
+        )}
       </View>
     );
   }
 }
 
-export default ChooseQiuzScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  itemExam: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 80,
-    margin: 10,
-    backgroundColor: '#dfe4ea',
-    borderRadius: 5,
-    shadowColor: '#dcdcdc',
-    shadowOffset: {
-      width: 8,
-      height: 8,
-    },
-    elevation: 5,
-  },
-  wrapLabel: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  titleExam: {
-    fontSize: 20,
-    marginHorizontal: 20,
-    fontWeight: 'bold',
-  },
-  imageLabel: {
-    width: 80,
-    height: 80,
-    borderRadius: 5,
-  },
+const mapStateToProps = createStructuredSelector({
+  listTopis: listTopicsSelector(),
 });
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    doGetListTopics: () => {
+      dispatch(getAllTopicsAction());
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseQiuzScreen);

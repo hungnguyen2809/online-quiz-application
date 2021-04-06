@@ -15,8 +15,28 @@ class ItemQuestion extends Component {
     super(props);
   }
 
+  _getLevel = (type) => {
+    switch (type) {
+      case 'E':
+        return 'Dễ';
+      case 'M':
+        return 'Trung bình';
+      case 'H':
+        return 'Khó';
+      default:
+        return null;
+    }
+  };
+
   render() {
-    const {title, number, islocal, onPressDow, onPresStart} = this.props;
+    const {
+      title,
+      numberQues,
+      level,
+      islocal,
+      onPressDow,
+      onPresStart,
+    } = this.props;
 
     const url = islocal
       ? require('./../../../assets/icons/icons-checked-success.png')
@@ -30,12 +50,12 @@ class ItemQuestion extends Component {
           activeOpacity={0.6}
           disabled={!islocal}>
           <View style={styles.wrapText}>
-            <Text style={styles.title}>Đề số 1</Text>
+            <Text style={styles.title}>{title}</Text>
             <View style={styles.wrapDes}>
-              <Text style={styles.description}>Số câu hỏi: 20</Text>
-              <Text style={styles.lavel}>Mức độ: Dễ</Text>
+              <Text style={styles.description}>Số câu hỏi: {numberQues}</Text>
+              <Text style={styles.lavel}>Mức độ: {this._getLevel(level)}</Text>
             </View>
-            <Text style={styles.result}>Đã hoàn thành : 6/10</Text>
+            {/* <Text style={styles.result}>Đã hoàn thành : 6/10</Text> */}
           </View>
         </TouchableOpacity>
         <TouchableWithoutFeedback onPress={onPressDow}>
