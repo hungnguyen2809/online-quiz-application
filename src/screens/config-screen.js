@@ -26,9 +26,9 @@ export const appScreens = {
     id: 'app.screen.Home',
     name: 'HomeScreen',
   },
-  ChooseQiuz: {
-    id: 'app.screen.ChooseQuiz',
-    name: 'ChooseQuizScreen',
+  ChooseTopicScreen: {
+    id: 'app.screen.ChooseTopicScreen',
+    name: 'ChooseTopicScreen',
   },
   ExamQuestions: {
     id: 'app.screen.ExamQuestions',
@@ -86,7 +86,7 @@ export const screenMain = {
             children: [
               {
                 component: {
-                  name: appScreens.ChooseQiuz.name,
+                  name: appScreens.ChooseTopicScreen.name,
                 },
               },
             ],

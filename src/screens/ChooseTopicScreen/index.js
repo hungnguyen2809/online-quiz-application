@@ -21,7 +21,7 @@ import {listTopicsSelector} from './../../redux/Topics/selectors';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
-class ChooseQiuzScreen extends Component {
+class ChooseTopicScreen extends Component {
   static options(props) {
     return {
       topBar: {
@@ -164,4 +164,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChooseQiuzScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseTopicScreen);

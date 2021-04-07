@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {createStructuredSelector} from 'reselect';
+import {connect} from 'react-redux';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import HeadTopBar from './../../components/HeadTopBar';
 import {backToLastScreen} from './../MethodScreen';
@@ -16,11 +18,10 @@ import ItemQuestion from './components/ItemQuestion';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
-import {debounce, get} from 'lodash';
-import {createStructuredSelector} from 'reselect';
+import {debounce, get, map} from 'lodash';
+import {addQuestion, getQuestionsByQS} from './../../realm/questions';
 import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
 import {listQuestionSetSelector} from './../../redux/QuestionSet/selectors';
-import {connect} from 'react-redux';
 
 class ChooseQuestionScreen extends Component {
   static options(props) {
@@ -79,10 +80,14 @@ class ChooseQuestionScreen extends Component {
       this.setState({idTopic: get(nextProps.topic, 'id')});
     }
     if (this.props.listQuestionSet !== nextProps.listQuestionSet) {
-      this.setState({
-        listQuestionSet: nextProps.listQuestionSet,
-        loading: false,
+      const mapData = map(nextProps.listQuestionSet, (item, index) => {
+        // let islocal = await this.isLocalQuestionSet(get(item, 'id'));
+        return {
+          // islocal,
+          ...item,
+        };
       });
+      this.setState({listQuestionSet: mapData, loading: false});
     }
   }
 
@@ -95,6 +100,12 @@ class ChooseQuestionScreen extends Component {
       callbacksOnSuccess: () => {},
       callbacksOnFail: () => {},
     });
+  };
+
+  isLocalQuestionSet = async (id_question_set) => {
+    const response = await getQuestionsByQS(id_question_set);
+    // console.log(_.get(response.data, 'length', 0));
+    return get(response.data, 'length', 0) > 0;
   };
 
   onStartExample = (data) => {
@@ -125,10 +136,13 @@ class ChooseQuestionScreen extends Component {
       case 'LAYOUT':
         return (
           <ItemQuestion
-            islocal={true}
+            // islocal={}
             title={get(item, 'description')}
             numberQues={get(item, 'total_question')}
             level={get(item, 'level')}
+            onPressDow={() => {
+              console.log('dow');
+            }}
             onPresStart={debounce(() => this.onStartExample(item), 300)}
           />
         );

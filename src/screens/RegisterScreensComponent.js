@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import stores from './../redux/stores';
 import {appScreens} from './config-screen';
 
-import ChooseQiuzScreen from './ChooseQiuzScreen';
+import ChooseTopicScreen from './ChooseTopicScreen';
 import ForgetPasswordScreen from './ForgetPasswordScreen';
 import HomeScreen from './HomeScreen';
 import LoginScreen from './LoginScreen';
@@ -43,8 +43,8 @@ const RegisterScreenComponent = () => {
   registerComponentWithRedux(appScreens.Home.name, HomeScreen, stores);
   registerComponentWithRedux(appScreens.MenuLeft.name, MenuLeftScreen);
   registerComponentWithRedux(
-    appScreens.ChooseQiuz.name,
-    ChooseQiuzScreen,
+    appScreens.ChooseTopicScreen.name,
+    ChooseTopicScreen,
     stores,
   );
   registerComponentWithRedux(

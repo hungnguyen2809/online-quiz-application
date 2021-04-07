@@ -91,7 +91,7 @@ class MenuLeftScreen extends Component {
         () => {
           goToScreenWithPassProps(
             appScreens.Navigate.id,
-            appScreens.ChooseQiuz,
+            appScreens.ChooseTopicScreen,
             {
               page: pages.math,
             },
@@ -109,7 +109,7 @@ class MenuLeftScreen extends Component {
         () => {
           goToScreenWithPassProps(
             appScreens.Navigate.id,
-            appScreens.ChooseQiuz,
+            appScreens.ChooseTopicScreen,
             {
               page: pages.english,
             },
