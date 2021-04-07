@@ -1,16 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TimeClock from './TimeClock';
-
-const isIOS = Platform.OS === 'ios';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
 
 class Header extends Component {
   constructor(props) {
@@ -45,7 +37,7 @@ export default Header;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: isIOS ? 45 : 5,
+    paddingTop: getStatusBarHeight(),
     backgroundColor: '#1e90ff',
     padding: 6,
     flexDirection: 'row',

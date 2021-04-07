@@ -3,7 +3,7 @@ import React from 'react';
 import {Text} from 'react-native';
 import {toString, floor} from 'lodash';
 
-const TIME = 0.3;
+const TIME = 15;
 
 class TimeClock extends React.Component {
   constructor(props) {

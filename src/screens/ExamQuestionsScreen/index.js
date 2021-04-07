@@ -1,22 +1,13 @@
 /* eslint-disable curly */
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {
-  Alert,
-  FlatList,
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, FlatList, Image, TouchableOpacity, View} from 'react-native';
 import {backToLastScreen} from './../MethodScreen';
 import ExecExam from './components/ExecExam';
 import Header from './components/Header';
 import {dataSet} from './../../assets/data/dataSet';
 import {fill, isEqual, upperCase} from 'lodash';
-
-const isIOS = Platform.OS === 'ios';
+import {styles} from './styles';
 class ExamQuestionsScreen extends Component {
   static options(prosp) {
     return {
@@ -183,22 +174,3 @@ class ExamQuestionsScreen extends Component {
 }
 
 export default ExamQuestionsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    paddingTop: 10,
-    backgroundColor: '#dfe4ea',
-  },
-  wapperFooter: {
-    height: 100,
-    marginBottom: isIOS ? 25 : 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-});

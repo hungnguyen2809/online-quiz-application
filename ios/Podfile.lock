@@ -68,6 +68,9 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
+  - GCDWebServer (3.5.4):
+    - GCDWebServer/Core (= 3.5.4)
+  - GCDWebServer/Core (3.5.4)
   - glog (0.3.5)
   - mailcore2-ios (0.6.4)
   - OpenSSL-Universal (1.0.2.20):
@@ -322,6 +325,9 @@ PODS:
     - React-Core
     - React-RCTImage
     - React-RCTText
+  - RealmJS (10.3.0):
+    - GCDWebServer
+    - React
   - RNCAsyncStorage (1.13.3):
     - React-Core
   - RNDeviceInfo (8.0.1):
@@ -390,6 +396,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
+  - RealmJS (from `../node_modules/realm`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNSmtpMailer (from `../node_modules/react-native-smtp-mailer/ios`)
@@ -408,6 +415,7 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - Flipper-RSocket
     - FlipperKit
+    - GCDWebServer
     - mailcore2-ios
     - OpenSSL-Universal
     - YogaKit
@@ -479,6 +487,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeNavigation:
     :path: "../node_modules/react-native-navigation"
+  RealmJS:
+    :path: "../node_modules/realm"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDeviceInfo:
@@ -506,6 +516,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: 64e7431a55835eb953b0bf984ef3b90ae9fdddd7
   FlipperKit: ab353d41aea8aae2ea6daaf813e67496642f3d7d
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   mailcore2-ios: 3ff0be2fa553d4da9c11d39c11d51863c768f24f
   OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
@@ -536,6 +547,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   ReactNativeNavigation: f32d9ba91d2a88e182b23ecabdee73d7a5ee74d1
+  RealmJS: ca9b0c1677d5248c6c360bc1b733ed087d345c2f
   RNCAsyncStorage: da95b83e241a7f5efe3da1a949b3ec3175380be0
   RNDeviceInfo: 921a809eaf9de79645a24de1c6ca90db6cb91786
   RNSmtpMailer: f8654a7cd1a25b0009e2f28c70bc34bb9e4040e6
@@ -545,4 +557,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 402da1511d8f9ef7517cc0dc035f6861c033a32e
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1
