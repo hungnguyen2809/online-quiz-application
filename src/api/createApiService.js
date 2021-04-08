@@ -6,6 +6,7 @@ const SERVER = `http://${Config.IP_HOST}:${Config.IP_PORT}/api`;
 
 const instance = axios.create({
   baseURL: SERVER,
+  timeout: 10000,
 });
 
 const _makeAuthRequest = (instanceRequest) => (args) => {

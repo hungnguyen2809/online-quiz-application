@@ -41,15 +41,13 @@ class ItemQuestion extends Component {
     const url = islocal
       ? require('./../../../assets/icons/icons-checked-success.png')
       : require('./../../../assets/icons/icons-below.png');
-    const onPress = islocal ? onPresStart : onPressDow;
 
     return (
       <View style={styles.container}>
         <TouchableOpacity
           onPress={onPresStart}
           style={{flex: 1}}
-          activeOpacity={0.6}
-          disabled={!islocal}>
+          activeOpacity={0.6}>
           <View style={styles.wrapText}>
             <Text style={styles.title}>{title}</Text>
             <View style={styles.wrapDes}>
@@ -59,7 +57,7 @@ class ItemQuestion extends Component {
             {/* <Text style={styles.result}>Đã hoàn thành : 6/10</Text> */}
           </View>
         </TouchableOpacity>
-        <TouchableWithoutFeedback onPress={onPress}>
+        <TouchableWithoutFeedback onPress={onPressDow}>
           <Image
             style={[styles.image, islocal ? {} : {tintColor: 'red'}]}
             source={url}

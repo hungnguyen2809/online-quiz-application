@@ -51,7 +51,15 @@ class ChooseTopicScreen extends Component {
     if (!!this.props.listTopis) {
       this.setState({listTopis: this.props.listTopis});
     } else {
-      this.props.doGetListTopics();
+      this.props.doGetListTopics(
+        {},
+        {
+          callbacksOnSuccess: () => {},
+          callbacksOnFail: () => {
+            this.setState({loading: false});
+          },
+        },
+      );
     }
   }
 
@@ -123,7 +131,15 @@ class ChooseTopicScreen extends Component {
 
   onRefreshTopic = () => {
     this.setState({loading: true}, () => {
-      this.props.doGetListTopics();
+      this.props.doGetListTopics(
+        {},
+        {
+          callbacksOnSuccess: () => {},
+          callbacksOnFail: () => {
+            this.setState({loading: false});
+          },
+        },
+      );
     });
   };
 
@@ -158,8 +174,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    doGetListTopics: () => {
-      dispatch(getAllTopicsAction());
+    doGetListTopics: (payload, callbacks) => {
+      dispatch(getAllTopicsAction(payload, callbacks));
     },
   };
 };

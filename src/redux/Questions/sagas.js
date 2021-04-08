@@ -1,27 +1,29 @@
-import {takeLatest, call, put, fork} from 'redux-saga/effects';
-import {getAllTopicsAPI} from './../../api/ApiTopic';
-import {TOPIC_GET_ALL_TOPICS} from './constants';
-import {getAllTopicsActionDone} from './actions';
+import {call, put, fork, takeLatest} from 'redux-saga/effects';
+import {QUESTIONS_GET_BY_QUESTIONSET} from './constants';
+import {getQuestionsByQSActionDone} from './actions';
+import {getQuestionsByQSAPI} from './../../api/ApiQuestion';
 import _ from 'lodash';
 import {Alert} from 'react-native';
 import {
   deleteAccountToStorage,
   deleteTokenToStorage,
 } from '../../common/asyncStorage';
-import {switchScreenLogin} from '../../screens/MethodScreen';
+import {switchScreenLogin} from './../../screens/MethodScreen';
 
-function* WorkGetAllTopics(action) {
+function* WorkGetListQuestions(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
-    const response = yield call(getAllTopicsAPI);
-    // console.log('DATA: ', response);
+    const response = yield call(getQuestionsByQSAPI, action.payload.data);
+
     if (
       response.status === 200 &&
       response.error === false &&
       !_.isEmpty(response.payload)
     ) {
-      yield put(getAllTopicsActionDone(response.payload));
-      yield callbacksOnSuccess();
+      // yield put(getQuestionsByQSActionDone(response.payload));
+      yield callbacksOnSuccess(response.payload);
+    } else {
+      yield callbacksOnFail();
     }
   } catch (error) {
     yield callbacksOnFail();
@@ -46,10 +48,10 @@ function* WorkGetAllTopics(action) {
   }
 }
 
-function* WatcherGetAllTopics() {
-  yield takeLatest(TOPIC_GET_ALL_TOPICS, WorkGetAllTopics);
+function* WatcherGetListQuestions() {
+  yield takeLatest(QUESTIONS_GET_BY_QUESTIONSET, WorkGetListQuestions);
 }
 
-export default function* TopicsSaga() {
-  yield fork(WatcherGetAllTopics);
+export default function* QuestionSagas() {
+  yield fork(WatcherGetListQuestions);
 }

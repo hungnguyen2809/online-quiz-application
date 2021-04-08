@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
+  Alert,
   Image,
   RefreshControl,
   ScrollView,
@@ -18,10 +19,11 @@ import ItemQuestion from './components/ItemQuestion';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
-import {debounce, get, map} from 'lodash';
+import {debounce, forEach, get} from 'lodash';
 import {addQuestion, getQuestionsByQS} from './../../realm/questions';
 import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
 import {listQuestionSetSelector} from './../../redux/QuestionSet/selectors';
+import {getQuestionsByQSAction} from './../../redux/Questions/actions';
 
 class ChooseQuestionScreen extends Component {
   static options(props) {
@@ -79,15 +81,23 @@ class ChooseQuestionScreen extends Component {
     if (this.props.topic !== nextProps.topic) {
       this.setState({idTopic: get(nextProps.topic, 'id')});
     }
+
     if (this.props.listQuestionSet !== nextProps.listQuestionSet) {
-      const mapData = map(nextProps.listQuestionSet, (item, index) => {
-        // let islocal = await this.isLocalQuestionSet(get(item, 'id'));
-        return {
-          // islocal,
+      let mapData = [];
+      let count = 0;
+      let total = [...nextProps.listQuestionSet].length;
+      forEach(nextProps.listQuestionSet, async (item, index) => {
+        count++;
+        const response = await getQuestionsByQS(get(item, 'id'));
+        let islocal = get(response.data, 'length', 0) > 0;
+        mapData.push({
+          islocal,
           ...item,
-        };
+        });
+        if (count === total) {
+          this.setState({listQuestionSet: mapData, loading: false});
+        }
       });
-      this.setState({listQuestionSet: mapData, loading: false});
     }
   }
 
@@ -102,21 +112,32 @@ class ChooseQuestionScreen extends Component {
     });
   };
 
-  isLocalQuestionSet = async (id_question_set) => {
-    const response = await getQuestionsByQS(id_question_set);
-    // console.log(_.get(response.data, 'length', 0));
-    return get(response.data, 'length', 0) > 0;
+  onStartExample = (data) => {
+    if (get(data, 'islocal')) {
+      goToScreenWithPassProps(
+        this.props.parentComponentId,
+        appScreens.ExamQuestions.name,
+        {
+          dataPass: data,
+          parentComponentId: this.props.parentComponentId,
+        },
+      );
+    } else {
+      Alert.alert('Thông báo', 'Bạn cần tải các câu hỏi về máy trước.');
+    }
   };
 
-  onStartExample = (data) => {
-    goToScreenWithPassProps(
-      this.props.parentComponentId,
-      appScreens.ExamQuestions.name,
-      {
-        dataPass: data,
-        parentComponentId: this.props.parentComponentId,
+  onDownloadQuestion = (item) => {
+    const payload = {
+      id_qs: get(item, 'id'),
+    };
+
+    this.props.doGetQuestionByQs(payload, {
+      callbacksOnSuccess: (data) => {
+        console.log('QES: ', data);
       },
-    );
+      callbacksOnFail: () => {},
+    });
   };
 
   _layoutProvider = () => {
@@ -136,13 +157,11 @@ class ChooseQuestionScreen extends Component {
       case 'LAYOUT':
         return (
           <ItemQuestion
-            // islocal={}
+            islocal={get(item, 'islocal')}
             title={get(item, 'description')}
             numberQues={get(item, 'total_question')}
             level={get(item, 'level')}
-            onPressDow={() => {
-              console.log('dow');
-            }}
+            onPressDow={debounce(() => this.onDownloadQuestion(item), 200)}
             onPresStart={debounce(() => this.onStartExample(item), 300)}
           />
         );
@@ -234,6 +253,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     doGetQuestionSet: (payload, callbacks) => {
       dispatch(questionSetGetDataAction(payload, callbacks));
+    },
+    doGetQuestionByQs: (payload, callbacks) => {
+      dispatch(getQuestionsByQSAction(payload, callbacks));
     },
   };
 };
