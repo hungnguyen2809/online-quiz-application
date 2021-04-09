@@ -19,9 +19,12 @@ import ItemQuestion from './components/ItemQuestion';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
-import {debounce, forEach, get} from 'lodash';
-import {addQuestion, getQuestionsByQS} from './../../realm/questions';
-import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
+import {debounce, forEach, get, map} from 'lodash';
+import {addQuestionToDB, getQuestionsByQS} from './../../realm/questions';
+import {
+  questionSetGetDataAction,
+  questionSetGetDataActionDone,
+} from './../../redux/QuestionSet/actions';
 import {listQuestionSetSelector} from './../../redux/QuestionSet/selectors';
 import {getQuestionsByQSAction} from './../../redux/Questions/actions';
 
@@ -46,8 +49,11 @@ class ChooseQuestionScreen extends Component {
 
     this.state = {
       listQuestionSet: [],
+      listQuestions: [],
       idTopic: 0,
       loading: false,
+      progress: 0,
+      showProgress: false,
     };
 
     this.layoutProvider = new LayoutProvider(
@@ -67,6 +73,8 @@ class ChooseQuestionScreen extends Component {
         }
       },
     );
+
+    this.clearTimeProgess = null;
   }
 
   componentDidMount() {
@@ -123,7 +131,7 @@ class ChooseQuestionScreen extends Component {
         },
       );
     } else {
-      Alert.alert('Thông báo', 'Bạn cần tải các câu hỏi về máy trước.');
+      Alert.alert('Thông báo', 'Bạn cần tải bộ câu hỏi về máy trước.');
     }
   };
 
@@ -134,7 +142,20 @@ class ChooseQuestionScreen extends Component {
 
     this.props.doGetQuestionByQs(payload, {
       callbacksOnSuccess: (data) => {
-        console.log('QES: ', data);
+        this.setState({listQuestions: data, showProgress: true}, () => {
+          this.onAddQuestionRealmDB(payload.id_qs);
+          let progress = 0;
+          this.clearTimeProgess = setInterval(() => {
+            progress += 0.1;
+            if (progress <= 1) {
+              this.setState({progress});
+            } else {
+              this.setState({progress: 0, showProgress: false}, () => {
+                clearInterval(this.clearTimeProgess);
+              });
+            }
+          }, 500);
+        });
       },
       callbacksOnFail: () => {},
     });
@@ -148,11 +169,10 @@ class ChooseQuestionScreen extends Component {
     const dataProvier = new DataProvider((r1, r2) => {
       return r1 !== r2;
     }).cloneWithRows(this.state.listQuestionSet);
-
     return dataProvier;
   };
 
-  _renderRendererItem = (type, item) => {
+  _renderRendererItem = (type, item, index, extendedState) => {
     switch (type) {
       case 'LAYOUT':
         return (
@@ -161,8 +181,10 @@ class ChooseQuestionScreen extends Component {
             title={get(item, 'description')}
             numberQues={get(item, 'total_question')}
             level={get(item, 'level')}
-            onPressDow={debounce(() => this.onDownloadQuestion(item), 200)}
             onPresStart={debounce(() => this.onStartExample(item), 300)}
+            onPressDow={debounce(() => this.onDownloadQuestion(item), 200)}
+            progressDow={extendedState.progressDow}
+            showProgress={extendedState.showProgress}
           />
         );
       default:
@@ -208,6 +230,35 @@ class ChooseQuestionScreen extends Component {
     this.onGetListQuestionSet();
   };
 
+  onAddQuestionRealmDB = (id_qs) => {
+    const {listQuestions, listQuestionSet} = this.state;
+    let count = 0;
+    let total = listQuestions.length;
+    forEach(listQuestions, (item, index) => {
+      addQuestionToDB(item).then(() => {
+        count++;
+        if (count === total) {
+          const dataMap = map(listQuestionSet, (item2, index2) => {
+            if (get(item2, 'id') === id_qs) {
+              return {
+                ...item2,
+                islocal: !get(item2, 'islocal'),
+              };
+            }
+            return {
+              ...item2,
+            };
+          });
+          this.setState({listQuestionSet: dataMap});
+        }
+      });
+    });
+  };
+
+  componentWillUnmount() {
+    this.clearTimeProgess && clearInterval(this.clearTimeProgess);
+  }
+
   render() {
     let subComponentButtonLeft = [];
     subComponentButtonLeft.push(this._renderSubComponentButtonLeft());
@@ -227,6 +278,10 @@ class ChooseQuestionScreen extends Component {
               dataProvider={dataProvider}
               layoutProvider={layoutProvider}
               rowRenderer={this._renderRendererItem}
+              extendedState={{
+                showProgress: this.state.showProgress,
+                progressDow: this.state.progress,
+              }}
               scrollViewProps={{
                 refreshControl: (
                   <RefreshControl
@@ -251,6 +306,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dispatch,
     doGetQuestionSet: (payload, callbacks) => {
       dispatch(questionSetGetDataAction(payload, callbacks));
     },

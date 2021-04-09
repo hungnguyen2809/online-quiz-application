@@ -40,7 +40,7 @@ export const getQuestionsByQS = (id_question_set) => {
   });
 };
 
-export const addQuestion = (question) => {
+export const addQuestionToDB = (question) => {
   return new Promise(async (resolve, reject) => {
     Realm.open(realmConfig)
       .then((realm) => {

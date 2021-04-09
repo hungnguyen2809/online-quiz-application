@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import HeadTopBar from './../../components/HeadTopBar';
@@ -21,13 +22,18 @@ class ForumScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {};
   }
+
+  componentDidMount() {}
 
   render() {
     return (
       <View style={styles.container}>
         <HeadTopBar />
-        <Text>Chưa vẽ gì cả</Text>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Chưa vẽ gì cả</Text>
+        </View>
       </View>
     );
   }

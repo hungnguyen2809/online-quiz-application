@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import {Colors} from './../../../common/Colors';
+import * as Progress from 'react-native-progress';
 
 class ItemQuestion extends Component {
   constructor(props) {
@@ -34,8 +35,10 @@ class ItemQuestion extends Component {
       numberQues,
       level,
       islocal,
-      onPressDow,
       onPresStart,
+      onPressDow,
+      progressDow,
+      showProgress,
     } = this.props;
 
     const url = islocal
@@ -57,12 +60,16 @@ class ItemQuestion extends Component {
             {/* <Text style={styles.result}>Đã hoàn thành : 6/10</Text> */}
           </View>
         </TouchableOpacity>
-        <TouchableWithoutFeedback onPress={onPressDow}>
-          <Image
-            style={[styles.image, islocal ? {} : {tintColor: 'red'}]}
-            source={url}
-          />
-        </TouchableWithoutFeedback>
+        {showProgress ? (
+          <Progress.Pie progress={progressDow} size={35} />
+        ) : (
+          <TouchableWithoutFeedback onPress={onPressDow}>
+            <Image
+              style={[styles.image, islocal ? {} : {tintColor: 'red'}]}
+              source={url}
+            />
+          </TouchableWithoutFeedback>
+        )}
       </View>
     );
   }
