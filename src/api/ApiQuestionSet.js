@@ -2,7 +2,8 @@ import {apis} from './createApiService';
 
 export const getQestionSetAPI = (args) => {
   return apis.makeAuthRequest({
-    url: `/questions-set/question-topic?id_topic=${args.id_topic}`,
+    url: '/questions-set/question-topic',
     method: 'GET',
+    params: args,
   });
 };
