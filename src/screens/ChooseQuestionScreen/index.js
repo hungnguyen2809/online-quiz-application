@@ -21,10 +21,7 @@ import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
 import {debounce, forEach, get, map} from 'lodash';
 import {addQuestionToDB, getQuestionsByQS} from './../../realm/questions';
-import {
-  questionSetGetDataAction,
-  questionSetGetDataActionDone,
-} from './../../redux/QuestionSet/actions';
+import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
 import {listQuestionSetSelector} from './../../redux/QuestionSet/selectors';
 import {getQuestionsByQSAction} from './../../redux/Questions/actions';
 
@@ -120,13 +117,15 @@ class ChooseQuestionScreen extends Component {
     });
   };
 
-  onStartExample = (data) => {
+  onStartExample = async (data) => {
+    const dataQuestions = await getQuestionsByQS(get(data, 'id', []));
     if (get(data, 'islocal')) {
-      goToScreenWithPassProps(
+      await goToScreenWithPassProps(
         this.props.parentComponentId,
         appScreens.ExamQuestions.name,
         {
           dataPass: data,
+          dataQuestions: get(dataQuestions, 'data', []),
           parentComponentId: this.props.parentComponentId,
         },
       );
@@ -154,7 +153,7 @@ class ChooseQuestionScreen extends Component {
                 clearInterval(this.clearTimeProgess);
               });
             }
-          }, 500);
+          }, 200);
         });
       },
       callbacksOnFail: () => {},

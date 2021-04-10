@@ -12,12 +12,12 @@ const instanceAxios = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 
-// Handle custom config ...
+// Custom request ...
 instanceAxios.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Handle custom response ...
+// Custom response ...
 instanceAxios.interceptors.response.use(
   (response) => {
     if (response && response.data) {

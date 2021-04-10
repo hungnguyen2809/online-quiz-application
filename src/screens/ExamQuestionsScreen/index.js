@@ -5,8 +5,8 @@ import {Alert, FlatList, Image, TouchableOpacity, View} from 'react-native';
 import {backToLastScreen} from './../MethodScreen';
 import ExecExam from './components/ExecExam';
 import Header from './components/Header';
-import {dataSet} from './../../assets/data/dataSet';
-import {fill, isEqual, upperCase} from 'lodash';
+// import {dataSet} from './../../assets/data/dataSet';
+import _, {fill, isEqual, upperCase} from 'lodash';
 import {styles} from './styles';
 class ExamQuestionsScreen extends Component {
   static options(prosp) {
@@ -27,10 +27,24 @@ class ExamQuestionsScreen extends Component {
   constructor(props) {
     super(props);
     this.viewQuestions = React.createRef();
-
-    this.arrAnsers = fill(Array(dataSet.length), -1);
-    this.questions = dataSet;
     this.potions = 0;
+    this.arrAnsers = fill(Array(props.dataQuestions.length), -1);
+
+    this.state = {
+      questions: [],
+    };
+  }
+
+  componentDidMount() {
+    if (!!this.props.dataQuestions) {
+      this.setState({questions: this.props.dataQuestions});
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.dataQuestions !== nextProps.dataQuestions) {
+      this.setState({questions: nextProps.dataQuestions});
+    }
   }
 
   _onFinishExam = () => {
@@ -87,7 +101,7 @@ class ExamQuestionsScreen extends Component {
   };
 
   _onPressNext = () => {
-    if (this.potions >= dataSet.length - 1) return;
+    if (this.potions >= this.state.questions.length - 1) return;
     this.potions++;
     // console.log('Potions: ', potions);
     this.viewQuestions.current.scrollToIndex({index: this.potions});
@@ -96,7 +110,12 @@ class ExamQuestionsScreen extends Component {
   _handleCheckAnswer = () => {
     let count = 0;
     this.arrAnsers.forEach((answer, index) => {
-      if (isEqual(upperCase(dataSet[index].answer), upperCase(answer))) {
+      if (
+        isEqual(
+          upperCase(_.get(this.state.questions[index], 'final', '')),
+          upperCase(answer),
+        )
+      ) {
         count = count + 1;
       }
     });
@@ -139,7 +158,7 @@ class ExamQuestionsScreen extends Component {
             pagingEnabled={true}
             scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
-            data={dataSet}
+            data={this.state.questions}
             renderItem={({item, index}) => {
               return (
                 <ExecExam

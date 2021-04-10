@@ -6,7 +6,7 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
-import {isEqual, upperCase} from 'lodash';
+import _, {isEqual, upperCase} from 'lodash';
 import {SCREEN_WIDTH} from './../../../common/dimensionScreen';
 
 class ExecExam extends Component {
@@ -18,19 +18,19 @@ class ExecExam extends Component {
 
     this.prop_question = [
       {
-        label: props.question.anA,
+        label: 'A. ' + _.get(props.question, 'as_a'),
         value: 'A',
       },
       {
-        label: props.question.anB,
+        label: 'B. ' + _.get(props.question, 'as_b'),
         value: 'B',
       },
       {
-        label: props.question.anC,
+        label: 'C. ' + _.get(props.question, 'as_c'),
         value: 'C',
       },
       {
-        label: props.question.anD,
+        label: 'D. ' + _.get(props.question, 'as_d'),
         value: 'D',
       },
     ];
@@ -56,14 +56,14 @@ class ExecExam extends Component {
   };
 
   render() {
-    const {question} = this.props.question;
+    const {content} = this.props.question;
     return (
       <View style={styles.container}>
         <Text style={styles.numberQuestion}>
           Câu số {this.props.index + 1}:
         </Text>
         <View style={styles.wapperContent}>
-          <Text style={styles.contentQuestion}>{question}</Text>
+          <Text style={styles.contentQuestion}>{content}</Text>
         </View>
         <View style={styles.chooseAnswer}>
           <RadioForm animation={true}>
@@ -80,8 +80,8 @@ class ExecExam extends Component {
                     buttonOuterColor={
                       this.state.isSelected === index ? '#2196f3' : '#000'
                     }
-                    buttonSize={15}
-                    buttonOuterSize={25}
+                    buttonSize={10}
+                    buttonOuterSize={20}
                     buttonStyle={{margin: 10}}
                     buttonWrapStyle={{}}
                   />
@@ -91,9 +91,11 @@ class ExecExam extends Component {
                     labelHorizontal={true}
                     onPress={this.onPress}
                     labelStyle={{
-                      fontSize: 18,
+                      fontSize: 17,
                       color: '#000',
                       fontWeight: '600',
+                      width: SCREEN_WIDTH - 80,
+                      lineHeight: 25,
                     }}
                     labelWrapStyle={{}}
                   />
@@ -125,10 +127,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   contentQuestion: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: 'bold',
     margin: 10,
     minHeight: 35,
+    lineHeight: 25,
   },
   chooseAnswer: {
     padding: 5,
