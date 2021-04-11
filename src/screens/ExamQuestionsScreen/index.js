@@ -1,13 +1,19 @@
-/* eslint-disable curly */
-/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {Alert, FlatList, Image, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  View,
+  BackHandler,
+} from 'react-native';
 import {backToLastScreen} from './../MethodScreen';
 import ExecExam from './components/ExecExam';
 import Header from './components/Header';
-// import {dataSet} from './../../assets/data/dataSet';
 import _, {fill, isEqual, upperCase} from 'lodash';
 import {styles} from './styles';
+import ModalReviewExam from './../../components/ModalReviewExam';
+
 class ExamQuestionsScreen extends Component {
   static options(prosp) {
     return {
@@ -32,13 +38,20 @@ class ExamQuestionsScreen extends Component {
 
     this.state = {
       questions: [],
+      showModalReview: false,
     };
+
+    this.backHandler = null;
   }
 
   componentDidMount() {
     if (!!this.props.dataQuestions) {
       this.setState({questions: this.props.dataQuestions});
     }
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.onBackHandler,
+    );
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -56,7 +69,13 @@ class ExamQuestionsScreen extends Component {
           text: 'OK',
           style: 'destructive',
           onPress: () => {
-            backToLastScreen(this.props.componentId);
+            if (this.state.showModalReview) {
+              this.setState({showModalReview: false}, () => {
+                backToLastScreen(this.props.componentId);
+              });
+            } else {
+              backToLastScreen(this.props.componentId);
+            }
           },
         },
       ],
@@ -143,12 +162,42 @@ class ExamQuestionsScreen extends Component {
     );
   };
 
+  _openCloseReviewExam = () => {
+    this.setState({showModalReview: !this.state.showModalReview});
+  };
+
+  onBackHandler = () => {
+    Alert.alert(
+      'Thông báo',
+      'Bạn có chắc muốn thoát ? Bài làm hiện tại sẽ không được tính ?',
+      [
+        {
+          text: 'Đồng ý',
+          onPress: () => {
+            backToLastScreen(this.props.componentId);
+          },
+          style: 'default',
+        },
+        {
+          text: 'Hủy',
+          onPress: () => {},
+          style: 'destructive',
+        },
+      ],
+    );
+    return true;
+  };
+
+  componentWillUnmount() {
+    this.backHandler && this.backHandler.remove();
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Header
           onPressLeft={this.goBackScreen}
-          onPressFinish={this.onSubmitFinishExam}
+          onPressRight={this._openCloseReviewExam}
           onFinishTime={this.onSubmitFinishEndTimeExam}
         />
         <View style={styles.content}>
@@ -187,6 +236,12 @@ class ExamQuestionsScreen extends Component {
             />
           </TouchableOpacity>
         </View>
+        <ModalReviewExam
+          listAnswerQuestions={this.arrAnsers}
+          visible={this.state.showModalReview}
+          onCancel={this._openCloseReviewExam}
+          onSubmit={this._onFinishExam}
+        />
       </View>
     );
   }

@@ -38,7 +38,7 @@ const _makeAuthRequest = (instanceRequest) => async (args) => {
 
   const token = await getTokenToStorage();
   const authHeaders = {
-    'auth-token': token,
+    'AuthToken-VTNH': token,
   };
 
   const options = {

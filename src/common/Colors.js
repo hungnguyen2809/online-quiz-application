@@ -14,6 +14,11 @@ const Colors = {
   LEVEL_H: '#eb2f06',
   LEVEL_M: '#e1b12c',
   LEVEL_E: '#4cd137',
+  DARK_MOUNTAIN: '#10ac84',
+  AMOUR: '#ee5253',
+  REEF_ENCOUNTER: '#079992',
+  WIZARD_GREY: '#535c68',
+  PURE_APPLE: '#6ab04c',
 };
 
 export {Colors};

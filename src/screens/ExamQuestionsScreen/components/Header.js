@@ -25,8 +25,12 @@ class Header extends Component {
           />
           <TimeClock onFinishTime={this.props.onFinishTime} />
         </View>
-        <TouchableOpacity onPress={this.props.onPressFinish}>
-          <Text style={styles.textBtnFinish}>Nộp bài</Text>
+        <TouchableOpacity onPress={this.props.onPressRight}>
+          {/* <Text style={styles.textBtnFinish}>Nộp bài</Text> */}
+          <Image
+            source={require('./../../../assets/icons/icon-todo-2.png')}
+            style={styles.iconTodo}
+          />
         </TouchableOpacity>
       </View>
     );
@@ -58,5 +62,10 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#f1f2f6',
     fontWeight: '700',
+  },
+  iconTodo: {
+    width: 30,
+    height: 30,
+    tintColor: '#FFF',
   },
 });
