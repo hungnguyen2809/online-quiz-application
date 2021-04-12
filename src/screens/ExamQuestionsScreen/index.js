@@ -13,6 +13,7 @@ import Header from './components/Header';
 import _, {fill, isEqual, upperCase} from 'lodash';
 import {styles} from './styles';
 import ModalReviewExam from './../../components/ModalReviewExam';
+import PagerView from 'react-native-pager-view';
 
 class ExamQuestionsScreen extends Component {
   static options(prosp) {
@@ -116,14 +117,16 @@ class ExamQuestionsScreen extends Component {
     if (this.potions <= 0) return;
     this.potions--;
     // console.log('Potions: ', potions);
-    this.viewQuestions.current.scrollToIndex({index: this.potions});
+    // this.viewQuestions.current.scrollToIndex({index: this.potions});
+    this.viewQuestions.current.setPage(this.potions);
   };
 
   _onPressNext = () => {
     if (this.potions >= this.state.questions.length - 1) return;
     this.potions++;
     // console.log('Potions: ', potions);
-    this.viewQuestions.current.scrollToIndex({index: this.potions});
+    // this.viewQuestions.current.scrollToIndex({index: this.potions});
+    this.viewQuestions.current.setPage(this.potions);
   };
 
   _handleCheckAnswer = () => {
@@ -201,7 +204,7 @@ class ExamQuestionsScreen extends Component {
           onFinishTime={this.onSubmitFinishEndTimeExam}
         />
         <View style={styles.content}>
-          <FlatList
+          {/* <FlatList
             ref={this.viewQuestions}
             horizontal={true}
             pagingEnabled={true}
@@ -220,7 +223,26 @@ class ExamQuestionsScreen extends Component {
               );
             }}
             keyExtractor={(item, index) => index.toString()}
-          />
+          /> */}
+          <PagerView
+            ref={this.viewQuestions}
+            style={{flex: 1}}
+            onPageSelected={(ev) => {
+              this.potions = ev.nativeEvent.position;
+            }}>
+            {_.map(this.state.questions, (item, index) => {
+              return (
+                <ExecExam
+                  key={index.toString()}
+                  question={item}
+                  index={index}
+                  onPressChooseAnswer={(value) =>
+                    (this.arrAnsers[this.potions] = value)
+                  }
+                />
+              );
+            })}
+          </PagerView>
         </View>
         <View style={styles.wapperFooter}>
           <TouchableOpacity onPress={this._onPressPrev}>
