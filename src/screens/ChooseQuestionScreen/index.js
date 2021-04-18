@@ -20,10 +20,13 @@ import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
 import {debounce, forEach, get, map} from 'lodash';
+import {getAccountSelector} from './../../redux/Account/selectors';
 import {addQuestionToDB, getQuestionsByQS} from './../../realm/questions';
-import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
-import {listQuestionSetSelector} from './../../redux/QuestionSet/selectors';
+// import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
+// import {listQuestionSetSelector} from './../../redux/QuestionSet/selectors';
 import {getQuestionsByQSAction} from './../../redux/Questions/actions';
+import {getListInfoExamSelector} from './../../redux/UserQuestion/selectors';
+import {getListInfoExamByUserTopicAction} from './../../redux/UserQuestion/actions';
 
 class ChooseQuestionScreen extends Component {
   static options(props) {
@@ -51,6 +54,8 @@ class ChooseQuestionScreen extends Component {
       loading: false,
       progress: 0,
       showProgress: false,
+      account: null,
+      listInfoExam: [],
     };
 
     this.layoutProvider = new LayoutProvider(
@@ -74,10 +79,15 @@ class ChooseQuestionScreen extends Component {
     this.clearTimeProgess = null;
   }
 
-  componentDidMount() {
-    if (!!this.props.topic) {
-      this.setState({idTopic: get(this.props.topic, 'id')}, () => {
-        this.onGetListQuestionSet();
+  async componentDidMount() {
+    if (!!this.props.account) {
+      this.setState({account: this.props.account}, () => {
+        if (!!this.props.topic) {
+          this.setState({idTopic: get(this.props.topic, 'id')}, () => {
+            // this.onGetListQuestionSet();
+            this.onGetListInfoExam();
+          });
+        }
       });
     }
   }
@@ -87,38 +97,65 @@ class ChooseQuestionScreen extends Component {
       this.setState({idTopic: get(nextProps.topic, 'id')});
     }
 
-    if (this.props.listQuestionSet !== nextProps.listQuestionSet) {
+    // if (this.props.listQuestionSet !== nextProps.listQuestionSet) {
+    //   let mapData = [];
+    //   let count = 0;
+    //   let total = [...nextProps.listQuestionSet].length;
+    //   forEach(nextProps.listQuestionSet, async (item, index) => {
+    //     count++;
+    //     const response = await getQuestionsByQS(get(item, 'id'));
+    //     let islocal = get(response.data, 'length', 0) > 0;
+    //     mapData.push({
+    //       islocal,
+    //       ...item,
+    //     });
+    //     if (count === total) {
+    //       this.setState({listQuestionSet: mapData, loading: false});
+    //     }
+    //   });
+    // }
+
+    if (this.props.listInfoExam !== nextProps.listInfoExam) {
       let mapData = [];
       let count = 0;
-      let total = [...nextProps.listQuestionSet].length;
-      forEach(nextProps.listQuestionSet, async (item, index) => {
+      let total = [...nextProps.listInfoExam].length;
+      forEach(nextProps.listInfoExam, async (item, index) => {
         count++;
-        const response = await getQuestionsByQS(get(item, 'id'));
+        const response = await getQuestionsByQS(get(item, 'id_qs'));
         let islocal = get(response.data, 'length', 0) > 0;
         mapData.push({
           islocal,
           ...item,
         });
         if (count === total) {
-          this.setState({listQuestionSet: mapData, loading: false});
+          this.setState({listInfoExam: mapData, loading: false});
         }
       });
     }
   }
 
-  onGetListQuestionSet = () => {
+  // onGetListQuestionSet = () => {
+  //   const payload = {
+  //     id_topic: this.state.idTopic,
+  //   };
+  //   this.setState({loading: true});
+  //   this.props.doGetQuestionSet(payload, {
+  //     callbacksOnSuccess: () => {},
+  //     callbacksOnFail: () => {},
+  //   });
+  // };
+
+  onGetListInfoExam = () => {
     const payload = {
+      id_user: get(this.state.account, 'id'),
       id_topic: this.state.idTopic,
     };
-    this.setState({loading: true});
-    this.props.doGetQuestionSet(payload, {
-      callbacksOnSuccess: () => {},
-      callbacksOnFail: () => {},
-    });
+    // console.log('PAYLOAD: ', payload);
+    this.props.doGetListInfoExam(payload);
   };
 
   onStartExample = async (data) => {
-    const dataQuestions = await getQuestionsByQS(get(data, 'id', []));
+    const dataQuestions = await getQuestionsByQS(get(data, 'id_qs', []));
     if (get(data, 'islocal')) {
       await goToScreenWithPassProps(
         this.props.parentComponentId,
@@ -136,7 +173,7 @@ class ChooseQuestionScreen extends Component {
 
   onDownloadQuestion = (item) => {
     const payload = {
-      id_qs: get(item, 'id'),
+      id_qs: get(item, 'id_qs'),
     };
 
     this.props.doGetQuestionByQs(payload, {
@@ -167,7 +204,7 @@ class ChooseQuestionScreen extends Component {
   _dataProviderFacetory = () => {
     const dataProvier = new DataProvider((r1, r2) => {
       return r1 !== r2;
-    }).cloneWithRows(this.state.listQuestionSet);
+    }).cloneWithRows(this.state.listInfoExam);
     return dataProvier;
   };
 
@@ -176,6 +213,7 @@ class ChooseQuestionScreen extends Component {
       case 'LAYOUT':
         return (
           <ItemQuestion
+            row={item}
             islocal={get(item, 'islocal')}
             title={get(item, 'description')}
             numberQues={get(item, 'total_question')}
@@ -226,19 +264,19 @@ class ChooseQuestionScreen extends Component {
   };
 
   onRefreshQuestionSet = () => {
-    this.onGetListQuestionSet();
+    this.onGetListInfoExam();
   };
 
   onAddQuestionRealmDB = (id_qs) => {
-    const {listQuestions, listQuestionSet} = this.state;
+    const {listQuestions, listInfoExam} = this.state;
     let count = 0;
     let total = listQuestions.length;
     forEach(listQuestions, (item, index) => {
       addQuestionToDB(item).then(() => {
         count++;
         if (count === total) {
-          const dataMap = map(listQuestionSet, (item2, index2) => {
-            if (get(item2, 'id') === id_qs) {
+          const dataMap = map(listInfoExam, (item2, index2) => {
+            if (get(item2, 'id_qs') === id_qs) {
               return {
                 ...item2,
                 islocal: !get(item2, 'islocal'),
@@ -248,7 +286,7 @@ class ChooseQuestionScreen extends Component {
               ...item2,
             };
           });
-          this.setState({listQuestionSet: dataMap});
+          this.setState({listInfoExam: dataMap});
         }
       });
     });
@@ -300,17 +338,22 @@ class ChooseQuestionScreen extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  listQuestionSet: listQuestionSetSelector(),
+  // listQuestionSet: listQuestionSetSelector(),
+  listInfoExam: getListInfoExamSelector(),
+  account: getAccountSelector(),
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch,
-    doGetQuestionSet: (payload, callbacks) => {
-      dispatch(questionSetGetDataAction(payload, callbacks));
-    },
+    // doGetQuestionSet: (payload, callbacks) => {
+    //   dispatch(questionSetGetDataAction(payload, callbacks));
+    // },
     doGetQuestionByQs: (payload, callbacks) => {
       dispatch(getQuestionsByQSAction(payload, callbacks));
+    },
+    doGetListInfoExam: (payload) => {
+      dispatch(getListInfoExamByUserTopicAction(payload));
     },
   };
 };

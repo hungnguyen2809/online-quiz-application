@@ -1,7 +1,7 @@
-import {fork, call, put, takeLatest} from 'redux-saga/effects';
-import {QUESTION_SET_GET_DATA} from './constants';
-import {questionSetGetDataActionDone} from './actions';
-import {getQestionSetAPI} from './../../api/ApiQuestionSet';
+import {takeLatest, put, call, fork} from 'redux-saga/effects';
+import {USER_QUESTION_GETLIST_INFO_EXAM} from './constants';
+import {getListInfoExamByUserTopicActionDone} from './actions';
+import {getListInfoExamByUserTopicAPI} from './../../api/ApiUserQuestion';
 import _ from 'lodash';
 import {Alert} from 'react-native';
 import {
@@ -10,17 +10,19 @@ import {
 } from '../../common/asyncStorage';
 import {switchScreenLogin} from '../../screens/MethodScreen';
 
-function* WorkGetQuestionSet(action) {
+function* WorkGetListInfoExam(action) {
   // const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
-    const response = yield call(getQestionSetAPI, action.payload.data);
-    // console.log('DATA: ', response);
+    const response = yield call(
+      getListInfoExamByUserTopicAPI,
+      action.payload.data,
+    );
     if (
       response.status === 200 &&
       response.error === false &&
       !_.isEmpty(response.payload)
     ) {
-      yield put(questionSetGetDataActionDone(response.payload));
+      yield put(getListInfoExamByUserTopicActionDone(response.payload));
     } else {
       Alert.alert('Thông báo', response.message);
     }
@@ -46,10 +48,10 @@ function* WorkGetQuestionSet(action) {
   }
 }
 
-function* WatcherGetQuestionSet() {
-  yield takeLatest(QUESTION_SET_GET_DATA, WorkGetQuestionSet);
+function* WatcherGetListInfoExam() {
+  yield takeLatest(USER_QUESTION_GETLIST_INFO_EXAM, WorkGetListInfoExam);
 }
 
-export default function* QuestionSetSaga() {
-  yield fork(WatcherGetQuestionSet);
+export default function* UserQuestionSagas() {
+  yield fork(WatcherGetListInfoExam);
 }

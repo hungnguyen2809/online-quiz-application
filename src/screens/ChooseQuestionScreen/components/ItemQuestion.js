@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {Colors} from './../../../common/Colors';
 import * as Progress from 'react-native-progress';
+import {get} from 'lodash';
 
 class ItemQuestion extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class ItemQuestion extends Component {
 
   render() {
     const {
+      row,
       title,
       numberQues,
       level,
@@ -57,7 +59,19 @@ class ItemQuestion extends Component {
               <Text style={styles.description}>Số câu hỏi: {numberQues}</Text>
               <Text style={styles.lavel}>Mức độ: {this._getLevel(level)}</Text>
             </View>
-            {/* <Text style={styles.result}>Đã hoàn thành : 6/10</Text> */}
+            {get(row, 'question_correct', null) ? (
+              <Text
+                style={{
+                  color:
+                    get(row, 'question_correct', 0) ===
+                    get(row, 'total_question', 0)
+                      ? Colors.DARK_MOUNTAIN
+                      : Colors.RED_ORANGE,
+                }}>
+                Đã hoàn thành : {get(row, 'question_correct', 0)}/
+                {get(row, 'total_question')}
+              </Text>
+            ) : null}
           </View>
         </TouchableOpacity>
         {showProgress ? (
