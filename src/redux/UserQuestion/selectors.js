@@ -9,3 +9,15 @@ export const getListInfoExamSelector = () => {
     return state.get('listInfoExam');
   });
 };
+
+export const getListRateUserSelector = () => {
+  return createSelector(userQuestionSate(), (state) => {
+    return state.get('listRateUser');
+  });
+};
+
+export const getListPercentTopicSelector = () => {
+  return createSelector(userQuestionSate(), (state) => {
+    return state.get('listPercentTopic');
+  });
+};

@@ -19,7 +19,7 @@ import ItemQuestion from './components/ItemQuestion';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
-import {debounce, forEach, get, map} from 'lodash';
+import {forEach, get, map} from 'lodash';
 import {getAccountSelector} from './../../redux/Account/selectors';
 import {addQuestionToDB, getQuestionsByQS} from './../../realm/questions';
 // import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
@@ -75,8 +75,6 @@ class ChooseQuestionScreen extends Component {
         }
       },
     );
-
-    this.clearTimeProgess = null;
   }
 
   async componentDidMount() {
@@ -171,26 +169,16 @@ class ChooseQuestionScreen extends Component {
     }
   };
 
-  onDownloadQuestion = (item) => {
+  onDownloadQuestion = (item, {callbacksOnSuccessDow}) => {
     const payload = {
       id_qs: get(item, 'id_qs'),
     };
 
     this.props.doGetQuestionByQs(payload, {
       callbacksOnSuccess: (data) => {
-        this.setState({listQuestions: data, showProgress: true}, () => {
+        this.setState({listQuestions: data}, () => {
+          callbacksOnSuccessDow();
           this.onAddQuestionRealmDB(payload.id_qs);
-          let progress = 0;
-          this.clearTimeProgess = setInterval(() => {
-            progress += 0.1;
-            if (progress <= 1) {
-              this.setState({progress});
-            } else {
-              this.setState({progress: 0, showProgress: false}, () => {
-                clearInterval(this.clearTimeProgess);
-              });
-            }
-          }, 200);
         });
       },
       callbacksOnFail: () => {},
@@ -214,14 +202,8 @@ class ChooseQuestionScreen extends Component {
         return (
           <ItemQuestion
             row={item}
-            islocal={get(item, 'islocal')}
-            title={get(item, 'description')}
-            numberQues={get(item, 'total_question')}
-            level={get(item, 'level')}
-            onPresStart={debounce(() => this.onStartExample(item), 300)}
-            onPressDow={debounce(() => this.onDownloadQuestion(item), 200)}
-            progressDow={extendedState.progressDow}
-            showProgress={extendedState.showProgress}
+            onPresStart={this.onStartExample}
+            onPressDow={this.onDownloadQuestion}
           />
         );
       default:
@@ -292,10 +274,6 @@ class ChooseQuestionScreen extends Component {
     });
   };
 
-  componentWillUnmount() {
-    this.clearTimeProgess && clearInterval(this.clearTimeProgess);
-  }
-
   render() {
     let subComponentButtonLeft = [];
     subComponentButtonLeft.push(this._renderSubComponentButtonLeft());
@@ -315,10 +293,7 @@ class ChooseQuestionScreen extends Component {
               dataProvider={dataProvider}
               layoutProvider={layoutProvider}
               rowRenderer={this._renderRendererItem}
-              extendedState={{
-                showProgress: this.state.showProgress,
-                progressDow: this.state.progress,
-              }}
+              extendedState={{}}
               scrollViewProps={{
                 refreshControl: (
                   <RefreshControl

@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from '../../common/Colors';
 import {isIphoneX} from 'react-native-iphone-x-helper';
+import {SCREEN_HEIGHT} from '../../common/dimensionScreen';
 
 const styles = StyleSheet.create({
   container: {
@@ -90,6 +91,36 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
     color: Colors.WHITE,
+  },
+  circle300: {
+    width: 300,
+    height: 300,
+    backgroundColor: Colors.PURE_APPLE,
+    borderRadius: 300 / 2,
+    position: 'absolute',
+    right: -50,
+    top: SCREEN_HEIGHT / 3,
+    opacity: 0.2,
+  },
+  circle100: {
+    width: 100,
+    height: 100,
+    backgroundColor: Colors.DARK_MOUNTAIN,
+    borderRadius: 100 / 2,
+    position: 'absolute',
+    left: -50,
+    top: 100,
+    opacity: 0.2,
+  },
+  circle50: {
+    width: 50,
+    height: 50,
+    backgroundColor: Colors.RADIANT_YELLOW,
+    borderRadius: 50 / 2,
+    position: 'absolute',
+    left: 50,
+    top: 100,
+    opacity: 0.2,
   },
 });
 

@@ -158,6 +158,7 @@ class ProfileScreen extends Component {
     // console.log('data: ', account);
     return (
       <View style={styles.container}>
+        <View style={styles.circle} />
         <View>
           {get(account, 'image') ? (
             <Image

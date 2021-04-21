@@ -85,6 +85,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 15,
   },
+  circle: {
+    width: 300,
+    height: 300,
+    backgroundColor: Colors.HAMMAN_BULE,
+    borderRadius: 300 / 2,
+    position: 'absolute',
+    right: -50,
+    top: SCREEN_HEIGHT / 2 - 300 / 2,
+    opacity: 0.2,
+  },
 });
 
 export {styles};

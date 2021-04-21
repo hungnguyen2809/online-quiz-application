@@ -32,13 +32,13 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   wapperProcess: {
-    height: 5,
+    height: 6,
     backgroundColor: '#ced6e0',
-    borderRadius: 2,
+    borderRadius: 4,
   },
   process: {
-    height: 5,
+    height: 6,
     backgroundColor: '#2ed573',
-    borderRadius: 2,
+    borderRadius: 4,
   },
 });

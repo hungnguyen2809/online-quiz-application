@@ -1,6 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
+import _ from 'lodash';
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {formatNumber} from '../../../common/format';
 
 const iconsRating = {
   _1st: require('./../../../assets/icons/1st_place_medal.png'),
@@ -14,7 +16,7 @@ class RatingUser extends Component {
   }
 
   render() {
-    const {rate} = this.props;
+    const {rate, row} = this.props;
     return (
       <View style={styles.container}>
         <View
@@ -25,7 +27,11 @@ class RatingUser extends Component {
           }}>
           <Image
             style={styles.avatar}
-            source={require('./../../../assets/icons/avatar/5.jpg')}
+            source={
+              _.get(row, 'image')
+                ? {uri: _.get(row, 'image')}
+                : require('./../../../assets/icons/avatar/5.jpg')
+            }
           />
           <View>
             <Text
@@ -36,9 +42,11 @@ class RatingUser extends Component {
                     rate === 1 ? '#eb2f06' : rate === 2 ? '#4cd137' : '#e1b12c',
                 },
               ]}>
-              Nguyễn Văn Hùng
+              {_.get(row, 'name')}
             </Text>
-            <Text style={styles.point}>Điểm số: 1234</Text>
+            <Text style={styles.point}>
+              Điểm số: {formatNumber(_.get(row, 'total_point'))}
+            </Text>
           </View>
         </View>
         <View style={{flex: 1}}>

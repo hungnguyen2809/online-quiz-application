@@ -1,3 +1,4 @@
+import numeral from 'numeral';
 import {toString, isEmpty} from 'lodash';
 
 export const formatPhone = (number) => {
@@ -13,4 +14,11 @@ export const formatPhone = (number) => {
     }
   }
   return res;
+};
+
+export const formatNumber = (value) => {
+  let str = numeral(value).format('0,0');
+  const newchar = '.';
+  str = str.split(',').join(newchar);
+  return str;
 };

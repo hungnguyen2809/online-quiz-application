@@ -24,7 +24,7 @@ const realmConfig = {
 };
 
 export const getQuestionsByQS = (id_question_set) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     Realm.open(realmConfig)
       .then((realm) => {
         realm.write(() => {
@@ -41,7 +41,7 @@ export const getQuestionsByQS = (id_question_set) => {
 };
 
 export const addQuestionToDB = (question) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     Realm.open(realmConfig)
       .then((realm) => {
         realm.write(() => {

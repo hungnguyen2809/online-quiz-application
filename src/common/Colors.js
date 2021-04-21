@@ -19,6 +19,8 @@ const Colors = {
   REEF_ENCOUNTER: '#079992',
   WIZARD_GREY: '#535c68',
   PURE_APPLE: '#6ab04c',
+  HAMMAN_BULE: '#67e6dc',
+  RADIANT_YELLOW: '#ff9f1a',
 };
 
 export {Colors};

@@ -10,11 +10,18 @@ import {
 } from 'react-native';
 import {Colors} from './../../../common/Colors';
 import * as Progress from 'react-native-progress';
-import {get} from 'lodash';
+import {get, debounce} from 'lodash';
 
 class ItemQuestion extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      progress: 0,
+      showProgress: false,
+    };
+
+    this.clearTimeProgess = null;
   }
 
   _getLevel = (type) => {
@@ -30,18 +37,37 @@ class ItemQuestion extends Component {
     }
   };
 
+  onPressDowload = () => {
+    this.props.onPressDow(this.props.row, {
+      callbacksOnSuccessDow: () => {
+        this.setState({showProgress: true}, () => {
+          let progress = 0;
+          this.clearTimeProgess = setInterval(() => {
+            progress += 0.1;
+            if (progress <= 1) {
+              this.setState({progress});
+            } else {
+              this.setState({progress: 0, showProgress: false}, () => {
+                clearInterval(this.clearTimeProgess);
+              });
+            }
+          }, 200);
+        });
+      },
+    });
+  };
+
+  onStartDowload = () => {
+    this.props.onPresStart(this.props.row);
+  };
+
+  componentWillUnmount() {
+    this.clearTimeProgess && clearInterval(this.clearTimeProgess);
+  }
+
   render() {
-    const {
-      row,
-      title,
-      numberQues,
-      level,
-      islocal,
-      onPresStart,
-      onPressDow,
-      progressDow,
-      showProgress,
-    } = this.props;
+    const {row} = this.props;
+    const islocal = get(row, 'islocal');
 
     const url = islocal
       ? require('./../../../assets/icons/icons-checked-success.png')
@@ -50,14 +76,18 @@ class ItemQuestion extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={onPresStart}
+          onPress={debounce(this.onStartDowload, 300)}
           style={{flex: 1}}
           activeOpacity={0.6}>
           <View style={styles.wrapText}>
-            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title}>{get(row, 'description')}</Text>
             <View style={styles.wrapDes}>
-              <Text style={styles.description}>Số câu hỏi: {numberQues}</Text>
-              <Text style={styles.lavel}>Mức độ: {this._getLevel(level)}</Text>
+              <Text style={styles.description}>
+                Số câu hỏi: {get(row, 'total_question')}
+              </Text>
+              <Text style={styles.lavel}>
+                Mức độ: {this._getLevel(get(row, 'level'))}
+              </Text>
             </View>
             {get(row, 'question_correct', null) ? (
               <Text
@@ -74,10 +104,11 @@ class ItemQuestion extends Component {
             ) : null}
           </View>
         </TouchableOpacity>
-        {showProgress ? (
-          <Progress.Pie progress={progressDow} size={35} />
+        {this.state.showProgress ? (
+          <Progress.Pie progress={this.state.progress} size={35} />
         ) : (
-          <TouchableWithoutFeedback onPress={onPressDow}>
+          <TouchableWithoutFeedback
+            onPress={debounce(this.onPressDowload, 200)}>
             <Image
               style={[styles.image, islocal ? {} : {tintColor: 'red'}]}
               source={url}

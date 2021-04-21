@@ -185,6 +185,9 @@ class ProfileDetailsScreen extends Component {
         />
         <TouchableWithoutFeedback onPress={this._onDismissKeybroad}>
           <View style={styles.content}>
+            <View style={styles.circle300} />
+            <View style={styles.circle100} />
+            <View style={styles.circle50} />
             <View style={{alignItems: 'center'}}>
               {get(accountUpdating, 'image') ? (
                 <Image
