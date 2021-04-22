@@ -20,6 +20,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  textNotExam: {
+    margin: 5,
+    fontStyle: 'italic',
+  },
 });
 
 export {styles};

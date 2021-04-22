@@ -50,6 +50,10 @@ export const appScreens = {
     id: 'app.screen.ForumScreen',
     name: 'ForumScreen',
   },
+  ResultExamScreen: {
+    id: 'app.screen.ResultExamScreen',
+    name: 'ResultExamScreen',
+  },
 };
 
 export const screenAuth = {

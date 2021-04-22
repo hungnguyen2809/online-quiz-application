@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, View, RefreshControl} from 'react-native';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {getAccountToStorage} from '../../common/asyncStorage';
 import HeadTopBar from '../../components/HeadTopBar';
 import _ from 'lodash';
-import * as Progress from 'react-native-progress';
 import {
   getListPercentTopicAction,
   getListRateUserAction,
@@ -41,6 +40,7 @@ class HomeScreen extends Component {
     this.state = {
       listRateUser: [],
       listPercentTopic: [],
+      loading: false,
     };
   }
 
@@ -57,6 +57,7 @@ class HomeScreen extends Component {
       if (this.props.listPercentTopic !== nextProps.listPercentTopic) {
         this.setState({listPercentTopic: nextProps.listPercentTopic});
       }
+      this.setState({loading: false});
     }
   }
 
@@ -68,31 +69,52 @@ class HomeScreen extends Component {
     this.props.doGetListPercentTopic(payload);
   };
 
+  onReloadData = () => {
+    this.setState({loading: true});
+    this.props.doGetListRateUser();
+    this.onGetListPercentTopic();
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <HeadTopBar />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.onReloadData}
+            />
+          }>
           <View style={styles.content}>
             <View style={styles.card}>
               <Text style={styles.titleCard}>Bảng xếp hạng:</Text>
-              {_.map(this.state.listRateUser, (item, index) => {
-                return <RatingUser key={index} rate={index + 1} row={item} />;
-              })}
+              {!_.isEmpty(this.state.listRateUser) ? (
+                _.map(this.state.listRateUser, (item, index) => {
+                  return <RatingUser key={index} rate={index + 1} row={item} />;
+                })
+              ) : (
+                <Text style={styles.textNotExam}>Chưa có bảng xếp hạng.</Text>
+              )}
             </View>
             <View style={styles.card}>
-              <Text style={styles.titleCard}>Tỷ lệ hoàn thành môn:</Text>
-              {_.map(this.state.listPercentTopic, (item, index) => {
-                let percent =
-                  _.get(item, 'total_correct') / _.get(item, 'total_question');
-                return (
-                  <AchievementUser
-                    key={index}
-                    name={_.get(item, 'name')}
-                    process={percent}
-                  />
-                );
-              })}
+              <Text style={styles.titleCard}>Thành tích:</Text>
+              {!_.isEmpty(this.state.listPercentTopic) ? (
+                _.map(this.state.listPercentTopic, (item, index) => {
+                  let percent =
+                    _.get(item, 'total_correct') /
+                    _.get(item, 'total_question');
+                  return (
+                    <AchievementUser
+                      key={index}
+                      name={_.get(item, 'name')}
+                      process={percent}
+                    />
+                  );
+                })
+              ) : (
+                <Text style={styles.textNotExam}>Bạn chưa có thành tích.</Text>
+              )}
             </View>
           </View>
         </ScrollView>
