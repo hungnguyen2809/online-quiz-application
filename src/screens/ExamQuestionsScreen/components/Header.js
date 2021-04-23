@@ -1,13 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import TimeClock from './TimeClock';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 
 class Header extends Component {
   constructor(props) {
     super(props);
+
+    this.refTime = React.createRef();
   }
+
+  onStopTime = () => {
+    this.refTime.current.onStop();
+  };
+
+  onFinishTime = () => {
+    return this.refTime.current.onFinish();
+  };
 
   render() {
     return (
@@ -23,7 +33,10 @@ class Header extends Component {
             style={styles.iconClock}
             source={require('./../../../assets/icons/clock.png')}
           />
-          <TimeClock onFinishTime={this.props.onFinishTime} />
+          <TimeClock
+            ref={this.refTime}
+            onFinishTime={this.props.onFinishTime}
+          />
         </View>
         <TouchableOpacity onPress={this.props.onPressRight}>
           {/* <Text style={styles.textBtnFinish}>Nộp bài</Text> */}

@@ -1,10 +1,12 @@
 import {
+  USER_QUESTION_CREATE,
   USER_QUESTION_GETLIST_INFO_EXAM,
   USER_QUESTION_GETLIST_INFO_EXAM_DONE,
   USER_QUESTION_GETLIST_PERCENT_TOPIC,
   USER_QUESTION_GETLIST_PERCENT_TOPIC_DONE,
   USER_QUESTION_GETLIST_RATE_USER,
   USER_QUESTION_GETLIST_RATE_USER_DONE,
+  USER_QUESTION_UPDATE,
 } from './constants';
 
 export const getListInfoExamByUserTopicAction = (
@@ -57,5 +59,27 @@ export const getListPercentTopicActionDone = (data) => {
   return {
     type: USER_QUESTION_GETLIST_PERCENT_TOPIC_DONE,
     payload: {data},
+  };
+};
+
+export const createUserQuestionAction = (
+  data,
+  callbacks = {callbacksOnSuccess: () => {}, callbacksOnFail: () => {}},
+) => {
+  return {
+    type: USER_QUESTION_CREATE,
+    payload: {data},
+    callbacks,
+  };
+};
+
+export const updateUserQuestionAction = (
+  data,
+  callbacks = {callbacksOnSuccess: () => {}, callbacksOnFail: () => {}},
+) => {
+  return {
+    type: USER_QUESTION_UPDATE,
+    payload: {data},
+    callbacks,
   };
 };

@@ -11,6 +11,7 @@ class TimeClock extends React.Component {
 
     this.state = {
       time: TIME * 60,
+      timeExec: 0,
     };
   }
 
@@ -24,6 +25,15 @@ class TimeClock extends React.Component {
     return second.length === 2 ? second : `0${second}`;
   };
 
+  onStop = () => {
+    this.eventTime && clearInterval(this.eventTime);
+  };
+
+  onFinish = () => {
+    this.onStop();
+    return this.state.timeExec;
+  };
+
   componentDidMount() {
     this.eventTime = setInterval(() => {
       console.log('time is runing.');
@@ -31,6 +41,7 @@ class TimeClock extends React.Component {
         (prevState) => {
           return {
             time: prevState.time - 1,
+            timeExec: prevState.timeExec + 1,
           };
         },
         () => {

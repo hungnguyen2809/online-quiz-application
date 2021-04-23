@@ -337,6 +337,8 @@ PODS:
   - RNSmtpMailer (1.2.0):
     - mailcore2-ios
     - React
+  - RNSVG (12.1.1):
+    - React
   - RNVectorIcons (8.0.0):
     - React-Core
   - Yoga (1.14.0)
@@ -403,6 +405,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNSmtpMailer (from `../node_modules/react-native-smtp-mailer/ios`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -500,6 +503,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNSmtpMailer:
     :path: "../node_modules/react-native-smtp-mailer/ios"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -557,6 +562,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: da95b83e241a7f5efe3da1a949b3ec3175380be0
   RNDeviceInfo: 921a809eaf9de79645a24de1c6ca90db6cb91786
   RNSmtpMailer: f8654a7cd1a25b0009e2f28c70bc34bb9e4040e6
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: f67a1abce2ec73e62fe4606e8110e95a832bc859
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

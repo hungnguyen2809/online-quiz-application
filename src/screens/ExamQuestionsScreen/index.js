@@ -1,19 +1,22 @@
+/* eslint-disable react/no-did-mount-set-state */
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   Alert,
-  FlatList,
+  // FlatList,
   Image,
   TouchableOpacity,
   View,
   BackHandler,
 } from 'react-native';
-import {backToLastScreen} from './../MethodScreen';
+import {backToLastScreen, goToScreenWithPassProps} from './../MethodScreen';
 import ExecExam from './components/ExecExam';
 import Header from './components/Header';
 import _, {fill, isEqual, upperCase} from 'lodash';
 import {styles} from './styles';
 import ModalReviewExam from './../../components/ModalReviewExam';
 import PagerView from 'react-native-pager-view';
+import {appScreens} from '../config-screen';
 
 class ExamQuestionsScreen extends Component {
   static options(prosp) {
@@ -43,10 +46,11 @@ class ExamQuestionsScreen extends Component {
     };
 
     this.backHandler = null;
+    this.refHeader = React.createRef();
   }
 
   componentDidMount() {
-    if (!!this.props.dataQuestions) {
+    if (this.props.dataQuestions) {
       this.setState({questions: this.props.dataQuestions});
     }
     this.backHandler = BackHandler.addEventListener(
@@ -61,26 +65,43 @@ class ExamQuestionsScreen extends Component {
     }
   }
 
-  _onFinishExam = () => {
-    Alert.alert(
-      'Kết quả',
-      `Bạn đã đúng ${this._handleCheckAnswer()}/${this.arrAnsers.length} !.`,
-      [
-        {
-          text: 'OK',
-          style: 'destructive',
-          onPress: () => {
-            if (this.state.showModalReview) {
-              this.setState({showModalReview: false}, () => {
-                backToLastScreen(this.props.componentId);
-              });
-            } else {
-              backToLastScreen(this.props.componentId);
-            }
-          },
-        },
-      ],
-    );
+  onGoToScreenResultExam = async () => {
+    this.refHeader.current.onStopTime();
+  };
+
+  _onFinishExam = async () => {
+    const {
+      countCorrect,
+      countInCorrect,
+      countNotCheck,
+    } = this._handleCheckAnswer();
+    let timeExec = this.refHeader.current.onFinishTime();
+    const dataProps = {
+      dataPass: this.props.dataPass,
+      timeExec,
+      countCorrect,
+      countInCorrect,
+      countNotCheck,
+      chooseQuestionId: this.props.chooseQuestionId,
+      parentComponentId: this.props.parentComponentId,
+      onRefreshQuestionSet: this.props.onRefreshQuestionSet,
+    };
+    if (this.state.showModalReview) {
+      this.setState({showModalReview: false}, async () => {
+        await goToScreenWithPassProps(
+          this.props.parentComponentId,
+          appScreens.ResultExamScreen.name,
+          dataProps,
+        );
+      });
+    } else {
+      await goToScreenWithPassProps(
+        this.props.parentComponentId,
+        appScreens.ResultExamScreen.name,
+        dataProps,
+      );
+    }
+    this.refHeader.current.onStopTime();
     console.log('Ans', this.arrAnsers);
   };
 
@@ -114,7 +135,9 @@ class ExamQuestionsScreen extends Component {
   };
 
   _onPressPrev = () => {
-    if (this.potions <= 0) return;
+    if (this.potions <= 0) {
+      return;
+    }
     this.potions--;
     // console.log('Potions: ', potions);
     // this.viewQuestions.current.scrollToIndex({index: this.potions});
@@ -122,7 +145,9 @@ class ExamQuestionsScreen extends Component {
   };
 
   _onPressNext = () => {
-    if (this.potions >= this.state.questions.length - 1) return;
+    if (this.potions >= this.state.questions.length - 1) {
+      return;
+    }
     this.potions++;
     // console.log('Potions: ', potions);
     // this.viewQuestions.current.scrollToIndex({index: this.potions});
@@ -130,7 +155,9 @@ class ExamQuestionsScreen extends Component {
   };
 
   _handleCheckAnswer = () => {
-    let count = 0;
+    let countCorrect = 0;
+    let countInCorrect = 0;
+    let countNotCheck = 0;
     this.arrAnsers.forEach((answer, index) => {
       if (
         isEqual(
@@ -138,10 +165,14 @@ class ExamQuestionsScreen extends Component {
           upperCase(answer),
         )
       ) {
-        count = count + 1;
+        countCorrect++;
+      } else if (answer === -1) {
+        countNotCheck++;
+      } else {
+        countInCorrect++;
       }
     });
-    return count;
+    return {countCorrect, countInCorrect, countNotCheck};
   };
 
   goBackScreen = () => {
@@ -199,6 +230,7 @@ class ExamQuestionsScreen extends Component {
     return (
       <View style={styles.container}>
         <Header
+          ref={this.refHeader}
           onPressLeft={this.goBackScreen}
           onPressRight={this._openCloseReviewExam}
           onFinishTime={this.onSubmitFinishEndTimeExam}

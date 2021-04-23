@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
@@ -78,9 +79,9 @@ class ChooseQuestionScreen extends Component {
   }
 
   async componentDidMount() {
-    if (!!this.props.account) {
+    if (this.props.account) {
       this.setState({account: this.props.account}, () => {
-        if (!!this.props.topic) {
+        if (this.props.topic) {
           this.setState({idTopic: get(this.props.topic, 'id')}, () => {
             // this.onGetListQuestionSet();
             this.onGetListInfoExam();
@@ -149,6 +150,7 @@ class ChooseQuestionScreen extends Component {
       id_topic: this.state.idTopic,
     };
     // console.log('PAYLOAD: ', payload);
+    this.setState({loading: true});
     this.props.doGetListInfoExam(payload);
   };
 
@@ -162,6 +164,8 @@ class ChooseQuestionScreen extends Component {
           dataPass: data,
           dataQuestions: get(dataQuestions, 'data', []),
           parentComponentId: this.props.parentComponentId,
+          chooseQuestionId: this.props.componentId,
+          onRefreshQuestionSet: this.onRefreshQuestionSet,
         },
       );
     } else {
