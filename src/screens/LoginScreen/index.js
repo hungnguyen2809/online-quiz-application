@@ -22,6 +22,7 @@ import InputEmailComponent from './components/InputEmailComponent';
 import InputPasswordComponent from './components/InputPasswordComponent';
 import {checkEmail, checkEmpty} from '../../common/validate';
 import {Encript} from './../../common/encoding';
+import SplashScreen from 'react-native-splash-screen';
 
 import {
   LoginAccountAction,
@@ -62,7 +63,11 @@ class LoginScreen extends Component {
     this.unsubscribeEventNetInfo = NetInfo.addEventListener((state) => {
       this.isConnectedInternet = state.isInternetReachable;
     });
-    this._handleExistsAccount();
+
+    setTimeout(() => {
+      SplashScreen.hide();
+      this._handleExistsAccount();
+    }, 1000);
   }
 
   onChangeEmail = (email) => {

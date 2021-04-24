@@ -256,6 +256,8 @@ PODS:
     - React-Core
   - react-native-pager-view (5.1.3):
     - React-Core
+  - react-native-splash-screen (3.2.0):
+    - React
   - React-RCTActionSheet (0.63.4):
     - React-Core/RCTActionSheetHeaders (= 0.63.4)
   - React-RCTAnimation (0.63.4):
@@ -334,6 +336,8 @@ PODS:
     - React-Core
   - RNDeviceInfo (8.0.1):
     - React-Core
+  - RNPermissions (3.0.2):
+    - React-Core
   - RNSmtpMailer (1.2.0):
     - mailcore2-ios
     - React
@@ -389,6 +393,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -404,6 +409,7 @@ DEPENDENCIES:
   - RealmJS (from `../node_modules/realm`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNSmtpMailer (from `../node_modules/react-native-smtp-mailer/ios`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -471,6 +477,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -501,6 +509,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNSmtpMailer:
     :path: "../node_modules/react-native-smtp-mailer/ios"
   RNSVG:
@@ -546,6 +556,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 64d12e81f3d9dad0af107fe6536b295d51932ec0
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-pager-view: 08c5414c85f5e3bb35e57f6e72a81a567b9ee749
+  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -561,6 +572,7 @@ SPEC CHECKSUMS:
   RealmJS: ca9b0c1677d5248c6c360bc1b733ed087d345c2f
   RNCAsyncStorage: da95b83e241a7f5efe3da1a949b3ec3175380be0
   RNDeviceInfo: 921a809eaf9de79645a24de1c6ca90db6cb91786
+  RNPermissions: 58c1eb5638504e3afda963a8b0f43b6752132b05
   RNSmtpMailer: f8654a7cd1a25b0009e2f28c70bc34bb9e4040e6
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: f67a1abce2ec73e62fe4606e8110e95a832bc859
