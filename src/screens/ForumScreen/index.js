@@ -1,8 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {appScreens} from '../config-screen';
-import {goToScreen} from '../MethodScreen';
+import {StyleSheet, Text, View} from 'react-native';
 import HeadTopBar from './../../components/HeadTopBar';
 
 class ForumScreen extends Component {
@@ -34,16 +32,7 @@ class ForumScreen extends Component {
       <View style={styles.container}>
         <HeadTopBar />
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          {/* <Text>Chưa vẽ gì cả</Text> */}
-          <TouchableOpacity
-            onPress={() => {
-              goToScreen(
-                this.props.componentId,
-                appScreens.ResultExamScreen.name,
-              );
-            }}>
-            <Text>GO TO</Text>
-          </TouchableOpacity>
+          <Text>Chưa vẽ gì cả</Text>
         </View>
       </View>
     );
