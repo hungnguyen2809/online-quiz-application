@@ -101,9 +101,9 @@ class HomeScreen extends Component {
               <Text style={styles.titleCard}>Thành tích:</Text>
               {!_.isEmpty(this.state.listPercentTopic) ? (
                 _.map(this.state.listPercentTopic, (item, index) => {
-                  let percent =
-                    _.get(item, 'total_correct') /
-                    _.get(item, 'total_question');
+                  let percent = (
+                    _.get(item, 'total_correct') / _.get(item, 'total_question')
+                  ).toFixed(2);
                   return (
                     <AchievementUser
                       key={index}

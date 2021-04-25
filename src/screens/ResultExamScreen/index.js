@@ -9,6 +9,7 @@ import {SCREEN_WIDTH} from '../../common/dimensionScreen';
 import HeadTopBar from '../../components/HeadTopBar';
 import {
   createUserQuestionAction,
+  getListPercentTopicAction,
   updateUserQuestionAction,
 } from '../../redux/UserQuestion/actions';
 import {backToScreen} from '../MethodScreen';
@@ -44,9 +45,15 @@ class ResultExamScreen extends Component {
 
   componentDidMount() {}
 
-  onGoBackScreen = () => {
-    backToScreen(this.props.chooseQuestionId);
+  onGoBackScreen = async () => {
+    await backToScreen(this.props.chooseQuestionId);
     this.props.onRefreshQuestionSet();
+
+    const account = await getAccountToStorage();
+    const payload = {
+      id_user: _.get(account, 'id'),
+    };
+    this.props.doGetListPercentTopic(payload);
   };
 
   onSubmitResult = async () => {
@@ -99,7 +106,7 @@ class ResultExamScreen extends Component {
 
   calculatorPercent = (num) => {
     let totalQues = _.get(this.props.dataPass, 'total_question');
-    return ((num / totalQues) * 100).toFixed(0);
+    return ((num / totalQues) * 100).toFixed(2);
   };
 
   render() {
@@ -202,6 +209,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     doUpdateUserQuestion: (payload, callbacks) => {
       dispatch(updateUserQuestionAction(payload, callbacks));
+    },
+    doGetListPercentTopic: (payload) => {
+      dispatch(getListPercentTopicAction(payload));
     },
   };
 };

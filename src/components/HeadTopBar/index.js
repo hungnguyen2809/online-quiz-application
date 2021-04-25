@@ -21,7 +21,7 @@ class HeadTopBar extends Component {
             : null}
           <Image
             style={[styles.logo, {marginLeft: subComponentButtonLeft ? 22 : 0}]}
-            source={require('./../../assets/icons/question_mark.png')}
+            source={require('./../../assets/images/logo.png')}
           />
           <Text style={styles.title}>{title ? title : 'Online Quiz'}</Text>
         </View>
@@ -57,13 +57,17 @@ const styles = StyleSheet.create({
     width: 26,
   },
   logo: {
-    width: 45,
-    height: 45,
+    width: 40,
+    height: 40,
+    borderRadius: 6,
+    marginBottom: 5,
+    borderColor: '#eee',
+    borderWidth: 1,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#d35400',
-    marginLeft: 25,
+    marginLeft: 20,
   },
 });
