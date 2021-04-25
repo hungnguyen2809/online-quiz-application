@@ -15,6 +15,8 @@ import {connect} from 'react-redux';
 import NetInfo from '@react-native-community/netinfo';
 import {Navigation} from 'react-native-navigation';
 import Spinner from 'react-native-loading-spinner-overlay';
+import SplashScreen from 'react-native-splash-screen';
+import LottieView from 'lottie-react-native';
 
 import {styles} from './styles';
 import {appScreens, screenMain} from './../config-screen';
@@ -22,7 +24,6 @@ import InputEmailComponent from './components/InputEmailComponent';
 import InputPasswordComponent from './components/InputPasswordComponent';
 import {checkEmail, checkEmpty} from '../../common/validate';
 import {Encript} from './../../common/encoding';
-import SplashScreen from 'react-native-splash-screen';
 
 import {
   LoginAccountAction,
@@ -51,6 +52,7 @@ class LoginScreen extends Component {
       email: '',
       password: '',
       loading: false,
+      showLottie: true,
     };
 
     this.isConnectedInternet = false;
@@ -64,10 +66,16 @@ class LoginScreen extends Component {
       this.isConnectedInternet = state.isInternetReachable;
     });
 
+    SplashScreen.hide();
     setTimeout(() => {
-      SplashScreen.hide();
-      this._handleExistsAccount();
-    }, 1000);
+      this.setState({showLottie: false}, () => {
+        if (this.isConnectedInternet) {
+          this._handleExistsAccount();
+        } else {
+          Alert.alert('Thông báo', 'Không có kết nối internet');
+        }
+      });
+    }, 1500);
   }
 
   onChangeEmail = (email) => {
@@ -200,7 +208,13 @@ class LoginScreen extends Component {
   };
 
   render() {
-    return (
+    return this.state.showLottie ? (
+      <LottieView
+        source={require('./../../assets/animated/question-mark.json')}
+        autoPlay
+        loop
+      />
+    ) : (
       <>
         <TouchableWithoutFeedback onPress={this.dismissKeyboard}>
           <KeyboardAvoidingView
