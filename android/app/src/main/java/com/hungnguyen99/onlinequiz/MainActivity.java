@@ -1,4 +1,4 @@
-package com.apptracnghiemonline;
+package com.hungnguyen99.onlinequiz;
 
 import com.reactnativenavigation.NavigationActivity;
 import android.os.Bundle;

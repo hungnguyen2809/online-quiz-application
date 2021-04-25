@@ -3,12 +3,12 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '11.0'
 
-target 'AppTracNghiemOnline' do
+target 'OnlineQuiz' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
-  target 'AppTracNghiemOnlineTests' do
+  target 'OnlineQuizTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -23,10 +23,10 @@ target 'AppTracNghiemOnline' do
   end
 end
 
-target 'AppTracNghiemOnline-tvOS' do
-  # Pods for AppTracNghiemOnline-tvOS
+target 'OnlineQuiz-tvOS' do
+  # Pods for OnlineQuiz-tvOS
 
-  target 'AppTracNghiemOnline-tvOSTests' do
+  target 'OnlineQuiz-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

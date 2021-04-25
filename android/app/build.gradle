@@ -147,7 +147,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.apptracnghiemonline"
+        applicationId "com.hungnguyen99.onlinequiz"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* AppTracNghiemOnlineTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AppTracNghiemOnlineTests.m */; };
+		00E356F31AD99517003FC87E /* OnlineQuizTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OnlineQuizTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2DCD954D1E0B4F2C00145EB5 /* AppTracNghiemOnlineTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AppTracNghiemOnlineTests.m */; };
-		4BD429F80EDBBD2A7C2029B5 /* libPods-AppTracNghiemOnline-AppTracNghiemOnlineTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 621F4E7654A1ECCA1E146824 /* libPods-AppTracNghiemOnline-AppTracNghiemOnlineTests.a */; };
+		2DCD954D1E0B4F2C00145EB5 /* OnlineQuizTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OnlineQuizTests.m */; };
+		4BD429F80EDBBD2A7C2029B5 /* libPods-OnlineQuiz-OnlineQuizTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 621F4E7654A1ECCA1E146824 /* libPods-OnlineQuiz-OnlineQuizTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		997D802C0E5EECB19A3374AE /* libPods-AppTracNghiemOnline-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 825F77C4510B5E56B591DFA2 /* libPods-AppTracNghiemOnline-tvOSTests.a */; };
-		B3E42F44B3726146701984A7 /* libPods-AppTracNghiemOnline-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7055175D7E1318F0AA5B5A37 /* libPods-AppTracNghiemOnline-tvOS.a */; };
+		997D802C0E5EECB19A3374AE /* libPods-OnlineQuiz-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 825F77C4510B5E56B591DFA2 /* libPods-OnlineQuiz-tvOSTests.a */; };
+		B3E42F44B3726146701984A7 /* libPods-OnlineQuiz-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7055175D7E1318F0AA5B5A37 /* libPods-OnlineQuiz-tvOS.a */; };
 		C50453A7900243A4A8B54E00 /* OpenSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 778890BF0E4748509A5B7620 /* OpenSans.ttf */; };
-		F7828EF9CEDA0454EE473759 /* libPods-AppTracNghiemOnline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B5198AD09B8D113634075C /* libPods-AppTracNghiemOnline.a */; };
+		F7828EF9CEDA0454EE473759 /* libPods-OnlineQuiz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B5198AD09B8D113634075C /* libPods-OnlineQuiz.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,45 +29,45 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = AppTracNghiemOnline;
+			remoteInfo = OnlineQuiz;
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "AppTracNghiemOnline-tvOS";
+			remoteInfo = "OnlineQuiz-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* AppTracNghiemOnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppTracNghiemOnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* OnlineQuizTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineQuizTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* AppTracNghiemOnlineTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppTracNghiemOnlineTests.m; sourceTree = "<group>"; };
-		0EF48F3625CB8785008AA09E /* AppTracNghiemOnline.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AppTracNghiemOnline.entitlements; path = AppTracNghiemOnline/AppTracNghiemOnline.entitlements; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* AppTracNghiemOnline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppTracNghiemOnline.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AppTracNghiemOnline/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = AppTracNghiemOnline/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AppTracNghiemOnline/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AppTracNghiemOnline/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AppTracNghiemOnline/main.m; sourceTree = "<group>"; };
-		1A5EA548C97B147B1DBECC86 /* Pods-AppTracNghiemOnline-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline-tvOS.release.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline-tvOS/Pods-AppTracNghiemOnline-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AppTracNghiemOnline-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* AppTracNghiemOnline-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppTracNghiemOnline-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		339920548172EB58EBF0998C /* Pods-AppTracNghiemOnline-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline-tvOSTests/Pods-AppTracNghiemOnline-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		35B929F391E8EB5CCEB62FFA /* Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.debug.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.debug.xcconfig"; sourceTree = "<group>"; };
-		42A8CECDA08271821552F8A9 /* Pods-AppTracNghiemOnline.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline.release.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline/Pods-AppTracNghiemOnline.release.xcconfig"; sourceTree = "<group>"; };
-		458AB248FE2C443D00297874 /* Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.release.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.release.xcconfig"; sourceTree = "<group>"; };
-		4D6CD8E7E0AE7FF0D36EBB41 /* Pods-AppTracNghiemOnline.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline.debug.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline/Pods-AppTracNghiemOnline.debug.xcconfig"; sourceTree = "<group>"; };
-		52B5198AD09B8D113634075C /* libPods-AppTracNghiemOnline.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppTracNghiemOnline.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		621F4E7654A1ECCA1E146824 /* libPods-AppTracNghiemOnline-AppTracNghiemOnlineTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppTracNghiemOnline-AppTracNghiemOnlineTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7055175D7E1318F0AA5B5A37 /* libPods-AppTracNghiemOnline-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppTracNghiemOnline-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356F21AD99517003FC87E /* OnlineQuizTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnlineQuizTests.m; sourceTree = "<group>"; };
+		0EF48F3625CB8785008AA09E /* OnlineQuiz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OnlineQuiz.entitlements; path = OnlineQuiz/OnlineQuiz.entitlements; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* OnlineQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlineQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OnlineQuiz/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OnlineQuiz/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OnlineQuiz/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OnlineQuiz/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OnlineQuiz/main.m; sourceTree = "<group>"; };
+		1A5EA548C97B147B1DBECC86 /* Pods-OnlineQuiz-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz-tvOS.release.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz-tvOS/Pods-OnlineQuiz-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		2D02E47B1E0B4A5D006451C7 /* OnlineQuiz-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OnlineQuiz-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* OnlineQuiz-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OnlineQuiz-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		339920548172EB58EBF0998C /* Pods-OnlineQuiz-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz-tvOSTests/Pods-OnlineQuiz-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		35B929F391E8EB5CCEB62FFA /* Pods-OnlineQuiz-OnlineQuizTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz-OnlineQuizTests.debug.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz-OnlineQuizTests/Pods-OnlineQuiz-OnlineQuizTests.debug.xcconfig"; sourceTree = "<group>"; };
+		42A8CECDA08271821552F8A9 /* Pods-OnlineQuiz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz.release.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz/Pods-OnlineQuiz.release.xcconfig"; sourceTree = "<group>"; };
+		458AB248FE2C443D00297874 /* Pods-OnlineQuiz-OnlineQuizTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz-OnlineQuizTests.release.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz-OnlineQuizTests/Pods-OnlineQuiz-OnlineQuizTests.release.xcconfig"; sourceTree = "<group>"; };
+		4D6CD8E7E0AE7FF0D36EBB41 /* Pods-OnlineQuiz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz.debug.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz/Pods-OnlineQuiz.debug.xcconfig"; sourceTree = "<group>"; };
+		52B5198AD09B8D113634075C /* libPods-OnlineQuiz.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		621F4E7654A1ECCA1E146824 /* libPods-OnlineQuiz-OnlineQuizTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz-OnlineQuizTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7055175D7E1318F0AA5B5A37 /* libPods-OnlineQuiz-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		778890BF0E4748509A5B7620 /* OpenSans.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans.ttf; path = ../src/assets/fonts/OpenSans.ttf; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AppTracNghiemOnline/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		825F77C4510B5E56B591DFA2 /* libPods-AppTracNghiemOnline-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppTracNghiemOnline-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B488D3957C53582FBE79CFB7 /* Pods-AppTracNghiemOnline-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline-tvOS/Pods-AppTracNghiemOnline-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		C5013BD585542160373A568D /* Pods-AppTracNghiemOnline-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTracNghiemOnline-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AppTracNghiemOnline-tvOSTests/Pods-AppTracNghiemOnline-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OnlineQuiz/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		825F77C4510B5E56B591DFA2 /* libPods-OnlineQuiz-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B488D3957C53582FBE79CFB7 /* Pods-OnlineQuiz-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz-tvOS/Pods-OnlineQuiz-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		C5013BD585542160373A568D /* Pods-OnlineQuiz-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz-tvOSTests/Pods-OnlineQuiz-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -77,7 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BD429F80EDBBD2A7C2029B5 /* libPods-AppTracNghiemOnline-AppTracNghiemOnlineTests.a in Frameworks */,
+				4BD429F80EDBBD2A7C2029B5 /* libPods-OnlineQuiz-OnlineQuizTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7828EF9CEDA0454EE473759 /* libPods-AppTracNghiemOnline.a in Frameworks */,
+				F7828EF9CEDA0454EE473759 /* libPods-OnlineQuiz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E42F44B3726146701984A7 /* libPods-AppTracNghiemOnline-tvOS.a in Frameworks */,
+				B3E42F44B3726146701984A7 /* libPods-OnlineQuiz-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,20 +101,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				997D802C0E5EECB19A3374AE /* libPods-AppTracNghiemOnline-tvOSTests.a in Frameworks */,
+				997D802C0E5EECB19A3374AE /* libPods-OnlineQuiz-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* AppTracNghiemOnlineTests */ = {
+		00E356EF1AD99517003FC87E /* OnlineQuizTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* AppTracNghiemOnlineTests.m */,
+				00E356F21AD99517003FC87E /* OnlineQuizTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = AppTracNghiemOnlineTests;
+			path = OnlineQuizTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -125,10 +125,10 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* AppTracNghiemOnline */ = {
+		13B07FAE1A68108700A75B9A /* OnlineQuiz */ = {
 			isa = PBXGroup;
 			children = (
-				0EF48F3625CB8785008AA09E /* AppTracNghiemOnline.entitlements */,
+				0EF48F3625CB8785008AA09E /* OnlineQuiz.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -137,7 +137,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = AppTracNghiemOnline;
+			name = OnlineQuiz;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -145,10 +145,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				52B5198AD09B8D113634075C /* libPods-AppTracNghiemOnline.a */,
-				621F4E7654A1ECCA1E146824 /* libPods-AppTracNghiemOnline-AppTracNghiemOnlineTests.a */,
-				7055175D7E1318F0AA5B5A37 /* libPods-AppTracNghiemOnline-tvOS.a */,
-				825F77C4510B5E56B591DFA2 /* libPods-AppTracNghiemOnline-tvOSTests.a */,
+				52B5198AD09B8D113634075C /* libPods-OnlineQuiz.a */,
+				621F4E7654A1ECCA1E146824 /* libPods-OnlineQuiz-OnlineQuizTests.a */,
+				7055175D7E1318F0AA5B5A37 /* libPods-OnlineQuiz-tvOS.a */,
+				825F77C4510B5E56B591DFA2 /* libPods-OnlineQuiz-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -163,9 +163,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* AppTracNghiemOnline */,
+				13B07FAE1A68108700A75B9A /* OnlineQuiz */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* AppTracNghiemOnlineTests */,
+				00E356EF1AD99517003FC87E /* OnlineQuizTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BB2050CB36C33B1C512861A7 /* Pods */,
@@ -179,10 +179,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* AppTracNghiemOnline.app */,
-				00E356EE1AD99517003FC87E /* AppTracNghiemOnlineTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* AppTracNghiemOnline-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* OnlineQuiz.app */,
+				00E356EE1AD99517003FC87E /* OnlineQuizTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* OnlineQuiz-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* OnlineQuiz-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -198,14 +198,14 @@
 		BB2050CB36C33B1C512861A7 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4D6CD8E7E0AE7FF0D36EBB41 /* Pods-AppTracNghiemOnline.debug.xcconfig */,
-				42A8CECDA08271821552F8A9 /* Pods-AppTracNghiemOnline.release.xcconfig */,
-				35B929F391E8EB5CCEB62FFA /* Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.debug.xcconfig */,
-				458AB248FE2C443D00297874 /* Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.release.xcconfig */,
-				B488D3957C53582FBE79CFB7 /* Pods-AppTracNghiemOnline-tvOS.debug.xcconfig */,
-				1A5EA548C97B147B1DBECC86 /* Pods-AppTracNghiemOnline-tvOS.release.xcconfig */,
-				C5013BD585542160373A568D /* Pods-AppTracNghiemOnline-tvOSTests.debug.xcconfig */,
-				339920548172EB58EBF0998C /* Pods-AppTracNghiemOnline-tvOSTests.release.xcconfig */,
+				4D6CD8E7E0AE7FF0D36EBB41 /* Pods-OnlineQuiz.debug.xcconfig */,
+				42A8CECDA08271821552F8A9 /* Pods-OnlineQuiz.release.xcconfig */,
+				35B929F391E8EB5CCEB62FFA /* Pods-OnlineQuiz-OnlineQuizTests.debug.xcconfig */,
+				458AB248FE2C443D00297874 /* Pods-OnlineQuiz-OnlineQuizTests.release.xcconfig */,
+				B488D3957C53582FBE79CFB7 /* Pods-OnlineQuiz-tvOS.debug.xcconfig */,
+				1A5EA548C97B147B1DBECC86 /* Pods-OnlineQuiz-tvOS.release.xcconfig */,
+				C5013BD585542160373A568D /* Pods-OnlineQuiz-tvOSTests.debug.xcconfig */,
+				339920548172EB58EBF0998C /* Pods-OnlineQuiz-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -213,9 +213,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* AppTracNghiemOnlineTests */ = {
+		00E356ED1AD99517003FC87E /* OnlineQuizTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "AppTracNghiemOnlineTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OnlineQuizTests" */;
 			buildPhases = (
 				FCF10412AF9E1AA83DE4EC8F /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -228,14 +228,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = AppTracNghiemOnlineTests;
-			productName = AppTracNghiemOnlineTests;
-			productReference = 00E356EE1AD99517003FC87E /* AppTracNghiemOnlineTests.xctest */;
+			name = OnlineQuizTests;
+			productName = OnlineQuizTests;
+			productReference = 00E356EE1AD99517003FC87E /* OnlineQuizTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* AppTracNghiemOnline */ = {
+		13B07F861A680F5B00A75B9A /* OnlineQuiz */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AppTracNghiemOnline" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OnlineQuiz" */;
 			buildPhases = (
 				EFE7D3DF8BEA7CC841A46579 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -249,14 +249,14 @@
 			);
 			dependencies = (
 			);
-			name = AppTracNghiemOnline;
-			productName = AppTracNghiemOnline;
-			productReference = 13B07F961A680F5B00A75B9A /* AppTracNghiemOnline.app */;
+			name = OnlineQuiz;
+			productName = OnlineQuiz;
+			productReference = 13B07F961A680F5B00A75B9A /* OnlineQuiz.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* OnlineQuiz-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AppTracNghiemOnline-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OnlineQuiz-tvOS" */;
 			buildPhases = (
 				0F06D141B28959DDA37C1229 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
@@ -269,14 +269,14 @@
 			);
 			dependencies = (
 			);
-			name = "AppTracNghiemOnline-tvOS";
-			productName = "AppTracNghiemOnline-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOS.app */;
+			name = "OnlineQuiz-tvOS";
+			productName = "OnlineQuiz-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* OnlineQuiz-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* OnlineQuiz-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AppTracNghiemOnline-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OnlineQuiz-tvOSTests" */;
 			buildPhases = (
 				CCA48E90CEFA4DCFBBB6410F /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -288,9 +288,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "AppTracNghiemOnline-tvOSTests";
-			productName = "AppTracNghiemOnline-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* AppTracNghiemOnline-tvOSTests.xctest */;
+			name = "OnlineQuiz-tvOSTests";
+			productName = "OnlineQuiz-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* OnlineQuiz-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -323,7 +323,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "AppTracNghiemOnline" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OnlineQuiz" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -336,10 +336,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* AppTracNghiemOnline */,
-				00E356ED1AD99517003FC87E /* AppTracNghiemOnlineTests */,
-				2D02E47A1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* OnlineQuiz */,
+				00E356ED1AD99517003FC87E /* OnlineQuizTests */,
+				2D02E47A1E0B4A5D006451C7 /* OnlineQuiz-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* OnlineQuiz-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -409,7 +409,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AppTracNghiemOnline-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OnlineQuiz-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -436,7 +436,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-OnlineQuiz-OnlineQuizTests/Pods-OnlineQuiz-OnlineQuizTests-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -477,7 +477,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OnlineQuiz-OnlineQuizTests/Pods-OnlineQuiz-OnlineQuizTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		90F9F9FDBAE8A800C1297F43 /* [CP] Copy Pods Resources */ = {
@@ -486,7 +486,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AppTracNghiemOnline/Pods-AppTracNghiemOnline-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-OnlineQuiz/Pods-OnlineQuiz-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -527,7 +527,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AppTracNghiemOnline/Pods-AppTracNghiemOnline-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OnlineQuiz/Pods-OnlineQuiz-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CCA48E90CEFA4DCFBBB6410F /* [CP] Check Pods Manifest.lock */ = {
@@ -545,7 +545,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AppTracNghiemOnline-tvOSTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OnlineQuiz-tvOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -567,7 +567,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AppTracNghiemOnline-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OnlineQuiz-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -589,7 +589,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OnlineQuiz-OnlineQuizTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -641,7 +641,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* AppTracNghiemOnlineTests.m in Sources */,
+				00E356F31AD99517003FC87E /* OnlineQuizTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,7 +667,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* AppTracNghiemOnlineTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* OnlineQuizTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,12 +676,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* AppTracNghiemOnline */;
+			target = 13B07F861A680F5B00A75B9A /* OnlineQuiz */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* AppTracNghiemOnline-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* OnlineQuiz-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -689,7 +689,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35B929F391E8EB5CCEB62FFA /* Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.debug.xcconfig */;
+			baseConfigurationReference = 35B929F391E8EB5CCEB62FFA /* Pods-OnlineQuiz-OnlineQuizTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
@@ -698,7 +698,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = AppTracNghiemOnlineTests/Info.plist;
+				INFOPLIST_FILE = OnlineQuizTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -708,19 +708,19 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppTracNghiemOnline.app/AppTracNghiemOnline";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlineQuiz.app/OnlineQuiz";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 458AB248FE2C443D00297874 /* Pods-AppTracNghiemOnline-AppTracNghiemOnlineTests.release.xcconfig */;
+			baseConfigurationReference = 458AB248FE2C443D00297874 /* Pods-OnlineQuiz-OnlineQuizTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 2VT72CZTC7;
-				INFOPLIST_FILE = AppTracNghiemOnlineTests/Info.plist;
+				INFOPLIST_FILE = OnlineQuizTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -730,21 +730,21 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppTracNghiemOnline.app/AppTracNghiemOnline";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlineQuiz.app/OnlineQuiz";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D6CD8E7E0AE7FF0D36EBB41 /* Pods-AppTracNghiemOnline.debug.xcconfig */;
+			baseConfigurationReference = 4D6CD8E7E0AE7FF0D36EBB41 /* Pods-OnlineQuiz.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = AppTracNghiemOnline/AppTracNghiemOnline.entitlements;
+				CODE_SIGN_ENTITLEMENTS = OnlineQuiz/OnlineQuiz.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2VT72CZTC7;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = AppTracNghiemOnline/Info.plist;
+				INFOPLIST_FILE = OnlineQuiz/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -752,7 +752,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hungnguyen99.OnlineQuiz;
-				PRODUCT_NAME = AppTracNghiemOnline;
+				PRODUCT_NAME = OnlineQuiz;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -761,14 +761,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 42A8CECDA08271821552F8A9 /* Pods-AppTracNghiemOnline.release.xcconfig */;
+			baseConfigurationReference = 42A8CECDA08271821552F8A9 /* Pods-OnlineQuiz.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = AppTracNghiemOnline/AppTracNghiemOnline.entitlements;
+				CODE_SIGN_ENTITLEMENTS = OnlineQuiz/OnlineQuiz.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2VT72CZTC7;
-				INFOPLIST_FILE = AppTracNghiemOnline/Info.plist;
+				INFOPLIST_FILE = OnlineQuiz/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -776,7 +776,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hungnguyen99.OnlineQuiz;
-				PRODUCT_NAME = AppTracNghiemOnline;
+				PRODUCT_NAME = OnlineQuiz;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -784,7 +784,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B488D3957C53582FBE79CFB7 /* Pods-AppTracNghiemOnline-tvOS.debug.xcconfig */;
+			baseConfigurationReference = B488D3957C53582FBE79CFB7 /* Pods-OnlineQuiz-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -796,14 +796,14 @@
 				DEVELOPMENT_TEAM = 2VT72CZTC7;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppTracNghiemOnline-tvOS/Info.plist";
+				INFOPLIST_FILE = "OnlineQuiz-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AppTracNghiemOnline-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.OnlineQuiz-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -813,7 +813,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A5EA548C97B147B1DBECC86 /* Pods-AppTracNghiemOnline-tvOS.release.xcconfig */;
+			baseConfigurationReference = 1A5EA548C97B147B1DBECC86 /* Pods-OnlineQuiz-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -825,14 +825,14 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 2VT72CZTC7;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppTracNghiemOnline-tvOS/Info.plist";
+				INFOPLIST_FILE = "OnlineQuiz-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AppTracNghiemOnline-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.OnlineQuiz-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -842,7 +842,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C5013BD585542160373A568D /* Pods-AppTracNghiemOnline-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = C5013BD585542160373A568D /* Pods-OnlineQuiz-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -853,24 +853,24 @@
 				DEVELOPMENT_TEAM = 2VT72CZTC7;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppTracNghiemOnline-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "OnlineQuiz-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AppTracNghiemOnline-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.OnlineQuiz-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppTracNghiemOnline-tvOS.app/AppTracNghiemOnline-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlineQuiz-tvOS.app/OnlineQuiz-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 339920548172EB58EBF0998C /* Pods-AppTracNghiemOnline-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 339920548172EB58EBF0998C /* Pods-OnlineQuiz-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -881,17 +881,17 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 2VT72CZTC7;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppTracNghiemOnline-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "OnlineQuiz-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.AppTracNghiemOnline-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.OnlineQuiz-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppTracNghiemOnline-tvOS.app/AppTracNghiemOnline-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlineQuiz-tvOS.app/OnlineQuiz-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -1012,7 +1012,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "AppTracNghiemOnlineTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OnlineQuizTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1021,7 +1021,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AppTracNghiemOnline" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OnlineQuiz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1030,7 +1030,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AppTracNghiemOnline-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OnlineQuiz-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1039,7 +1039,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AppTracNghiemOnline-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OnlineQuiz-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1048,7 +1048,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "AppTracNghiemOnline" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OnlineQuiz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
