@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import Config from 'react-native-config';
 import {getTokenToStorage} from './../common/asyncStorage';
 
-const isProduct = false;
+const isProduct = true;
 
 const BaseAPI = {
   HOST: isProduct ? Config.IP_HOST_PRODUCT : Config.IP_HOST_DEV,

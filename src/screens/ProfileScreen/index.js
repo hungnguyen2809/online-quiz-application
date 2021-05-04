@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 // import DocumentPicker from 'react-native-document-picker';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {get, isEmpty, toString} from 'lodash';
+import {get} from 'lodash';
 import {deleteAccountToStorage} from './../../common/asyncStorage';
 import {Navigation} from 'react-native-navigation';
 import {appScreens, screenAuth} from './../config-screen';
@@ -27,6 +27,7 @@ import {getAccountSelector} from './../../redux/Account/selectors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ItemInfo from './components/ItemInfo';
 import Toast from './../../components/Toast';
+import ImageResizer from 'react-native-image-resizer';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -97,16 +98,30 @@ class ProfileScreen extends Component {
     );
   };
 
-  _handleSaveChangeAvatar = (fileImage) => {
+  _handleSaveChangeAvatar = async (fileImage) => {
     try {
+      const imageResize = await ImageResizer.createResizedImage(
+        fileImage.uri,
+        fileImage.width / 4 > 200 ? fileImage.width / 4 : fileImage.width,
+        fileImage.height / 4 > 200 ? fileImage.height / 4 : fileImage.height,
+        'JPEG',
+        60,
+        0,
+        undefined,
+        false,
+        {mode: 'contain', onlyScaleDown: false},
+      );
+
       const formData = new FormData();
       formData.append('id', this.state.account.id);
       formData.append('file', {
-        name: fileImage.fileName,
-        type: fileImage.type,
-        uri: isIOS ? fileImage.uri.replace('file://', '') : fileImage.uri,
+        name: imageResize.name,
+        height: imageResize.height,
+        width: imageResize.width,
+        size: imageResize.size,
+        type: 'image/jpg',
+        uri: isIOS ? imageResize.uri.replace('file://', '') : imageResize.uri,
       });
-
       this.props.doUpdateAvatar(formData, {
         callbacksOnSuccess: () => {
           this.refToast.current.onShowToast('Cập nhật thành công !', 2000);

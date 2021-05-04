@@ -256,6 +256,8 @@ PODS:
     - React-Core
   - react-native-image-picker (3.2.1):
     - React-Core
+  - react-native-image-resizer (1.4.4):
+    - React-Core
   - react-native-netinfo (5.9.10):
     - React-Core
   - react-native-pager-view (5.1.3):
@@ -396,6 +398,7 @@ DEPENDENCIES:
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -481,6 +484,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-document-picker"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
@@ -564,6 +569,7 @@ SPEC CHECKSUMS:
   react-native-date-picker: 7f35e3562bfd46232f6f87dc4f4c30c5cd06aa4a
   react-native-document-picker: 20f652c2402d3ddc81f396d8167c3bd978add4a2
   react-native-image-picker: 64d12e81f3d9dad0af107fe6536b295d51932ec0
+  react-native-image-resizer: 13ac4af788f88af36d0353a1324401ebabd04fe4
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-pager-view: 08c5414c85f5e3bb35e57f6e72a81a567b9ee749
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
