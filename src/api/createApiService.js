@@ -3,10 +3,18 @@ import queryString from 'query-string';
 import Config from 'react-native-config';
 import {getTokenToStorage} from './../common/asyncStorage';
 
-const SERVER = `http://${Config.IP_HOST}:${Config.IP_PORT}/api`;
+const isProduct = false;
+
+const BaseAPI = {
+  HOST: isProduct ? Config.IP_HOST_PRODUCT : Config.IP_HOST_DEV,
+  PORT: Config.IP_PORT,
+  BaseUrl: isProduct
+    ? `http://${Config.IP_HOST_PRODUCT}:${Config.IP_PORT}/api`
+    : `http://${Config.IP_HOST_DEV}:${Config.IP_PORT}/api`,
+};
 
 const instanceAxios = axios.create({
-  baseURL: SERVER,
+  baseURL: BaseAPI.BaseUrl,
   timeout: 10000,
   timeoutErrorMessage: 'Quá thời gian kết nối',
   paramsSerializer: (params) => queryString.stringify(params),
