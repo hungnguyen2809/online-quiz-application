@@ -19,7 +19,7 @@ import ModalDate from './../../components/ModalDateTime';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {getAccountSelector} from '../../redux/Account/selectors';
-import {debounce, get, trim} from 'lodash';
+import {debounce, get, isEmpty, trim} from 'lodash';
 import moment from 'moment';
 import {dateFormat} from './../../common/formatDate';
 import {updateInfoAccountAction} from '../../redux/Account/actions';
@@ -142,10 +142,12 @@ class ProfileDetailsScreen extends Component {
       id: get(this.state.accountUpdating, 'id'),
       name: trim(get(this.state.accountUpdating, 'name')),
       phone: trim(get(this.state.accountUpdating, 'phone')),
-      birtday: moment(get(this.state.accountUpdating, 'birtday')).format(
-        dateFormat,
-      ),
-      address: trim(get(this.state.accountUpdating, 'address')),
+      birtday: !isEmpty(get(this.state.accountUpdating, 'birtday', null))
+        ? moment(get(this.state.accountUpdating, 'birtday')).format(dateFormat)
+        : null,
+      address: !isEmpty(trim(get(this.state.accountUpdating, 'address')))
+        ? trim(get(this.state.accountUpdating, 'address'))
+        : null,
     };
     // console.log('Body: ', body);
 

@@ -32,7 +32,7 @@ class ForumScreen extends Component {
       <View style={styles.container}>
         <HeadTopBar />
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>Chưa vẽ gì cả</Text>
+          <Text>Đang phát triển</Text>
         </View>
       </View>
     );
