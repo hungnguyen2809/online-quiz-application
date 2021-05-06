@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
+import {Navigation} from 'react-native-navigation';
 import {ScrollView, Text, View, RefreshControl} from 'react-native';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {getAccountToStorage} from '../../common/asyncStorage';
 import HeadTopBar from '../../components/HeadTopBar';
-import _ from 'lodash';
+import {get, isEmpty, map} from 'lodash';
 import {
   getListPercentTopicAction,
   getListRateUserAction,
@@ -36,6 +37,7 @@ class HomeScreen extends Component {
 
   constructor(props) {
     super(props);
+    Navigation.events().bindComponent(this);
 
     this.state = {
       listRateUser: [],
@@ -44,7 +46,9 @@ class HomeScreen extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount() {}
+
+  componentDidAppear() {
     this.props.doGetListRateUser();
     this.onGetListPercentTopic();
   }
@@ -64,7 +68,7 @@ class HomeScreen extends Component {
   onGetListPercentTopic = async () => {
     const account = await getAccountToStorage();
     const payload = {
-      id_user: _.get(account, 'id'),
+      id_user: get(account, 'id'),
     };
     this.props.doGetListPercentTopic(payload);
   };
@@ -89,8 +93,8 @@ class HomeScreen extends Component {
           <View style={styles.content}>
             <View style={styles.card}>
               <Text style={styles.titleCard}>Bảng xếp hạng:</Text>
-              {!_.isEmpty(this.state.listRateUser) ? (
-                _.map(this.state.listRateUser, (item, index) => {
+              {!isEmpty(this.state.listRateUser) ? (
+                map(this.state.listRateUser, (item, index) => {
                   return <RatingUser key={index} rate={index + 1} row={item} />;
                 })
               ) : (
@@ -99,15 +103,15 @@ class HomeScreen extends Component {
             </View>
             <View style={styles.card}>
               <Text style={styles.titleCard}>Thành tích:</Text>
-              {!_.isEmpty(this.state.listPercentTopic) ? (
-                _.map(this.state.listPercentTopic, (item, index) => {
+              {!isEmpty(this.state.listPercentTopic) ? (
+                map(this.state.listPercentTopic, (item, index) => {
                   let percent = (
-                    _.get(item, 'total_correct') / _.get(item, 'total_question')
+                    get(item, 'total_correct') / get(item, 'total_question')
                   ).toFixed(2);
                   return (
                     <AchievementUser
                       key={index}
-                      name={_.get(item, 'name')}
+                      name={get(item, 'name')}
                       process={percent}
                     />
                   );

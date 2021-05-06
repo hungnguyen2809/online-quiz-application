@@ -85,7 +85,18 @@ class ItemQuestion extends Component {
               <Text style={styles.description}>
                 Số câu hỏi: {get(row, 'total_question')}
               </Text>
-              <Text style={styles.lavel}>
+              <Text
+                style={[
+                  styles.lavel,
+                  {
+                    color:
+                      get(row, 'level') === 'E'
+                        ? Colors.LEVEL_E
+                        : get(row, 'level') === 'M'
+                        ? Colors.LEVEL_M
+                        : Colors.LEVEL_H,
+                  },
+                ]}>
                 Mức độ: {this._getLevel(get(row, 'level'))}
               </Text>
             </View>
@@ -147,7 +158,6 @@ const styles = StyleSheet.create({
     color: Colors.CLEAR_CHILL,
   },
   lavel: {
-    color: Colors.LEVEL_E,
     marginLeft: 10,
   },
   image: {

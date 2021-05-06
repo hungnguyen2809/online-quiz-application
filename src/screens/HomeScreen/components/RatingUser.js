@@ -4,11 +4,11 @@ import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {formatNumber} from '../../../common/format';
 
-const iconsRating = {
-  _1st: require('./../../../assets/icons/1st_place_medal.png'),
-  _2nd: require('./../../../assets/icons/2nd_place_medal.png'),
-  _3rd: require('./../../../assets/icons/3rd_place_medal.png'),
-};
+// const iconsRating = {
+//   _1st: require('./../../../assets/icons/1st_place_medal.png'),
+//   _2nd: require('./../../../assets/icons/2nd_place_medal.png'),
+//   _3rd: require('./../../../assets/icons/3rd_place_medal.png'),
+// };
 
 class RatingUser extends Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class RatingUser extends Component {
             </Text>
           </View>
         </View>
-        <View style={{flex: 1}}>
+        {/* <View style={{flex: 1}}>
           <Image
             style={styles.iconsRate}
             source={
@@ -60,7 +60,7 @@ class RatingUser extends Component {
                 : iconsRating._3rd
             }
           />
-        </View>
+        </View> */}
       </View>
     );
   }

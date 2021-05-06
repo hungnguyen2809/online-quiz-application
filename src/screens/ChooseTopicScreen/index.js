@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {Navigation} from 'react-native-navigation';
 import HeadTopBar from '../../components/HeadTopBar';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
@@ -19,7 +20,7 @@ import {createStructuredSelector} from 'reselect';
 import {getAllTopicsAction} from './../../redux/Topics/actions';
 import {listTopicsSelector} from './../../redux/Topics/selectors';
 import {connect} from 'react-redux';
-import _ from 'lodash';
+import {get} from 'lodash';
 
 class ChooseTopicScreen extends Component {
   static options(props) {
@@ -40,6 +41,7 @@ class ChooseTopicScreen extends Component {
 
   constructor(props) {
     super(props);
+    Navigation.events().bindComponent(this);
 
     this.state = {
       listTopis: [],
@@ -47,7 +49,9 @@ class ChooseTopicScreen extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount() {}
+
+  componentDidAppear() {
     if (!!this.props.listTopis) {
       this.setState({listTopis: this.props.listTopis});
     } else {
@@ -84,14 +88,11 @@ class ChooseTopicScreen extends Component {
     return (
       <TouchableOpacity onPress={() => this._startExam(item)}>
         <View style={styles.itemExam}>
-          <Image
-            style={styles.imageLabel}
-            source={{uri: _.get(item, 'image')}}
-          />
+          <Image style={styles.imageLabel} source={{uri: get(item, 'image')}} />
           <View style={styles.wrapLabel}>
-            <Text style={styles.titleExam}>{_.get(item, 'name')}</Text>
+            <Text style={styles.titleExam}>{get(item, 'name')}</Text>
             <Text numberOfLines={2} style={styles.desExam}>
-              {_.get(item, 'description')}
+              {get(item, 'description')}
             </Text>
           </View>
           <MaterialIcons
