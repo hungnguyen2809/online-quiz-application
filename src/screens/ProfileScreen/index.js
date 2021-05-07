@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
@@ -53,6 +54,8 @@ class ProfileScreen extends Component {
 
     this.state = {
       account: {},
+      loadingBg: false,
+      loadingAvt: false,
     };
 
     this.refToast = React.createRef();
@@ -176,10 +179,21 @@ class ProfileScreen extends Component {
         <View style={styles.circle} />
         <View>
           {get(account, 'image') ? (
-            <Image
-              style={styles.imageBackground}
-              source={{uri: get(account, 'image')}}
-            />
+            <View style={{backgroundColor: '#dcdcdc'}}>
+              <Image
+                style={styles.imageBackground}
+                source={{uri: get(account, 'image')}}
+                onLoadStart={() => this.setState({loadingBg: true})}
+                onLoad={() => this.setState({loadingBg: false})}
+              />
+              {this.state.loadingBg ? (
+                <ActivityIndicator
+                  size={'large'}
+                  color={'red'}
+                  style={styles.loadingBg}
+                />
+              ) : null}
+            </View>
           ) : (
             <Image
               style={styles.imageBackground}
@@ -188,10 +202,15 @@ class ProfileScreen extends Component {
           )}
           <View style={styles.wrapAvatar}>
             {get(account, 'image') ? (
-              <Image
-                style={styles.avatar}
-                source={{uri: get(account, 'image')}}
-              />
+              <View>
+                <Image
+                  style={styles.avatar}
+                  source={{uri: get(account, 'image')}}
+                />
+                {this.state.loadingAvt ? (
+                  <ActivityIndicator color={'red'} style={styles.loadingAvt} />
+                ) : null}
+              </View>
             ) : (
               <Image
                 style={styles.avatar}

@@ -10,6 +10,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {styles} from './styles';
@@ -55,6 +56,7 @@ class ProfileDetailsScreen extends Component {
       account: {},
       accountUpdating: {},
       isDisabled: true,
+      loadingImage: false,
     };
   }
 
@@ -192,10 +194,20 @@ class ProfileDetailsScreen extends Component {
             <View style={styles.circle50} />
             <View style={{alignItems: 'center'}}>
               {get(accountUpdating, 'image') ? (
-                <Image
-                  style={styles.avatar}
-                  source={{uri: get(accountUpdating, 'image')}}
-                />
+                <View style={{backgroundColor: '#fff', borderRadius: 50}}>
+                  <Image
+                    style={styles.avatar}
+                    source={{uri: get(accountUpdating, 'image')}}
+                    onLoadStart={() => this.setState({loadingImage: true})}
+                    onLoad={(ev) => this.setState({loadingImage: false})}
+                  />
+                  {this.state.loadingImage ? (
+                    <ActivityIndicator
+                      color={'red'}
+                      style={{position: 'absolute', top: 40, left: 40}}
+                    />
+                  ) : null}
+                </View>
               ) : (
                 <Image
                   style={styles.avatar}

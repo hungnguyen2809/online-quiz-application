@@ -1,7 +1,6 @@
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {Colors} from '../../common/Colors';
 import {SCREEN_WIDTH, SCREEN_HEIGHT} from './../../common/dimensionScreen';
-const isIOS = Platform.OS === 'ios';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,9 +20,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.WHITE,
   },
+  loadingAvt: {position: 'absolute', top: 40 - 10, left: 40 - 10},
   imageBackground: {
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT / 3,
+  },
+  loadingBg: {
+    position: 'absolute',
+    top: SCREEN_HEIGHT / 3 / 2 - 20,
+    left: SCREEN_WIDTH / 2 - 20,
   },
   btnChangeAvatar: {
     position: 'absolute',

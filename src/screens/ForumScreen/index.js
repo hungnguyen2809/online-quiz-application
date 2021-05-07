@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import HeadTopBar from './../../components/HeadTopBar';
+import * as Animatable from 'react-native-animatable';
 
 class ForumScreen extends Component {
   static options(props) {
@@ -33,6 +34,13 @@ class ForumScreen extends Component {
         <HeadTopBar />
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Đang phát triển</Text>
+          <Animatable.Text
+            animation="pulse"
+            easing="ease-out"
+            iterationCount="infinite"
+            style={{textAlign: 'center'}}>
+            ❤️
+          </Animatable.Text>
         </View>
       </View>
     );
