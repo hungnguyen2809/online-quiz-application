@@ -1,5 +1,5 @@
 const fonts = {
-  OpenSans: 'OpenSans',
+  OpenSans: 'Open Sans Regular',
 };
 
 export {fonts};

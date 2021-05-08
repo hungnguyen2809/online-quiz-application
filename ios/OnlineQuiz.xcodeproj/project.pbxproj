@@ -19,7 +19,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		997D802C0E5EECB19A3374AE /* libPods-OnlineQuiz-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 825F77C4510B5E56B591DFA2 /* libPods-OnlineQuiz-tvOSTests.a */; };
 		B3E42F44B3726146701984A7 /* libPods-OnlineQuiz-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7055175D7E1318F0AA5B5A37 /* libPods-OnlineQuiz-tvOS.a */; };
-		C50453A7900243A4A8B54E00 /* OpenSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 778890BF0E4748509A5B7620 /* OpenSans.ttf */; };
+		C50453A7900243A4A8B54E00 /* Open Sans Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 778890BF0E4748509A5B7620 /* Open Sans Regular.ttf */; };
 		F7828EF9CEDA0454EE473759 /* libPods-OnlineQuiz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B5198AD09B8D113634075C /* libPods-OnlineQuiz.a */; };
 /* End PBXBuildFile section */
 
@@ -63,7 +63,7 @@
 		52B5198AD09B8D113634075C /* libPods-OnlineQuiz.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		621F4E7654A1ECCA1E146824 /* libPods-OnlineQuiz-OnlineQuizTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz-OnlineQuizTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7055175D7E1318F0AA5B5A37 /* libPods-OnlineQuiz-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		778890BF0E4748509A5B7620 /* OpenSans.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans.ttf; path = ../src/assets/fonts/OpenSans.ttf; sourceTree = "<group>"; };
+		778890BF0E4748509A5B7620 /* Open Sans Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = file; name = "Open Sans Regular.ttf"; path = "../src/assets/fonts/Open Sans Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OnlineQuiz/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		825F77C4510B5E56B591DFA2 /* libPods-OnlineQuiz-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnlineQuiz-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B488D3957C53582FBE79CFB7 /* Pods-OnlineQuiz-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnlineQuiz-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-OnlineQuiz-tvOS/Pods-OnlineQuiz-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 		9267E310FC50446980036AB8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				778890BF0E4748509A5B7620 /* OpenSans.ttf */,
+				778890BF0E4748509A5B7620 /* Open Sans Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -358,7 +358,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				C50453A7900243A4A8B54E00 /* OpenSans.ttf in Resources */,
+				C50453A7900243A4A8B54E00 /* Open Sans Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

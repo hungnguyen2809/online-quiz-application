@@ -51,7 +51,7 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>OpenSans.ttf</string>
+		<string>Open Sans Regular.ttf</string>
 		<string>FontAwesome.ttf</string>
 		<string>Ionicons.ttf</string>
 		<string>MaterialIcons.ttf</string>
