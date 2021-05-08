@@ -206,6 +206,8 @@ class ProfileScreen extends Component {
                 <Image
                   style={styles.avatar}
                   source={{uri: get(account, 'image')}}
+                  onLoadStart={() => this.setState({loadingAvt: true})}
+                  onLoad={() => this.setState({loadingAvt: false})}
                 />
                 {this.state.loadingAvt ? (
                   <ActivityIndicator color={'red'} style={styles.loadingAvt} />

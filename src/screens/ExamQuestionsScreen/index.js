@@ -12,7 +12,7 @@ import {
 import {backToLastScreen, goToScreenWithPassProps} from './../MethodScreen';
 import ExecExam from './components/ExecExam';
 import Header from './components/Header';
-import _, {fill, isEqual, upperCase} from 'lodash';
+import {fill, isEqual, upperCase, get, map, shuffle} from 'lodash';
 import {styles} from './styles';
 import ModalReviewExam from './../../components/ModalReviewExam';
 import PagerView from 'react-native-pager-view';
@@ -51,7 +51,7 @@ class ExamQuestionsScreen extends Component {
 
   componentDidMount() {
     if (this.props.dataQuestions) {
-      this.setState({questions: this.props.dataQuestions});
+      this.setState({questions: shuffle(this.props.dataQuestions)});
     }
     this.backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -61,7 +61,7 @@ class ExamQuestionsScreen extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.dataQuestions !== nextProps.dataQuestions) {
-      this.setState({questions: nextProps.dataQuestions});
+      this.setState({questions: shuffle(nextProps.dataQuestions)});
     }
   }
 
@@ -161,7 +161,7 @@ class ExamQuestionsScreen extends Component {
     this.arrAnsers.forEach((answer, index) => {
       if (
         isEqual(
-          upperCase(_.get(this.state.questions[index], 'final', '')),
+          upperCase(get(this.state.questions[index], 'final', '')),
           upperCase(answer),
         )
       ) {
@@ -262,7 +262,7 @@ class ExamQuestionsScreen extends Component {
             onPageSelected={(ev) => {
               this.potions = ev.nativeEvent.position;
             }}>
-            {_.map(this.state.questions, (item, index) => {
+            {map(this.state.questions, (item, index) => {
               return (
                 <ExecExam
                   key={index.toString()}
