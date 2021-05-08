@@ -122,7 +122,7 @@ class ProfileScreen extends Component {
         height: imageResize.height,
         width: imageResize.width,
         size: imageResize.size,
-        type: 'image/jpg',
+        type: 'image/jpeg',
         uri: isIOS ? imageResize.uri.replace('file://', '') : imageResize.uri,
       });
       this.props.doUpdateAvatar(formData, {
