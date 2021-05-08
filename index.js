@@ -1,8 +1,11 @@
 import {Navigation} from 'react-native-navigation';
 import {screenAuth} from './src/screens/config-screen';
 import RegisterScreenComponent from './src/screens/RegisterScreensComponent';
+import GlobalFont from 'react-native-global-font';
+import {fonts} from './src/common/fonts';
 
 RegisterScreenComponent();
+GlobalFont.applyGlobal(fonts.OpenSans);
 
 Navigation.setDefaultOptions({
   bottomTab: {
