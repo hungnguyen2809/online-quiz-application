@@ -140,24 +140,32 @@ class ProfileDetailsScreen extends Component {
 
   onSubmitSaveChangeInfo = () => {
     // console.log('Acount: ', this.state.accountUpdating);
-    const body = {
-      id: get(this.state.accountUpdating, 'id'),
-      name: trim(get(this.state.accountUpdating, 'name')),
-      phone: trim(get(this.state.accountUpdating, 'phone')),
-      birtday: !isEmpty(get(this.state.accountUpdating, 'birtday', null))
-        ? moment(get(this.state.accountUpdating, 'birtday')).format(dateFormat)
-        : null,
-      address: !isEmpty(trim(get(this.state.accountUpdating, 'address')))
-        ? trim(get(this.state.accountUpdating, 'address'))
-        : null,
-    };
-    // console.log('Body: ', body);
-
+    if (isEmpty(trim(get(this.state.accountUpdating, 'name')))) {
+      Alert.alert('Thông báo', 'Tên người dùng là bắt buộc.');
+      return;
+    }
     Alert.alert('Thông báo', 'Bạn có chắc muốn cập nhật thông tin mới ?', [
       {
         text: 'Đồng ý',
         style: 'cancel',
         onPress: () => {
+          const body = {
+            id: get(this.state.accountUpdating, 'id'),
+            name: trim(get(this.state.accountUpdating, 'name')),
+            phone: !isEmpty(trim(get(this.state.accountUpdating, 'phone')))
+              ? trim(get(this.state.accountUpdating, 'phone'))
+              : null,
+            birtday:
+              get(this.state.accountUpdating, 'birtday', null) !== null
+                ? moment(get(this.state.accountUpdating, 'birtday')).format(
+                    dateFormat,
+                  )
+                : null,
+            address: !isEmpty(trim(get(this.state.accountUpdating, 'address')))
+              ? trim(get(this.state.accountUpdating, 'address'))
+              : null,
+          };
+          // console.log('Body: ', body);
           this.props.doUpdateAccountInfo(body, {
             callbacksOnSuccess: () => {
               this.refToast.current.onShowToast(

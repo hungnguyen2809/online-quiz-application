@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   top: {
-    flex: 2.2,
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },

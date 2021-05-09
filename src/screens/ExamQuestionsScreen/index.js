@@ -60,7 +60,10 @@ class ExamQuestionsScreen extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.dataQuestions !== nextProps.dataQuestions) {
+    if (
+      !!nextProps.dataQuestions &&
+      this.props.dataQuestions !== nextProps.dataQuestions
+    ) {
       this.setState({questions: shuffle(nextProps.dataQuestions)});
     }
   }
@@ -264,14 +267,16 @@ class ExamQuestionsScreen extends Component {
             }}>
             {map(this.state.questions, (item, index) => {
               return (
-                <ExecExam
-                  key={index.toString()}
-                  question={item}
-                  index={index}
-                  onPressChooseAnswer={(value) =>
-                    (this.arrAnsers[this.potions] = value)
-                  }
-                />
+                <View key={index.toString()}>
+                  <ExecExam
+                    key={index.toString()}
+                    question={item}
+                    index={index}
+                    onPressChooseAnswer={(value) =>
+                      (this.arrAnsers[this.potions] = value)
+                    }
+                  />
+                </View>
               );
             })}
           </PagerView>

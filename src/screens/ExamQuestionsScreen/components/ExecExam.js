@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
-import _, {isEqual, upperCase} from 'lodash';
+import {get, isEqual, upperCase} from 'lodash';
 import {SCREEN_WIDTH} from './../../../common/dimensionScreen';
 
 class ExecExam extends Component {
@@ -18,19 +18,19 @@ class ExecExam extends Component {
 
     this.prop_question = [
       {
-        label: 'A. ' + _.get(props.question, 'as_a'),
+        label: 'A. ' + get(props.question, 'as_a'),
         value: 'A',
       },
       {
-        label: 'B. ' + _.get(props.question, 'as_b'),
+        label: 'B. ' + get(props.question, 'as_b'),
         value: 'B',
       },
       {
-        label: 'C. ' + _.get(props.question, 'as_c'),
+        label: 'C. ' + get(props.question, 'as_c'),
         value: 'C',
       },
       {
-        label: 'D. ' + _.get(props.question, 'as_d'),
+        label: 'D. ' + get(props.question, 'as_d'),
         value: 'D',
       },
     ];
@@ -58,7 +58,7 @@ class ExecExam extends Component {
   render() {
     const {content} = this.props.question;
     return (
-      <View style={styles.container}>
+      <ScrollView style={{flex: 1}}>
         <Text style={styles.numberQuestion}>
           Câu số {this.props.index + 1}:
         </Text>
@@ -104,7 +104,7 @@ class ExecExam extends Component {
             })}
           </RadioForm>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
