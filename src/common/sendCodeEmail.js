@@ -18,7 +18,7 @@ const sendOTPCode = (code, emailSend) => {
     htmlBody: `
     <h3>Cám ơn bạn đã sử dụng ứng dụng. Mọi thắc mắc xin vui lòng liện hệ: cskh.onlinequiz@gmail.com</h3>
     <h3>Mã OTP: ${code}</h3>
-    <p>Trân thành cám ơn !.</p>`,
+    <p>Chân thành cám ơn !.</p>`,
   });
 };
 

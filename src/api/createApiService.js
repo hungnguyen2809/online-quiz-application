@@ -1,7 +1,15 @@
+/* eslint-disable no-new */
 import axios from 'axios';
 import queryString from 'query-string';
 import Config from 'react-native-config';
-import {getTokenToStorage} from './../common/asyncStorage';
+import {Alert} from 'react-native';
+import {get} from 'lodash';
+import {switchScreenLogin} from '../screens/MethodScreen';
+import {
+  deleteAccountToStorage,
+  deleteTokenToStorage,
+  getTokenToStorage,
+} from './../common/asyncStorage';
 
 const isProduct = true;
 
@@ -13,6 +21,8 @@ const BaseAPI = {
     : `http://${Config.IP_HOST_DEV}:${Config.IP_PORT}/api`,
 };
 
+const CancelToken = axios.CancelToken;
+
 const instanceAxios = axios.create({
   baseURL: BaseAPI.BaseUrl,
   timeout: 10000,
@@ -20,14 +30,21 @@ const instanceAxios = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 
+let cancelRequest = null;
 // Custom request ...
 instanceAxios.interceptors.request.use(async (config) => {
+  if (cancelRequest) {
+    cancelRequest();
+  }
   return config;
 });
 
 // Custom response ...
 instanceAxios.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    if (cancelRequest) {
+      cancelRequest = null;
+    }
     if (response && response.data) {
       return {
         status: response.status,
@@ -36,7 +53,33 @@ instanceAxios.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  async (error) => {
+    if (error.response) {
+      const {response} = error;
+      const {data} = response;
+
+      if (response.status === 400) {
+        if (get(data, 'token_invalid') === true) {
+          if (cancelRequest === null) {
+            new CancelToken((cancel) => {
+              cancelRequest = cancel;
+            });
+            Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
+              {
+                text: 'OK',
+                style: 'destructive',
+                onPress: async () => {
+                  await deleteAccountToStorage();
+                  await deleteTokenToStorage();
+                  await switchScreenLogin();
+                },
+              },
+            ]);
+          }
+          return {data};
+        }
+      }
+    }
     throw error;
   },
 );
