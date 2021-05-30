@@ -29,6 +29,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ItemInfo from './components/ItemInfo';
 import Toast from './../../components/Toast';
 import ImageResizer from 'react-native-image-resizer';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -56,6 +57,7 @@ class ProfileScreen extends Component {
       account: {},
       loadingBg: false,
       loadingAvt: false,
+      loadingUpdateAvt: false,
     };
 
     this.refToast = React.createRef();
@@ -125,9 +127,11 @@ class ProfileScreen extends Component {
         type: 'image/jpeg',
         uri: isIOS ? imageResize.uri.replace('file://', '') : imageResize.uri,
       });
+      this.setState({loadingUpdateAvt: true});
       this.props.doUpdateAvatar(formData, {
         callbacksOnSuccess: () => {
           this.refToast.current.onShowToast('Cập nhật thành công !', 2000);
+          this.setState({loadingUpdateAvt: false});
         },
         callbacksOnFail: () => {},
       });
@@ -254,6 +258,7 @@ class ProfileScreen extends Component {
           </TouchableOpacity>
         </View>
         <Toast ref={this.refToast} />
+        <Spinner visible={this.state.loadingUpdateAvt} />
       </View>
     );
   }
