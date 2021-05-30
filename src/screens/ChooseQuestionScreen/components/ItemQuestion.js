@@ -100,7 +100,7 @@ class ItemQuestion extends Component {
                 Mức độ: {this._getLevel(get(row, 'level'))}
               </Text>
             </View>
-            {get(row, 'question_correct', null) ? (
+            {get(row, 'question_correct', -1) !== -1 ? (
               <Text
                 style={{
                   color:
