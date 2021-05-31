@@ -16,6 +16,8 @@ import ProfileDetailsScreen from './ProfileDetailsScreen';
 import ChooseQuestionScreen from './ChooseQuestionScreen';
 import ForumScreen from './ForumScreen';
 import ResultExamScreen from './ResultExamScreen';
+import PostDetailsScreen from './PostDetailsScreen';
+import PostCreateScreen from './PostCreateScreen';
 
 // const registerComponentWithoutRedux = (srceenName, ComponentProvider) => {
 //   Navigation.registerComponent(srceenName, () => ComponentProvider);
@@ -68,6 +70,16 @@ const RegisterScreenComponent = () => {
   registerComponentWithRedux(
     appScreens.ResultExamScreen.name,
     ResultExamScreen,
+    stores,
+  );
+  registerComponentWithRedux(
+    appScreens.PostDetailsScreen.name,
+    PostDetailsScreen,
+    stores,
+  );
+  registerComponentWithRedux(
+    appScreens.PostCreatesScreen.name,
+    PostCreateScreen,
     stores,
   );
 };

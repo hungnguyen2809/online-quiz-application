@@ -54,6 +54,14 @@ export const appScreens = {
     id: 'app.screen.ResultExamScreen',
     name: 'ResultExamScreen',
   },
+  PostDetailsScreen: {
+    id: 'app.screen.PostDetailScreen',
+    name: 'PostDetailsScreen',
+  },
+  PostCreatesScreen: {
+    id: 'app.screen.PostCreatesScreen',
+    name: 'PostCreatesScreen',
+  },
 };
 
 export const screenAuth = {
