@@ -31,7 +31,7 @@ class ForgetPasswordScreen extends Component {
         visible: true,
         animate: true,
         title: {
-          text: 'Quyên mật khẩu',
+          text: 'Quên mật khẩu',
         },
       },
     };

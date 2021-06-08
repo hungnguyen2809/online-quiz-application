@@ -18,6 +18,11 @@ PostItem.propTypes = {
   onDetailPost: PropTypes.func.isRequired,
 };
 
+PostItem.defaultProps = {
+  row: {},
+  onDetailPost: () => {},
+};
+
 function PostItem(props) {
   const {row, onDetailPost} = props;
   const [loadingAvt, setLoadingAvt] = useState(false);

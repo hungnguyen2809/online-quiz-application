@@ -247,7 +247,7 @@ class LoginScreen extends Component {
                   onPress={() => {
                     this._onGoToScreen(appScreens.ForgetPassword);
                   }}>
-                  <Text style={styles.textForgert}>Quyên mật khẩu?</Text>
+                  <Text style={styles.textForgert}>Quên mật khẩu?</Text>
                 </TouchableOpacity>
                 <Text style={{textAlign: 'center', fontSize: 14}}>hoặc</Text>
                 <TouchableOpacity

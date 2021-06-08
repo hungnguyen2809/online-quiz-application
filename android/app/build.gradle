@@ -202,6 +202,10 @@ android {
 		exclude 'META-INF/mimetypes.default'
 		exclude 'META-INF/mailcap.default'
 	}
+
+    // fix AAPT: error: failed to read PNG signature: file does not start with PNG signature.
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
 }
 
 dependencies {
