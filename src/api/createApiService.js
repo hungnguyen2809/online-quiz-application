@@ -21,6 +21,8 @@ const BaseAPI = {
     : `http://${Config.IP_HOST_DEV}:${Config.IP_PORT}/api`,
 };
 
+const urlUpload = 'https://api.cloudinary.com/v1_1/hungnguyen2809/image/upload';
+
 const CancelToken = axios.CancelToken;
 
 const instanceAxios = axios.create({
@@ -127,4 +129,31 @@ const _makeNonAuthRequest = (instanceRequest) => async (args) => {
 export const apis = {
   makeAuthRequest: _makeAuthRequest(instanceAxios),
   makeNonAuthRequest: _makeNonAuthRequest(instanceAxios),
+};
+
+export const makeUploadImage = async (imageFile) => {
+  try {
+    if (!imageFile) {
+      Alert.alert('Thông báo', 'Yêu cầu cần có file ảnh');
+      return;
+    }
+
+    const uploadPreset = isProduct ? 'online-quiz' : 'online-quiz-dev';
+    const formData = new FormData();
+    formData.append('cloud_name', 'hungnguyen2809');
+    formData.append('upload_preset', uploadPreset);
+    formData.append('file', imageFile);
+
+    const response = await axios.post(urlUpload, formData);
+    return {
+      ...response.data,
+    };
+  } catch (error) {
+    if (error.response) {
+      const {response} = error;
+      Alert.alert('Có lỗi', get(response, 'error.message', 'Lỗi đặc biệt'));
+      return;
+    }
+    throw error;
+  }
 };
