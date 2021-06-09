@@ -36,9 +36,9 @@ export const updateAvatarAccountAPI = (agrs) => {
     url: API_USER_AVATAR,
     method: 'POST',
     data: agrs,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+    // headers: {
+    //   'Content-Type': 'multipart/form-data',
+    // },
   });
 };
 

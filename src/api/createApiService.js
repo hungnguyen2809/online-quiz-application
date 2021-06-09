@@ -11,7 +11,7 @@ import {
   getTokenToStorage,
 } from './../common/asyncStorage';
 
-const isProduct = true;
+const isProduct = false;
 
 const BaseAPI = {
   HOST: isProduct ? Config.IP_HOST_PRODUCT : Config.IP_HOST_DEV,
@@ -138,7 +138,9 @@ export const makeUploadImage = async (imageFile) => {
       return;
     }
 
-    const uploadPreset = isProduct ? 'online-quiz' : 'online-quiz-dev';
+    const uploadPreset = isProduct
+      ? 'online-quiz-avatar'
+      : 'online-quiz-dev-avatar';
     const formData = new FormData();
     formData.append('cloud_name', 'hungnguyen2809');
     formData.append('upload_preset', uploadPreset);
@@ -151,7 +153,10 @@ export const makeUploadImage = async (imageFile) => {
   } catch (error) {
     if (error.response) {
       const {response} = error;
-      Alert.alert('Có lỗi', get(response, 'error.message', 'Lỗi đặc biệt'));
+      Alert.alert(
+        'Đã xảy ra lỗi',
+        'Lỗi tải ảnh ' + get(response, 'data.error.message', ''),
+      );
       return;
     }
     throw error;

@@ -1,35 +1,39 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-did-mount-set-state */
+import {get} from 'lodash';
 import React, {Component} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Image,
+  Platform,
   ScrollView,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
-  Platform,
-  ActivityIndicator,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {createStructuredSelector} from 'reselect';
 // import DocumentPicker from 'react-native-document-picker';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {get} from 'lodash';
-import {deleteAccountToStorage} from './../../common/asyncStorage';
+import ImageResizer from 'react-native-image-resizer';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {Navigation} from 'react-native-navigation';
-import {appScreens, screenAuth} from './../config-screen';
-import {styles} from './styles';
+import uuid from 'react-native-uuid';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {connect} from 'react-redux';
+import {createStructuredSelector} from 'reselect';
+import {makeUploadImage} from '../../api/createApiService';
+import {deleteAccountToStorage} from './../../common/asyncStorage';
 import {formatPhone} from './../../common/format';
+import Toast from './../../components/Toast';
 import {
   LogoutAccountAction,
   updateAvatarAction,
 } from './../../redux/Account/actions';
 import {getAccountSelector} from './../../redux/Account/selectors';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {appScreens, screenAuth} from './../config-screen';
 import ItemInfo from './components/ItemInfo';
-import Toast from './../../components/Toast';
-import ImageResizer from 'react-native-image-resizer';
-import Spinner from 'react-native-loading-spinner-overlay';
+import {styles} from './styles';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -107,35 +111,70 @@ class ProfileScreen extends Component {
     try {
       const imageResize = await ImageResizer.createResizedImage(
         fileImage.uri,
-        fileImage.width / 4 > 200 ? fileImage.width / 4 : fileImage.width,
-        fileImage.height / 4 > 200 ? fileImage.height / 4 : fileImage.height,
+        fileImage.width / 3 > 300 ? fileImage.width / 3 : fileImage.width,
+        fileImage.height / 3 > 300 ? fileImage.height / 3 : fileImage.height,
         'JPEG',
-        60,
+        90,
         0,
         undefined,
         false,
         {mode: 'contain', onlyScaleDown: false},
       );
 
-      const formData = new FormData();
-      formData.append('id', this.state.account.id);
-      formData.append('file', {
-        name: imageResize.name,
+      this.setState({loadingUpdateAvt: true});
+
+      // const formData = new FormData();
+      // formData.append('id', this.state.account.id);
+      // formData.append('file', {
+      //   name: imageResize.name,
+      //   height: imageResize.height,
+      //   width: imageResize.width,
+      //   size: imageResize.size,
+      //   type: 'image/jpeg',
+      //   uri: isIOS ? imageResize.uri.replace('file://', '') : imageResize.uri,
+      // });
+
+      const imageUpload = {
+        name: uuid.v4() + '_' + get(this.state.account, 'id', '0'),
         height: imageResize.height,
         width: imageResize.width,
         size: imageResize.size,
         type: 'image/jpeg',
         uri: isIOS ? imageResize.uri.replace('file://', '') : imageResize.uri,
-      });
-      this.setState({loadingUpdateAvt: true});
-      this.props.doUpdateAvatar(formData, {
+      };
+      const resImage = await makeUploadImage(imageUpload);
+
+      // this.props.doUpdateAvatar(formData, {
+      //   callbacksOnSuccess: () => {
+      //     this.refToast.current.onShowToast('Cập nhật thành công !', 2000);
+      //     this.setState({loadingUpdateAvt: false});
+      //   },
+      //   callbacksOnFail: () => {},
+      // });
+      const payload = {
+        id: get(this.state.account, 'id', '0'),
+        imageUrl: resImage.secure_url,
+      };
+
+      this.props.doUpdateAvatar(payload, {
         callbacksOnSuccess: () => {
-          this.refToast.current.onShowToast('Cập nhật thành công !', 2000);
           this.setState({loadingUpdateAvt: false});
+          if (Platform.OS === 'ios') {
+            Alert.alert('Thông báo', 'Cập nhật thành công');
+          } else {
+            ToastAndroid.showWithGravityAndOffset(
+              'Cập nhật thành công',
+              ToastAndroid.SHORT,
+              ToastAndroid.BOTTOM,
+              25,
+              20,
+            );
+          }
         },
         callbacksOnFail: () => {},
       });
     } catch (error) {
+      console.log(error.message);
       this.setState({loading: false}, () => {
         Alert.alert(
           'Thông báo !',
