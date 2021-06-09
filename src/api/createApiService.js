@@ -14,11 +14,9 @@ import {
 const isProduct = false;
 
 const BaseAPI = {
-  HOST: isProduct ? Config.IP_HOST_PRODUCT : Config.IP_HOST_DEV,
-  PORT: Config.IP_PORT,
   BaseUrl: isProduct
-    ? `http://${Config.IP_HOST_PRODUCT}:${Config.IP_PORT}/api`
-    : `http://${Config.IP_HOST_DEV}:${Config.IP_PORT}/api`,
+    ? 'https://server-online-quiz.herokuapp.com/api'
+    : `http://${Config.IP_HOST_DEV}:${Config.IP_PORT_DEV}/api`,
 };
 
 const urlUpload = 'https://api.cloudinary.com/v1_1/hungnguyen2809/image/upload';
