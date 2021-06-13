@@ -1,13 +1,15 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {Colors} from '../../common/Colors';
+import {SCREEN_WIDTH} from './../../common/dimensionScreen';
+const isIOS = Platform.OS === 'ios';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: isIphoneX() ? 25 : 0,
-    marginTop: getStatusBarHeight(),
+    marginTop: isIOS ? getStatusBarHeight() : getStatusBarHeight() + 5,
   },
   wrapHeader: {
     display: 'flex',
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     width: '100%',
-    height: 2,
+    height: 1,
     backgroundColor: '#dcdcdc',
     marginVertical: 15,
   },
@@ -76,6 +78,21 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     left: 65,
     top: -5,
+  },
+  textName: {
+    lineHeight: 25,
+    fontSize: 15,
+  },
+  imagePost: {
+    width: SCREEN_WIDTH / 2,
+    height: SCREEN_WIDTH / 2,
+    marginTop: 5,
+    backgroundColor: '#a4b0be',
+  },
+  loadingImagePost: {
+    position: 'absolute',
+    top: SCREEN_WIDTH / 2,
+    left: SCREEN_WIDTH / 2 - 10,
   },
 });
 

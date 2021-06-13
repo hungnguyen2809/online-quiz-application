@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ECF5F5',
   },
   wrapInputDes: {
     padding: 10,
@@ -18,6 +18,8 @@ const styles = StyleSheet.create({
     maxHeight: 120,
     padding: 5,
     borderRadius: 6,
+    alignContent: 'flex-start',
+    alignSelf: 'stretch',
   },
   btnChooseImage: {
     display: 'flex',

@@ -1,24 +1,30 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
+import {debounce, get, size} from 'lodash';
 import React, {Component} from 'react';
-import {get} from 'lodash';
 import {
   ActivityIndicator,
   Image,
+  RefreshControl,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
+import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import {createStructuredSelector} from 'reselect';
-import {getAccountSelector} from '../../redux/Account/selectors';
-import HeadTopBar from './../../components/HeadTopBar';
-import {styles} from './styles';
 // import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import PostItem from '../../components/PostItem';
-import {goToScreenWithPassProps} from '../MethodScreen';
+import {getAccountSelector} from '../../redux/Account/selectors';
+import {getAllPostAction} from '../../redux/Post/actions';
+import {getAllPostSelector} from '../../redux/Post/selectors';
 import {appScreens} from '../config-screen';
+import {goToScreenWithPassProps} from '../MethodScreen';
+import {SCREEN_WIDTH} from './../../common/dimensionScreen';
+import HeadTopBar from './../../components/HeadTopBar';
+import {styles} from './styles';
 
 class ForumScreen extends Component {
   static options(props) {
@@ -39,9 +45,31 @@ class ForumScreen extends Component {
 
   constructor(props) {
     super(props);
+    Navigation.events().bindComponent(this);
+
     this.state = {
+      loading: false,
       loadingAvt: false,
+      listPosts: [],
     };
+
+    this.layoutProvider = new LayoutProvider(
+      (index) => {
+        return 'LAYOUT';
+      },
+      (type, dim, index) => {
+        switch (type) {
+          case 'LAYOUT':
+            dim.width = SCREEN_WIDTH;
+            dim.height = 150;
+            break;
+          default:
+            dim.width = SCREEN_WIDTH;
+            dim.height = 150;
+            break;
+        }
+      },
+    );
   }
 
   componentDidMount() {
@@ -50,13 +78,80 @@ class ForumScreen extends Component {
     }
   }
 
+  componentDidAppear() {
+    this.onGetListAllPost();
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props !== nextProps) {
       if (this.props.account !== nextProps.account) {
         this.setState({account: nextProps.account});
       }
+
+      if (
+        !!nextProps.listPosts &&
+        this.props.listPosts !== nextProps.listPosts
+      ) {
+        this.setState({listPosts: nextProps.listPosts, loading: false});
+      }
     }
   }
+
+  onGetListAllPost = () => {
+    this.props.doGetListAllPost();
+  };
+
+  _renderListNonData = () => {
+    return (
+      <View style={{flex: 1}}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this._onRefreshPost}
+            />
+          }
+          contentContainerStyle={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Image
+            style={{width: 150, height: 150}}
+            source={require('./../../assets/images/no_data.png')}
+          />
+          <Text>Không có bài viết</Text>
+          <Text>Hãy là người tạo mới bài viết</Text>
+        </ScrollView>
+      </View>
+    );
+  };
+
+  _layoutProvider = () => {
+    return this.layoutProvider;
+  };
+
+  _dataProvider = () => {
+    const _dataProvider = new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(
+      this.state.listPosts,
+    );
+    return _dataProvider;
+  };
+
+  _renderRowItem = (type, item, index, extendState) => {
+    switch (type) {
+      case 'LAYOUT':
+        return (
+          <PostItem
+            row={item}
+            account={this.props.account}
+            onDetailPost={debounce(this.goToPostDetailsScreen, 200)}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   goToPostDetailsScreen = (row) => {
     goToScreenWithPassProps(
@@ -64,6 +159,7 @@ class ForumScreen extends Component {
       appScreens.PostDetailsScreen.name,
       {
         row,
+        onRefreshPost: this._onRefreshPost,
         parentComponentId: this.props.componentId,
       },
     );
@@ -74,9 +170,16 @@ class ForumScreen extends Component {
       this.props.componentId,
       appScreens.PostCreatesScreen.name,
       {
+        account: this.props.account,
+        onRefreshPost: this.onGetListAllPost,
         parentComponentId: this.props.componentId,
       },
     );
+  };
+
+  _onRefreshPost = () => {
+    this.setState({loading: true});
+    this.onGetListAllPost();
   };
 
   render() {
@@ -128,11 +231,25 @@ class ForumScreen extends Component {
             </TouchableOpacity> */}
           </View>
           <View style={styles.wrapContent}>
-            <ScrollView>
-              <PostItem onDetailPost={this.goToPostDetailsScreen} />
-              <PostItem />
-              <PostItem />
-            </ScrollView>
+            {size(this.state.listPosts) ? (
+              <RecyclerListView
+                dataProvider={this._dataProvider()}
+                layoutProvider={this._layoutProvider()}
+                rowRenderer={this._renderRowItem}
+                forceNonDeterministicRendering={true}
+                canChangeSize={true}
+                scrollViewProps={{
+                  refreshControl: (
+                    <RefreshControl
+                      refreshing={this.state.loading}
+                      onRefresh={this._onRefreshPost}
+                    />
+                  ),
+                }}
+              />
+            ) : (
+              this._renderListNonData()
+            )}
           </View>
         </View>
       </View>
@@ -142,10 +259,15 @@ class ForumScreen extends Component {
 
 const mapStateToProps = createStructuredSelector({
   account: getAccountSelector(),
+  listPosts: getAllPostSelector(),
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    doGetListAllPost: () => {
+      dispatch(getAllPostAction());
+    },
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForumScreen);

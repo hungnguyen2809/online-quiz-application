@@ -106,8 +106,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 9999,
+    padding: 5,
   },
   text: {
-    fontSize: 15,
+    fontSize: 14,
   },
 });

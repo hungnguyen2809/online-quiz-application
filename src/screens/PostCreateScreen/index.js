@@ -1,16 +1,27 @@
 /* eslint-disable react-native/no-inline-styles */
+import {get, isEmpty, trim} from 'lodash';
+import debounce from 'lodash.debounce';
 import React, {Component} from 'react';
 import {
   Alert,
   Image,
+  Platform,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {Navigation} from 'react-native-navigation';
+import uuid from 'react-native-uuid';
+import {connect} from 'react-redux';
+import {createStructuredSelector} from 'reselect';
+import {makeUploadImage} from '../../api/createApiService';
+import {onToastAlert} from '../../common/validate';
 import HeaderBar from '../../components/HeaderBar';
+import {createNewPostAction} from '../../redux/Post/actions';
 import {styles} from './styles';
 
 class PostCreateScreen extends Component {
@@ -35,8 +46,11 @@ class PostCreateScreen extends Component {
     this.state = {
       fileSource: null,
       textDes: '',
+      loading: false,
     };
   }
+
+  componentDidMount() {}
 
   _goBackScreen = () => {
     Navigation.pop(this.props.componentId);
@@ -61,9 +75,72 @@ class PostCreateScreen extends Component {
     }
   };
 
+  _onSubmitCreatePost = async () => {
+    const textDes = trim(this.state.textDes);
+    if (isEmpty(textDes)) {
+      onToastAlert('Bạn chưa nhập nội dung bài viết');
+    }
+    this.setState({loading: true});
+
+    try {
+      let resImage = null;
+      if (this.state.fileSource) {
+        const imageResize = await ImageResizer.createResizedImage(
+          this.state.fileSource.uri,
+          this.state.fileSource.width / 3 > 600
+            ? this.state.fileSource.width / 3
+            : this.state.fileSource.width,
+          this.state.fileSource.height / 3 > 600
+            ? this.state.fileSource.height / 3
+            : this.state.fileSource.height,
+          'JPEG',
+          95,
+          0,
+          undefined,
+          false,
+          {mode: 'contain', onlyScaleDown: false},
+        );
+        const imageUpload = {
+          name: uuid.v4(),
+          height: imageResize.height,
+          width: imageResize.width,
+          size: imageResize.size,
+          type: 'image/jpeg',
+          uri:
+            Platform.OS === 'ios'
+              ? imageResize.uri.replace('file://', '')
+              : imageResize.uri,
+        };
+        resImage = await makeUploadImage(imageUpload);
+      }
+
+      const payload = {
+        id_user: get(this.props.account, 'id', null),
+        content: textDes,
+        image: resImage ? resImage.secure_url : null,
+      };
+
+      this.props.doCreateNewPost(payload, {
+        callbackOnSuccess: () => {
+          this.props.onRefreshPost && this.props.onRefreshPost();
+          this.setState({loading: false});
+          this._goBackScreen();
+        },
+        callbackOnFail: () => {
+          this.setState({loading: false});
+        },
+      });
+    } catch (error) {
+      Alert.alert('Đã xảy ra lỗi', error.message);
+      this.setState({loading: false});
+    }
+  };
+
   _renderSubButtonright = () => {
     return (
-      <TouchableOpacity key={'btn_send'}>
+      <TouchableOpacity
+        key={'btn_send'}
+        onPress={debounce(this._onSubmitCreatePost, 300)}>
         <Image
           style={{width: 30, height: 30}}
           source={require('./../../assets/icons/icons-sent.png')}
@@ -81,7 +158,7 @@ class PostCreateScreen extends Component {
         <HeaderBar
           onPressButtonLeft={this._goBackScreen}
           onPressButtonRight={subButtonRight}
-          title={'Tạo câu hỏi'}
+          title={'Tạo bài viết'}
         />
         <View style={styles.wrapInputDes}>
           <TextInput
@@ -122,9 +199,20 @@ class PostCreateScreen extends Component {
             ) : null}
           </View>
         </View>
+        <Spinner visible={this.state.loading} />
       </View>
     );
   }
 }
 
-export default PostCreateScreen;
+const mapStateToProps = createStructuredSelector({});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    doCreateNewPost: (payload, callbacks) => {
+      dispatch(createNewPostAction(payload, callbacks));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostCreateScreen);

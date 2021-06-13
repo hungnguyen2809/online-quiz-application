@@ -1,5 +1,7 @@
+/* eslint-disable react/no-did-mount-set-state */
+/* eslint-disable no-extra-boolean-cast */
 /* eslint-disable react-native/no-inline-styles */
-import {get} from 'lodash';
+import {get, isEmpty, size, trim} from 'lodash';
 import React, {Component} from 'react';
 import {
   ActivityIndicator,
@@ -8,15 +10,33 @@ import {
   Image,
   Keyboard,
   Platform,
+  RefreshControl,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
+import Spinner from 'react-native-loading-spinner-overlay';
+import uuid from 'react-native-uuid';
+import {connect} from 'react-redux';
+// import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
+import {createStructuredSelector} from 'reselect';
+import {makeUploadImage} from '../../api/createApiService';
+// import {SCREEN_WIDTH} from '../../common/dimensionScreen';
+import {getTimeFromNow} from '../../common/format';
+import {onToastAlert} from '../../common/validate';
 import PostItemComment from '../../components/PostItemComment';
+import {getAccountSelector} from '../../redux/Account/selectors';
+import {
+  createPostCommentAction,
+  getPostCommentAction,
+} from '../../redux/Post/actions';
+import {getAllPostCommentSelector} from '../../redux/Post/selectors';
 import {backToLastScreen} from '../MethodScreen';
 import {styles} from './styles';
+import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
 
 class PostDetailsScreen extends Component {
   static options(props) {
@@ -43,14 +63,62 @@ class PostDetailsScreen extends Component {
       heightKeybroad: 0,
       textComment: '',
       fileSource: null,
+      loadingImage: false,
+
+      loading: false,
+      loadingRefresh: false,
+      account: {},
+      listPostComments: [],
     };
 
     this.keyBroadHide = null;
     this.keyBroadShow = null;
+
+    // this.layouyProvider = new LayoutProvider(
+    //   (index) => {
+    //     return index === 0 ? 'POST' : 'POST_COMMENT';
+    //   },
+    //   (type, dim, index) => {
+    //     switch (type) {
+    //       case 'POST':
+    //         dim.width = SCREEN_WIDTH;
+    //         dim.height = 150;
+    //         break;
+    //       case 'POST_COMMENT':
+    //         dim.width = SCREEN_WIDTH;
+    //         dim.height = 150;
+    //         break;
+    //       default:
+    //         dim.width = SCREEN_WIDTH;
+    //         dim.height = 0;
+    //         break;
+    //     }
+    //   },
+    // );
   }
 
   componentDidMount() {
+    if (!!this.props.listPostComments) {
+      this.setState({listPostComments: this.props.listPostComments});
+    }
+    if (!!this.props.account) {
+      this.setState({account: this.props.account});
+    }
+
+    this.onGetListPostComment();
     this.onRegisterEventKeybroad();
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (
+      !!nextProps.listPostComments &&
+      this.props.listPostComments !== nextProps.listPostComments
+    ) {
+      this.setState({
+        listPostComments: nextProps.listPostComments,
+        loadingRefresh: false,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -93,7 +161,135 @@ class PostDetailsScreen extends Component {
     }
   };
 
-  onSubmitSendComment = () => {};
+  onSubmitSendComment = async () => {
+    const textComment = trim(this.state.textComment);
+    let resImage = null;
+
+    if (isEmpty(textComment)) {
+      onToastAlert('Bạn chưa nhập nội dung trả lời');
+      return;
+    }
+
+    this.setState({loading: true});
+    try {
+      if (this.state.fileSource) {
+        const imageResize = await ImageResizer.createResizedImage(
+          this.state.fileSource.uri,
+          this.state.fileSource.width / 3 > 600
+            ? this.state.fileSource.width / 3
+            : this.state.fileSource.width,
+          this.state.fileSource.height / 3 > 600
+            ? this.state.fileSource.height / 3
+            : this.state.fileSource.height,
+          'JPEG',
+          95,
+          0,
+          undefined,
+          false,
+          {mode: 'contain', onlyScaleDown: false},
+        );
+        const imageUpload = {
+          name: uuid.v4(),
+          height: imageResize.height,
+          width: imageResize.width,
+          size: imageResize.size,
+          type: 'image/jpeg',
+          uri:
+            Platform.OS === 'ios'
+              ? imageResize.uri.replace('file://', '')
+              : imageResize.uri,
+        };
+        resImage = await makeUploadImage(imageUpload, 'post');
+      }
+
+      const payload = {
+        id_post: get(this.props.row, 'id_post', null),
+        id_user: get(this.props.account, 'id', null),
+        comment: textComment,
+        image: resImage ? resImage.secure_url : null,
+      };
+
+      this.props.doCreatePostComment(payload, {
+        callbackOnSuccess: () => {
+          this.onGetListPostComment();
+          this.setState({loading: false, fileSource: null, textComment: ''});
+        },
+        callbackOnFail: () => {
+          this.setState({loading: false});
+        },
+      });
+    } catch (error) {
+      Alert.alert('Đã xảy ra lỗi', error.message);
+      this.setState({loading: false});
+    }
+  };
+
+  onGetListPostComment = () => {
+    const payload = {
+      id_post: get(this.props.row, 'id_post', null),
+    };
+    this.props.doGetPostComment(payload);
+  };
+
+  onRefreshPostComment = () => {
+    this.setState({loadingRefresh: true});
+    this.onGetListPostComment();
+  };
+
+  // _layoutProvider = () => {
+  //   return this.layouyProvider;
+  // };
+
+  // _dataProvider = () => {
+  //   let dataProvider = [];
+  //   dataProvider.push(this.props.row);
+  //   dataProvider.push(this.state.listPostComments);
+  //   const _dataProvider = new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(
+  //     dataProvider,
+  //   );
+  //   return _dataProvider;
+  // };
+
+  // _rowRenderItem = (type, item, index, extendState) => {
+  //   switch (type) {
+  //     case 'POST':
+  //       return (
+  //         <View>
+  //           <Text style={styles.textContent}>
+  //             {get(this.props.row, 'content', '')}
+  //           </Text>
+  //           {get(this.props.row, 'image', null) ? (
+  //             <View>
+  //               <Image
+  //                 style={styles.imagePost}
+  //                 source={{uri: get(this.props.row, 'image')}}
+  //                 onLoadStart={() => this.setState({loadingImage: true})}
+  //                 onLoad={() => this.setState({loadingImage: false})}
+  //               />
+  //               {extendState.loadingImage ? (
+  //                 <ActivityIndicator
+  //                   color={'red'}
+  //                   style={styles.loadingImagePost}
+  //                 />
+  //               ) : null}
+  //             </View>
+  //           ) : null}
+  //           <View style={styles.divider} />
+  //           {extendState.sizePostComment ? (
+  //             <Text>Trả lời:</Text>
+  //           ) : (
+  //             <Text style={{textAlign: 'center'}}>
+  //               Hãy là người đầu tiên trả lời
+  //             </Text>
+  //           )}
+  //         </View>
+  //       );
+  //     case 'POST_COMMENT':
+  //       return <PostItemComment />;
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   render() {
     const {row} = this.props;
@@ -106,11 +302,11 @@ class PostDetailsScreen extends Component {
               source={require('./../../assets/icons/arrow.png')}
             />
           </TouchableOpacity>
-          {get(row, 'image') ? (
+          {get(row, 'avatar') ? (
             <>
               <Image
                 style={styles.avatar}
-                source={{uri: get(row, 'image')}}
+                source={{uri: get(row, 'avatar')}}
                 onLoadStart={() => this.setState({loadingAvt: true})}
                 onLoad={() => this.setState({loadingAvt: false})}
               />
@@ -124,40 +320,77 @@ class PostDetailsScreen extends Component {
               source={require('./../../assets/icons/avatar/5.jpg')}
             />
           )}
-          <View style={{marginLeft: 10}}>
+          <View style={{marginLeft: 10, flex: 1}}>
             <Text
               allowFontScaling={false}
               style={styles.textName}
               numberOfLines={1}>
-              Nguyễn Văn Hùng
+              {get(row, 'name', '')}
             </Text>
             <Text allowFontScaling={false} style={styles.textTime}>
-              1 giờ
+              {getTimeFromNow(get(row, 'date_create', ''))}
             </Text>
           </View>
+          {get(this.state.account, 'id', -1) === get(row, 'id_user', -2) ? (
+            <TouchableOpacity style={{marginRight: 10}}>
+              <MateriaIcon name={'more-vert'} size={20} />
+            </TouchableOpacity>
+          ) : null}
         </View>
         <View style={styles.wrapContent}>
           <FlatList
             ListHeaderComponent={
-              <>
+              <View>
                 <Text style={styles.textContent}>
-                  Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van
-                  Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung Nguyen
-                  Van Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung
-                  Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van
-                  Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung Nguyen
-                  Van Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung
-                  Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van
-                  Hung Nguyen Van Hung Nguyen Van Hung Nguyen Van Hung
+                  {get(row, 'content', '')}
                 </Text>
+                {get(row, 'image', null) ? (
+                  <View>
+                    <Image
+                      style={styles.imagePost}
+                      source={{uri: get(row, 'image')}}
+                      onLoadStart={() => this.setState({loadingImage: true})}
+                      onLoad={() => this.setState({loadingImage: false})}
+                    />
+                    {this.state.loadingImage ? (
+                      <ActivityIndicator
+                        color={'red'}
+                        style={styles.loadingImagePost}
+                      />
+                    ) : null}
+                  </View>
+                ) : null}
                 <View style={styles.divider} />
-                <Text>Trả lời:</Text>
-              </>
+                {size(this.state.listPostComments) ? (
+                  <Text>Trả lời:</Text>
+                ) : (
+                  <Text style={{textAlign: 'center'}}>
+                    Hãy là người đầu tiên trả lời
+                  </Text>
+                )}
+              </View>
             }
-            data={[1, 2, 3, 4, 5, 6, 7, 9]}
-            renderItem={() => <PostItemComment />}
+            data={this.state.listPostComments}
+            renderItem={({item}) => <PostItemComment row={item} />}
             keyExtractor={(item, index) => index.toString()}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.loadingRefresh}
+                onRefresh={this.onRefreshPostComment}
+              />
+            }
           />
+          {/* <RecyclerListView
+            dataProvider={this._dataProvider()}
+            layoutProvider={this._layoutProvider()}
+            forceNonDeterministicRendering={true}
+            canChangeSize={true}
+            rowRenderer={this._rowRenderItem}
+            extendedState={{
+              loadingImage: this.state.loadingImage,
+              sizePostComment: size(this.state.listPostComments),
+            }}
+          /> */}
         </View>
         {this.state.fileSource ? (
           <View style={{marginLeft: 10}}>
@@ -186,6 +419,7 @@ class PostDetailsScreen extends Component {
             },
           ]}>
           <TextInput
+            value={this.state.textComment}
             multiline={true}
             style={styles.textInput}
             placeholder={'Nhập nội dung'}
@@ -207,9 +441,26 @@ class PostDetailsScreen extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        <Spinner visible={this.state.loading} />
       </View>
     );
   }
 }
 
-export default PostDetailsScreen;
+const mapStateToProps = createStructuredSelector({
+  listPostComments: getAllPostCommentSelector(),
+  account: getAccountSelector(),
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    doGetPostComment: (payload) => {
+      dispatch(getPostCommentAction(payload));
+    },
+    doCreatePostComment: (payload, callbacks) => {
+      dispatch(createPostCommentAction(payload, callbacks));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostDetailsScreen);

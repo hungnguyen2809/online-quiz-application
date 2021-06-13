@@ -1,9 +1,10 @@
 /* eslint-disable no-new */
 import axios from 'axios';
-import queryString from 'query-string';
-import Config from 'react-native-config';
-import {Alert} from 'react-native';
 import {get} from 'lodash';
+import queryString from 'query-string';
+import {Alert} from 'react-native';
+import Config from 'react-native-config';
+import {getPresetCloundinary} from '../common/validate';
 import {switchScreenLogin} from '../screens/MethodScreen';
 import {
   deleteAccountToStorage,
@@ -129,16 +130,14 @@ export const apis = {
   makeNonAuthRequest: _makeNonAuthRequest(instanceAxios),
 };
 
-export const makeUploadImage = async (imageFile) => {
+export const makeUploadImage = async (imageFile, type = 'avt') => {
   try {
     if (!imageFile) {
       Alert.alert('Thông báo', 'Yêu cầu cần có file ảnh');
       return;
     }
 
-    const uploadPreset = isProduct
-      ? 'online-quiz-avatar'
-      : 'online-quiz-dev-avatar';
+    const uploadPreset = getPresetCloundinary(type, isProduct);
     const formData = new FormData();
     formData.append('cloud_name', 'hungnguyen2809');
     formData.append('upload_preset', uploadPreset);

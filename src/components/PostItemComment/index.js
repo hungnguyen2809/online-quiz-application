@@ -1,10 +1,22 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Colors} from '../../common/Colors';
 import {get} from 'lodash';
 import {useState} from 'react';
+import {getTimeFromNow} from '../../common/format';
+import {SCREEN_WIDTH} from '../../common/dimensionScreen';
+import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
+import {useSelector} from 'react-redux';
+import {getAccountSelector} from '../../redux/Account/selectors';
 
 PostItemComment.propTypes = {
   row: PropTypes.object,
@@ -13,39 +25,46 @@ PostItemComment.propTypes = {
 function PostItemComment(props) {
   const {row} = props;
   const [loadingAvt, setLoadingAvt] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const account = useSelector(getAccountSelector());
 
   return (
     <View>
       <View style={styles.wrapHeader}>
-        {get(row, 'image') ? (
-          <>
+        {get(row, 'avatar', null) ? (
+          <View>
             <Image
               style={styles.avatar}
-              source={{uri: get(row, 'image')}}
+              source={{uri: get(row, 'avatar')}}
               onLoadStart={() => setLoadingAvt(true)}
               onLoad={() => setLoadingAvt(false)}
             />
             {loadingAvt ? (
               <ActivityIndicator color={'red'} style={styles.loadingAvt} />
             ) : null}
-          </>
+          </View>
         ) : (
           <Image
             style={styles.avatar}
             source={require('./../../assets/icons/avatar/5.jpg')}
           />
         )}
-        <View style={{marginLeft: 10}}>
+        <View style={{marginLeft: 10, flex: 1}}>
           <Text
             allowFontScaling={false}
             style={styles.textName}
             numberOfLines={1}>
-            Nguyễn Văn Hùng
+            {get(row, 'name', '')}
           </Text>
           <Text allowFontScaling={false} style={styles.textTime}>
-            1 giờ
+            {getTimeFromNow(get(row, 'date_create', ''))}
           </Text>
         </View>
+        {get(account, 'id', -1) === get(row, 'id_user_cmt', -2) ? (
+          <TouchableOpacity>
+            <MateriaIcon name={'more-vert'} size={20} />
+          </TouchableOpacity>
+        ) : null}
       </View>
       <View
         style={{
@@ -54,14 +73,20 @@ function PostItemComment(props) {
           borderBottomWidth: 1,
           paddingBottom: 10,
         }}>
-        <Text style={{lineHeight: 24}}>
-          Không có gì đâu nhé Không có gì đâu nhé Không có gì đâu nhé Không có
-          gì đâu nhé Không có gì đâu nhé
-        </Text>
-        <Image
-          style={{width: 200, height: 200, borderRadius: 3}}
-          source={require('./../../assets/images/photo-background.jpeg')}
-        />
+        <Text style={{lineHeight: 24}}>{get(row, 'comment', '')}</Text>
+        {get(row, 'image', null) ? (
+          <View>
+            <Image
+              style={styles.imageCommnet}
+              source={{uri: get(row, 'image')}}
+              onLoadStart={() => setLoadingImage(true)}
+              onLoad={() => setLoadingImage(false)}
+            />
+            {loadingImage ? (
+              <ActivityIndicator color={'red'} style={styles.loadingImage} />
+            ) : null}
+          </View>
+        ) : null}
       </View>
     </View>
   );
@@ -88,7 +113,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.CLEAR_CHILL,
   },
-  loadingAvt: {position: 'absolute', top: 13, left: 13},
+  loadingAvt: {position: 'absolute', top: 10, left: 10},
   textTime: {fontSize: 13},
   textName: {lineHeight: 20, fontSize: 15},
   wrapContent: {
@@ -108,5 +133,17 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#dcdcdc',
     marginVertical: 10,
+  },
+  imageCommnet: {
+    width: SCREEN_WIDTH / 2,
+    height: SCREEN_WIDTH / 2,
+    marginTop: 5,
+    backgroundColor: '#a4b0be',
+    borderRadius: 5,
+  },
+  loadingImage: {
+    position: 'absolute',
+    top: SCREEN_WIDTH / 4 - 5,
+    left: SCREEN_WIDTH / 4 - 10,
   },
 });
