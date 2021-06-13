@@ -1,4 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
+import NetInfo from '@react-native-community/netinfo';
+import LottieView from 'lottie-react-native';
 import React, {Component} from 'react';
 import {
   Alert,
@@ -11,29 +13,24 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
-import NetInfo from '@react-native-community/netinfo';
-import {Navigation} from 'react-native-navigation';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {Navigation} from 'react-native-navigation';
 import SplashScreen from 'react-native-splash-screen';
-import LottieView from 'lottie-react-native';
-
-import {styles} from './styles';
-import {appScreens, screenMain} from './../config-screen';
-import InputEmailComponent from './components/InputEmailComponent';
-import InputPasswordComponent from './components/InputPasswordComponent';
+import {connect} from 'react-redux';
 import {checkEmail, checkEmpty} from '../../common/validate';
-import {Encript} from './../../common/encoding';
-
-import {
-  LoginAccountAction,
-  LoginAccountActionSuccess,
-} from './../../redux/Account/actions';
-
 import {
   getAccountToStorage,
   setAccountToStorage,
 } from './../../common/asyncStorage';
+import {Encript} from './../../common/encoding';
+import {
+  LoginAccountAction,
+  LoginAccountActionSuccess,
+} from './../../redux/Account/actions';
+import {appScreens, screenMain} from './../config-screen';
+import InputEmailComponent from './components/InputEmailComponent';
+import InputPasswordComponent from './components/InputPasswordComponent';
+import {styles} from './styles';
 
 const isIOS = Platform.OS === 'ios';
 

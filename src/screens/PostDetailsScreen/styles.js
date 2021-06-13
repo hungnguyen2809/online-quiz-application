@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: isIphoneX() ? 25 : 0,
     marginTop: isIOS ? getStatusBarHeight() : getStatusBarHeight() + 5,
+    backgroundColor: Colors.WHITE,
   },
   wrapHeader: {
     display: 'flex',
@@ -52,13 +53,14 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 15,
     padding: 10,
     borderWidth: 1,
     borderColor: '#dcdc',
     borderRadius: 10,
     minHeight: 60,
     maxHeight: 60,
+    textAlignVertical: 'top',
   },
   wrapBtnFooter: {
     paddingLeft: 10,

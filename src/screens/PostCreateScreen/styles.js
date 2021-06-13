@@ -18,8 +18,7 @@ const styles = StyleSheet.create({
     maxHeight: 120,
     padding: 5,
     borderRadius: 6,
-    alignContent: 'flex-start',
-    alignSelf: 'stretch',
+    textAlignVertical: 'top',
   },
   btnChooseImage: {
     display: 'flex',
