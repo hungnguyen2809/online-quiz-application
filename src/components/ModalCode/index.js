@@ -32,7 +32,7 @@ class ModalCodeComponent extends Component {
 
     this.state = {
       timeOutCode: TIME_OUT,
-      isVisibleModal: true,
+      isVisibleModal: false,
       retryCode: false,
       code: '',
       disabledSubmit: true,

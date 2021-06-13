@@ -1,3 +1,4 @@
+import {isEqual, trim} from 'lodash';
 import React, {Component} from 'react';
 import {
   Alert,
@@ -8,26 +9,35 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {styles} from './styles';
-import {connect} from 'react-redux';
-import InputCustomComponent from './components/InputCustom';
-import {isEqual, trim} from 'lodash';
-import {checkEmail, checkEmpty} from './../../common/validate';
-import {Encript} from './../../common/encoding';
-import ModalCodeComponent from '../../components/ModalCode';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Toast from './../../components/Toast';
-
-import {setRootScreen} from './../MethodScreen';
-import {screenMain} from './../config-screen';
+import {connect} from 'react-redux';
+import ModalCodeComponent from '../../components/ModalCode';
+import {Encript} from './../../common/encoding';
+import {checkEmail, checkEmpty} from './../../common/validate';
 import {
-  registerAccountAction,
   hasEmailAccountAction,
+  registerAccountAction,
 } from './../../redux/Account/actions';
+import {screenMain} from './../config-screen';
+import {setRootScreen} from './../MethodScreen';
+import InputCustomComponent from './components/InputCustom';
+import {styles} from './styles';
 
 const isIOS = Platform.OS === 'ios';
 
 class RegisterScreen extends Component {
+  static options(props) {
+    return {
+      topBar: {
+        visible: true,
+        animate: true,
+        title: {
+          text: 'Tạo mới tài khoản',
+        },
+      },
+    };
+  }
+
   constructor(props) {
     super(props);
     this.inputEmailRef = React.createRef();
@@ -42,18 +52,6 @@ class RegisterScreen extends Component {
       password: '',
       repassword: '',
       loading: false,
-    };
-  }
-
-  static options(props) {
-    return {
-      topBar: {
-        visible: true,
-        animate: true,
-        title: {
-          text: 'Tạo mới tài khoản',
-        },
-      },
     };
   }
 
@@ -146,20 +144,25 @@ class RegisterScreen extends Component {
       name: trim(name),
       password: Encript(email, password),
     };
-
-    this.props.doRegisterAccount(body, {
-      callbacksOnSuccess: () => {
-        setRootScreen(screenMain);
-      },
-      callbacksOnFail: (erCode) => {
-        this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-      },
+    this.setState({loading: true}, () => {
+      this.props.doRegisterAccount(body, {
+        callbacksOnSuccess: () => {
+          this.setState({loading: false}, () => {
+            setRootScreen(screenMain);
+          });
+        },
+        callbacksOnFail: (erCode) => {
+          this.setState({loading: false});
+          this._onToastAlert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+        },
+      });
     });
   };
 
   render() {
     return (
-      <>
+      // eslint-disable-next-line react-native/no-inline-styles
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
         <ScrollView style={styles.container}>
           <View style={styles.wapperContent}>
             <View>
@@ -232,7 +235,8 @@ class RegisterScreen extends Component {
           ref={this.modalCode}
           onHandleEventSuccess={this._handleSubmitRegisterUser}
         />
-      </>
+        <Spinner visible={this.state.loading} />
+      </View>
     );
   }
 }
