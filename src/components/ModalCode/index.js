@@ -1,4 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+import {isEqual, random, toNumber} from 'lodash';
 import React, {Component} from 'react';
 import {
   Dimensions,
@@ -10,11 +12,8 @@ import {
   View,
 } from 'react-native';
 import RNModal from 'react-native-modal';
-import InputCustomComponent from '../InputCustom';
-import Toast from './../Toast/';
-import {random, isEqual, toNumber} from 'lodash';
-
 import {sendOTPCode} from './../../common/sendCodeEmail';
+import Toast from './../Toast/';
 
 const WIDTH_SCREEN = Dimensions.get('window').width;
 // const HEIGHT_SCREEN = Dimensions.get('window').height;
@@ -33,7 +32,7 @@ class ModalCodeComponent extends Component {
 
     this.state = {
       timeOutCode: TIME_OUT,
-      isVisibleModal: false,
+      isVisibleModal: true,
       retryCode: false,
       code: '',
       disabledSubmit: true,
@@ -65,9 +64,7 @@ class ModalCodeComponent extends Component {
   };
 
   _dismissKeyboard = () => {
-    if (this.showKeyboard) {
-      Keyboard.dismiss();
-    }
+    Keyboard.dismiss();
   };
 
   _genegateCode = () => {
@@ -77,11 +74,13 @@ class ModalCodeComponent extends Component {
   _sendEmailCode = () => {
     sendOTPCode(this.codeAuthencation, this.state.emailSendCode)
       .then((seccess) => {
+        this._dismissKeyboard();
         this.toast.current.onShowToast(
           'Mã xác thực đã được gửi đến email của bạn.',
         );
       })
       .catch((error) => {
+        this._dismissKeyboard();
         this.toast.current.onShowToast(
           'Lỗi không thể gửi mã lúc này. Vui lòng thử lại sau.',
         );
@@ -134,6 +133,7 @@ class ModalCodeComponent extends Component {
       this.codeAuthencation = null;
       this.onDismissModal();
     } else {
+      this._dismissKeyboard();
       this.toast.current.onShowToast('Mã không đúng.');
     }
   };
@@ -147,17 +147,15 @@ class ModalCodeComponent extends Component {
         onSwipeComplete={this.onDismissModal}>
         <TouchableWithoutFeedback onPress={this._dismissKeyboard}>
           <View style={styles.container}>
-            <Text style={styles.title}>Xác thực tài khoản</Text>
+            <Text style={styles.title}>Nhập mã xác thực</Text>
             <View style={styles.wapper}>
-              <Text style={styles.titleInput}>Mã xác minh:</Text>
-              <InputCustomComponent
-                icons={'key-wireless'}
-                returnKeyType={'send'}
-                keyboardType={'numeric'}
-                maxLength={5}
-                secureTextEntry={false}
-                onChangeText={this._onChangeCode}
-                onSubmitEditing={this._handleSubmit}
+              <OTPInputView
+                style={{width: '100%', height: 50}}
+                codeInputFieldStyle={{color: 'black', fontSize: 16}}
+                pinCount={5}
+                code={this.state.code}
+                autoFocusOnLoad={true}
+                onCodeChanged={this._onChangeCode}
               />
             </View>
             <View style={styles.wapperRetry}>
@@ -221,20 +219,13 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
     textAlign: 'center',
     backgroundColor: '#2ed573',
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     color: '#fff',
     paddingVertical: 10,
-    textTransform: 'capitalize',
-  },
-  titleInput: {
-    fontSize: 18,
-    fontWeight: '500',
-    fontStyle: 'italic',
   },
   wapperButton: {
     marginTop: 25,
@@ -242,7 +233,6 @@ const styles = StyleSheet.create({
     padding: 13,
     marginHorizontal: '6%',
     borderRadius: 10,
-    marginBottom: 50,
   },
   titleButton: {
     color: '#fff',
