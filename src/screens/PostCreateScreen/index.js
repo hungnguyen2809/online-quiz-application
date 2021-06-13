@@ -36,6 +36,7 @@ class PostCreateScreen extends Component {
       statusBar: {
         drawBehind: true,
         backgroundColor: 'transparent',
+        style: 'dark',
       },
     };
   }
@@ -123,7 +124,7 @@ class PostCreateScreen extends Component {
       this.props.doCreateNewPost(payload, {
         callbackOnSuccess: () => {
           this.props.onRefreshPost && this.props.onRefreshPost();
-          this.setState({loading: false});
+          this.setState({loading: false, textDes: ''});
           this._goBackScreen();
         },
         callbackOnFail: () => {
@@ -162,6 +163,7 @@ class PostCreateScreen extends Component {
         />
         <View style={styles.wrapInputDes}>
           <TextInput
+            value={this.state.textDes}
             multiline={true}
             style={styles.textInput}
             placeholder={'Nhập nội dung'}
@@ -169,7 +171,7 @@ class PostCreateScreen extends Component {
             onChangeText={(text) => {
               this.setState({textDes: text});
             }}
-            maxLength={200}
+            maxLength={1000}
           />
           <View style={{display: 'flex', flexDirection: 'row', marginTop: 10}}>
             <TouchableOpacity

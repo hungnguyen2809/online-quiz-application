@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-did-mount-set-state */
-import {get} from 'lodash';
+import {debounce, get} from 'lodash';
 import React, {Component} from 'react';
 import {
   ActivityIndicator,
@@ -50,6 +50,7 @@ class ProfileScreen extends Component {
       statusBar: {
         drawBehind: true,
         backgroundColor: 'transparent',
+        style: 'dark',
       },
     };
   }
@@ -184,7 +185,7 @@ class ProfileScreen extends Component {
     }
   };
 
-  _goToScreen = () => {
+  _goToScreen = debounce(() => {
     Navigation.push(this.props.componentId, {
       component: {
         name: appScreens.ProfileDetails.name,
@@ -193,7 +194,7 @@ class ProfileScreen extends Component {
         },
       },
     });
-  };
+  }, 300);
 
   _handleLogout = () => {
     Alert.alert('Thông báo', 'Bạn có chắc muốn đăng xuất ?', [
@@ -215,7 +216,8 @@ class ProfileScreen extends Component {
   };
 
   render() {
-    const {account} = this.state;
+    // const {account} = this.state;
+    const {account} = this.props;
     // console.log('data: ', account);
     return (
       <View style={styles.container}>
@@ -274,17 +276,17 @@ class ProfileScreen extends Component {
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'person'}
-              text={get(account, 'name', ' ')}
+              text={get(account, 'name', '')}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'smartphone'}
-              text={formatPhone(get(account, 'phone', ' '))}
+              text={formatPhone(get(account, 'phone', ''))}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'email'}
-              text={get(account, 'email', ' ')}
+              text={get(account, 'email', '')}
             />
           </ScrollView>
         </View>
