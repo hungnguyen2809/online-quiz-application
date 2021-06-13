@@ -17,6 +17,7 @@ import {SCREEN_WIDTH} from '../../common/dimensionScreen';
 import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
 import {useSelector} from 'react-redux';
 import {getAccountSelector} from '../../redux/Account/selectors';
+import ImageView from 'react-native-image-viewing';
 
 PostItemComment.propTypes = {
   row: PropTypes.object,
@@ -24,9 +25,10 @@ PostItemComment.propTypes = {
 
 function PostItemComment(props) {
   const {row} = props;
+  const account = useSelector(getAccountSelector());
   const [loadingAvt, setLoadingAvt] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
-  const account = useSelector(getAccountSelector());
+  const [showImageView, setShowImageView] = useState(false);
 
   return (
     <View>
@@ -76,18 +78,31 @@ function PostItemComment(props) {
         <Text style={{lineHeight: 24}}>{get(row, 'comment', '')}</Text>
         {get(row, 'image', null) ? (
           <View>
-            <Image
-              style={styles.imageCommnet}
-              source={{uri: get(row, 'image')}}
-              onLoadStart={() => setLoadingImage(true)}
-              onLoad={() => setLoadingImage(false)}
-            />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={{alignSelf: 'flex-start'}}
+              onPress={() => setShowImageView(true)}>
+              <Image
+                style={styles.imageCommnet}
+                source={{uri: get(row, 'image')}}
+                onLoadStart={() => setLoadingImage(true)}
+                onLoad={() => setLoadingImage(false)}
+              />
+            </TouchableOpacity>
             {loadingImage ? (
               <ActivityIndicator color={'red'} style={styles.loadingImage} />
             ) : null}
           </View>
         ) : null}
       </View>
+      {get(row, 'image', null) ? (
+        <ImageView
+          images={[{uri: get(row, 'image')}]}
+          visible={showImageView}
+          imageIndex={0}
+          onRequestClose={() => setShowImageView(false)}
+        />
+      ) : null}
     </View>
   );
 }

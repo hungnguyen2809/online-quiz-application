@@ -37,6 +37,7 @@ import {getAllPostCommentSelector} from '../../redux/Post/selectors';
 import {backToLastScreen} from '../MethodScreen';
 import {styles} from './styles';
 import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
+import ImageView from 'react-native-image-viewing';
 
 class PostDetailsScreen extends Component {
   static options(props) {
@@ -69,6 +70,7 @@ class PostDetailsScreen extends Component {
       loadingRefresh: false,
       account: {},
       listPostComments: [],
+      showImageView: false,
     };
 
     this.keyBroadHide = null;
@@ -346,12 +348,17 @@ class PostDetailsScreen extends Component {
                 </Text>
                 {get(row, 'image', null) ? (
                   <View>
-                    <Image
-                      style={styles.imagePost}
-                      source={{uri: get(row, 'image')}}
-                      onLoadStart={() => this.setState({loadingImage: true})}
-                      onLoad={() => this.setState({loadingImage: false})}
-                    />
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={{alignSelf: 'flex-start'}}
+                      onPress={() => this.setState({showImageView: true})}>
+                      <Image
+                        style={styles.imagePost}
+                        source={{uri: get(row, 'image')}}
+                        onLoadStart={() => this.setState({loadingImage: true})}
+                        onLoad={() => this.setState({loadingImage: false})}
+                      />
+                    </TouchableOpacity>
                     {this.state.loadingImage ? (
                       <ActivityIndicator
                         color={'red'}
@@ -368,6 +375,14 @@ class PostDetailsScreen extends Component {
                     Hãy là người đầu tiên trả lời
                   </Text>
                 )}
+                {get(row, 'image', null) ? (
+                  <ImageView
+                    images={[{uri: get(row, 'image')}]}
+                    visible={this.state.showImageView}
+                    imageIndex={0}
+                    onRequestClose={() => this.setState({showImageView: false})}
+                  />
+                ) : null}
               </View>
             }
             data={this.state.listPostComments}

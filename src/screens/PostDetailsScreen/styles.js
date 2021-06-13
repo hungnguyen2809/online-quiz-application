@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
   },
   loadingImagePost: {
     position: 'absolute',
-    top: SCREEN_WIDTH / 2,
-    left: SCREEN_WIDTH / 2 - 10,
+    top: SCREEN_WIDTH / 4,
+    left: SCREEN_WIDTH / 4 - 10,
   },
 });
 

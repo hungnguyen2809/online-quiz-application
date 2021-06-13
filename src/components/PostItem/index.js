@@ -1,8 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {get, size} from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -11,8 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Colors} from '../../common/Colors';
+import ImageView from 'react-native-image-viewing';
 import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
+import {Colors} from '../../common/Colors';
 import {getTimeFromNow} from '../../common/format';
 
 PostItem.propTypes = {
@@ -31,6 +31,7 @@ function PostItem(props) {
   const {row, onDetailPost, account} = props;
   const [loadingAvt, setLoadingAvt] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
+  const [showImageView, setShowImageView] = useState(false);
 
   const handleNavigatePost = () => {
     onDetailPost && onDetailPost(row);
@@ -96,12 +97,17 @@ function PostItem(props) {
         </TouchableOpacity>
         {get(row, 'image', null) ? (
           <View>
-            <Image
-              style={styles.imagePost}
-              source={{uri: get(row, 'image')}}
-              onLoadStart={() => setLoadingImage(true)}
-              onLoad={() => setLoadingImage(false)}
-            />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={{alignSelf: 'flex-start'}}
+              onPress={() => setShowImageView(true)}>
+              <Image
+                style={styles.imagePost}
+                source={{uri: get(row, 'image')}}
+                onLoadStart={() => setLoadingImage(true)}
+                onLoad={() => setLoadingImage(false)}
+              />
+            </TouchableOpacity>
             {loadingImage ? (
               <ActivityIndicator
                 color={'red'}
@@ -112,9 +118,21 @@ function PostItem(props) {
         ) : null}
         <View style={styles.divider} />
         <TouchableOpacity activeOpacity={0.8} onPress={handleNavigatePost}>
-          <Text>1 câu trả lời</Text>
+          {get(row, 'number', 0) ? (
+            <Text>{get(row, 'number')} câu trả lời</Text>
+          ) : (
+            <Text>Hãy là người đầu tiên bình luận</Text>
+          )}
         </TouchableOpacity>
       </View>
+      {get(row, 'image', null) ? (
+        <ImageView
+          images={[{uri: get(row, 'image')}]}
+          visible={showImageView}
+          imageIndex={0}
+          onRequestClose={() => setShowImageView(false)}
+        />
+      ) : null}
     </View>
   );
 }
