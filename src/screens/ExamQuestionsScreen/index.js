@@ -1,22 +1,22 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
+import {fill, get, isEqual, map, shuffle, upperCase} from 'lodash';
 import React, {Component} from 'react';
 import {
   Alert,
-  // FlatList,
-  Image,
-  TouchableOpacity,
-  View,
   BackHandler,
+  // FlatList,
+  // Image,
+  // TouchableOpacity,
+  View,
 } from 'react-native';
+import PagerView from 'react-native-pager-view';
+import {appScreens} from '../config-screen';
+import ModalReviewExam from './../../components/ModalReviewExam';
 import {backToLastScreen, goToScreenWithPassProps} from './../MethodScreen';
 import ExecExam from './components/ExecExam';
 import Header from './components/Header';
-import {fill, isEqual, upperCase, get, map, shuffle} from 'lodash';
 import {styles} from './styles';
-import ModalReviewExam from './../../components/ModalReviewExam';
-import PagerView from 'react-native-pager-view';
-import {appScreens} from '../config-screen';
 
 class ExamQuestionsScreen extends Component {
   static options(prosp) {
@@ -225,6 +225,13 @@ class ExamQuestionsScreen extends Component {
     return true;
   };
 
+  onScrollToQuestion = (idx) => {
+    this.setState({showModalReview: false}, () => {
+      this.potions = idx;
+      this.viewQuestions.current.setPage(idx);
+    });
+  };
+
   componentWillUnmount() {
     this.backHandler && this.backHandler.remove();
   }
@@ -281,7 +288,7 @@ class ExamQuestionsScreen extends Component {
             })}
           </PagerView>
         </View>
-        <View style={styles.wapperFooter}>
+        {/* <View style={styles.wapperFooter}>
           <TouchableOpacity onPress={this._onPressPrev}>
             <Image
               style={{tintColor: '#ff4757'}}
@@ -294,12 +301,13 @@ class ExamQuestionsScreen extends Component {
               source={require('./../../assets/icons/arrow.png')}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <ModalReviewExam
           listAnswerQuestions={this.arrAnsers}
           visible={this.state.showModalReview}
           onCancel={this._openCloseReviewExam}
           onSubmit={this._onFinishExam}
+          onPressItem={this.onScrollToQuestion}
         />
       </View>
     );
