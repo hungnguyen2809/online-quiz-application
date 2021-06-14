@@ -1,5 +1,7 @@
+/* eslint-disable no-extra-boolean-cast */
+/* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
-import _ from 'lodash';
+import {debounce, upperCase} from 'lodash';
 import React, {Component} from 'react';
 import {Text, View, Platform, TouchableOpacity, FlatList} from 'react-native';
 import Modal from 'react-native-modal';
@@ -8,14 +10,21 @@ import {styles} from './styles';
 
 const isIOS = Platform.OS === 'ios';
 
-const ItemReviewQuestion = ({index, answer}) => {
-  const checkedA = _.upperCase(answer) === 'A';
-  const checkedB = _.upperCase(answer) === 'B';
-  const checkedC = _.upperCase(answer) === 'C';
-  const checkedD = _.upperCase(answer) === 'D';
+const ItemReviewQuestion = ({index, answer, onPressItem}) => {
+  const checkedA = upperCase(answer) === 'A';
+  const checkedB = upperCase(answer) === 'B';
+  const checkedC = upperCase(answer) === 'C';
+  const checkedD = upperCase(answer) === 'D';
+
+  const _onPressItem = () => {
+    onPressItem && onPressItem(index);
+  };
 
   return (
-    <View style={styles.containerItemQues}>
+    <TouchableOpacity
+      style={styles.containerItemQues}
+      activeOpacity={0.9}
+      onPress={debounce(_onPressItem, 250)}>
       <Text style={styles.numberQues}>{index + 1}. </Text>
       <View
         style={[
@@ -45,7 +54,7 @@ const ItemReviewQuestion = ({index, answer}) => {
         ]}>
         <Text style={styles.textAnswer}>D</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -58,8 +67,18 @@ class ModalReviewExam extends Component {
     };
   }
 
+  _onPressItem = (idx) => {
+    this.props.onPressItem && this.props.onPressItem(idx);
+  };
+
   renderRowItem = ({item, index}) => {
-    return <ItemReviewQuestion index={index} answer={item} />;
+    return (
+      <ItemReviewQuestion
+        index={index}
+        answer={item}
+        onPressItem={this._onPressItem}
+      />
+    );
   };
 
   componentDidMount() {

@@ -23,6 +23,9 @@ Navigation.setDefaultOptions({
   bottomTabs: {
     backgroundColor: '#6a89cc',
   },
+  statusBar: {
+    style: 'dark',
+  },
 });
 
 Navigation.events().registerAppLaunchedListener(async () => {
