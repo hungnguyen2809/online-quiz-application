@@ -12,7 +12,7 @@ import {
   getTokenToStorage,
 } from './../common/asyncStorage';
 
-const isProduct = false;
+export const isProduct = false;
 
 const BaseAPI = {
   BaseUrl: isProduct

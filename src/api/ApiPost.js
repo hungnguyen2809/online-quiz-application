@@ -1,9 +1,10 @@
 import {apis} from './createApiService';
 
-export const getAllPostAPI = () => {
+export const getAllPostAPI = (args) => {
   return apis.makeAuthRequest({
     url: '/post/get-all',
     method: 'GET',
+    params: args,
   });
 };
 

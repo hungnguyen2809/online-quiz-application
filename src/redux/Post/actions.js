@@ -8,11 +8,12 @@ import {
 } from './constants';
 
 export const getAllPostAction = (
+  data,
   callbacks = {callbackOnSuccess: () => {}, callbackOnFail: () => {}},
 ) => {
   return {
     type: POST_GET_ALL_POST,
-    payload: {},
+    payload: {data},
     callbacks,
   };
 };

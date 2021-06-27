@@ -6,7 +6,7 @@ import {
   getAllPostAPI,
   getPostCommentAPI,
 } from '../../api/ApiPost';
-import {getAllPostActionDone, getPostComemntActionDone} from './actions';
+import {getPostComemntActionDone} from './actions';
 import {
   POST_COMMENT_CREATE_POST_COMMENT,
   POST_COMMENT_GET_POST_COMMENT,
@@ -17,17 +17,16 @@ import {
 function* workerGetAllPost(action) {
   const {callbackOnSuccess, callbackOnFail} = action.callbacks;
   try {
-    const response = yield call(getAllPostAPI);
+    const response = yield call(getAllPostAPI, action.payload.data);
     if (response.error === false && response.status === 200) {
-      yield put(getAllPostActionDone(response.payload));
-      yield callbackOnSuccess();
+      yield callbackOnSuccess(response.payload);
     } else {
       Alert.alert('Đã xảy ra lỗi', response.message);
       yield callbackOnFail();
     }
   } catch (error) {
-    Alert.alert('Đã xảy ra lỗi', error.message);
     yield callbackOnFail();
+    Alert.alert('Đã xảy ra lỗi', error.message);
   }
 }
 
