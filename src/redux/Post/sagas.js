@@ -1,3 +1,4 @@
+import {isEmpty} from 'lodash';
 import {Alert} from 'react-native';
 import {call, fork, put, takeLatest} from 'redux-saga/effects';
 import {
@@ -6,7 +7,7 @@ import {
   getAllPostAPI,
   getPostCommentAPI,
 } from '../../api/ApiPost';
-import {getPostComemntActionDone} from './actions';
+import {getAllPostActionDone} from './actions';
 import {
   POST_COMMENT_CREATE_POST_COMMENT,
   POST_COMMENT_GET_POST_COMMENT,
@@ -19,7 +20,8 @@ function* workerGetAllPost(action) {
   try {
     const response = yield call(getAllPostAPI, action.payload.data);
     if (response.error === false && response.status === 200) {
-      yield callbackOnSuccess(response.payload);
+      yield put(getAllPostActionDone(response.payload, action.payload.page));
+      yield callbackOnSuccess({isNull: isEmpty(response.payload)});
     } else {
       Alert.alert('Đã xảy ra lỗi', response.message);
       yield callbackOnFail();
@@ -59,8 +61,8 @@ function* workerGetPostComment(action) {
   try {
     const response = yield call(getPostCommentAPI, action.payload.data);
     if (response.error === false && response.status === 200) {
-      yield put(getPostComemntActionDone(response.payload));
-      yield callbackOnSuccess();
+      // yield put(getPostComemntActionDone(response.payload));
+      yield callbackOnSuccess(response.payload);
     } else {
       Alert.alert('Có lỗi', response.message);
       yield callbackOnFail();

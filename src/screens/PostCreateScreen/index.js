@@ -125,10 +125,11 @@ class PostCreateScreen extends Component {
 
       this.props.doCreateNewPost(payload, {
         callbackOnSuccess: () => {
-          this.props.onRefreshPost && this.props.onRefreshPost();
-          this.setState({loading: false, textDes: ''});
-          this._goBackScreen();
-          SocketManager.emit(SOCKET_CLIENT_SEND_NEW_POST);
+          this.setState({loading: false, textDes: ''}, () => {
+            SocketManager.emit(SOCKET_CLIENT_SEND_NEW_POST);
+            this._goBackScreen();
+            this.props.onRefreshPost && this.props.onRefreshPost();
+          });
         },
         callbackOnFail: () => {
           this.setState({loading: false});

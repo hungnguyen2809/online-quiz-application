@@ -9,19 +9,20 @@ import {
 
 export const getAllPostAction = (
   data,
+  page,
   callbacks = {callbackOnSuccess: () => {}, callbackOnFail: () => {}},
 ) => {
   return {
     type: POST_GET_ALL_POST,
-    payload: {data},
+    payload: {data, page},
     callbacks,
   };
 };
 
-export const getAllPostActionDone = (data) => {
+export const getAllPostActionDone = (data, page) => {
   return {
     type: POST_GET_ALL_POST_DONE,
-    payload: {data},
+    payload: {data, page},
   };
 };
 

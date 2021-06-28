@@ -1,6 +1,6 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
-import {debounce, get, isEmpty, size} from 'lodash';
+import {debounce, get, map, size} from 'lodash';
 import React, {Component} from 'react';
 import {
   ActivityIndicator,
@@ -20,6 +20,7 @@ import AlertNoti from '../../components/AlertNoti';
 import PostItem from '../../components/PostItem';
 import {getAccountSelector} from '../../redux/Account/selectors';
 import {getAllPostAction} from '../../redux/Post/actions';
+import {getAllPostSelector, getPagePost} from '../../redux/Post/selectors';
 import SocketManager from '../../socketIO';
 import {SOCKET_SERVER_SEND_NEW_POST} from '../../socketIO/constant';
 import {appScreens} from '../config-screen';
@@ -76,6 +77,7 @@ class ForumScreen extends Component {
       },
     );
 
+    this.isDidAppear = false;
     this.refListPost = React.createRef();
   }
 
@@ -92,7 +94,10 @@ class ForumScreen extends Component {
   }
 
   componentDidAppear() {
-    this.onGetListAllPost();
+    if (this.isDidAppear === false) {
+      this.onGetListAllPost();
+      this.isDidAppear = true;
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -101,26 +106,40 @@ class ForumScreen extends Component {
         this.setState({account: nextProps.account});
       }
     }
+
+    if (!!nextProps.listPosts && this.props.listPosts !== nextProps.listPosts) {
+      this.setState({listPosts: nextProps.listPosts}, () => {
+        if (!!nextProps.pagePost && nextProps.pagePost === 1) {
+          setTimeout(this.onScrollToTop, 300);
+        }
+      });
+    }
   }
 
   onGetListAllPost = (page = 1) => {
     let offset = page * 10 - 10;
     const payload = {offset};
-    this.props.doGetListAllPost(payload, {
-      callbackOnSuccess: (listPosts) => {
-        if (!isEmpty(listPosts)) {
+    this.props.doGetListAllPost(payload, page, {
+      callbackOnSuccess: ({isNull}) => {
+        if (!isNull) {
           this.setState({
-            listPosts:
-              page === 1 ? listPosts : this.state.listPosts.concat(listPosts),
             curPage: page,
+            loading: false,
+            showNewPost: false,
+            loadMore: false,
           });
+        } else {
+          this.setState({loading: false, showNewPost: false, loadMore: false});
         }
-        this.setState({loading: false, showNewPost: false, loadMore: false});
       },
       callbackOnFail: () => {
         this.setState({loading: false, showNewPost: false, loadMore: false});
       },
     });
+  };
+
+  onScrollToTop = () => {
+    this.refListPost.current.scrollToOffset(0, 0, true);
   };
 
   _renderListNonData = () => {
@@ -129,7 +148,6 @@ class ForumScreen extends Component {
         <ScrollView
           refreshControl={
             <RefreshControl
-              colors={'red'}
               refreshing={this.state.loading}
               onRefresh={this._onRefreshPost}
             />
@@ -183,7 +201,19 @@ class ForumScreen extends Component {
       {
         row,
         parentComponentId: this.props.componentId,
-        onRefreshPost: () => {},
+        onUpdatePost: ({id_post, number}) => {
+          const mapPosts = map(this.state.listPosts, (item) => {
+            if (item.id_post === id_post && item.number !== number) {
+              return {
+                ...item,
+                number,
+              };
+            } else {
+              return {...item};
+            }
+          });
+          this.setState({listPosts: mapPosts});
+        },
       },
     );
   };
@@ -196,8 +226,7 @@ class ForumScreen extends Component {
         account: this.props.account,
         parentComponentId: this.props.componentId,
         onRefreshPost: () => {
-          this.refListPost.current.scrollToOffset(0, 0, true);
-          // this.onGetListAllPost();
+          this.onGetListAllPost();
         },
       },
     );
@@ -213,7 +242,7 @@ class ForumScreen extends Component {
   };
 
   handlePressAlertNoti = () => {
-    this.refListPost.current.scrollToOffset(0, 0, true);
+    // this.refListPost.current.scrollToOffset(0, 0, true);
     this.onGetListAllPost();
   };
 
@@ -278,7 +307,6 @@ class ForumScreen extends Component {
                 scrollViewProps={{
                   refreshControl: (
                     <RefreshControl
-                      colors={'red'}
                       refreshing={this.state.loading}
                       onRefresh={this._onRefreshPost}
                     />
@@ -306,12 +334,14 @@ class ForumScreen extends Component {
 
 const mapStateToProps = createStructuredSelector({
   account: getAccountSelector(),
+  listPosts: getAllPostSelector(),
+  pagePost: getPagePost(),
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    doGetListAllPost: (payload, callbacks) => {
-      dispatch(getAllPostAction(payload, callbacks));
+    doGetListAllPost: (payload, page, callbacks) => {
+      dispatch(getAllPostAction(payload, page, callbacks));
     },
   };
 };

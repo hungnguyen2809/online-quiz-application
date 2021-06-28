@@ -33,7 +33,7 @@ import {
   createPostCommentAction,
   getPostCommentAction,
 } from '../../redux/Post/actions';
-import {getAllPostCommentSelector} from '../../redux/Post/selectors';
+// import {getAllPostCommentSelector} from '../../redux/Post/selectors';
 import {backToLastScreen} from '../MethodScreen';
 import {styles} from './styles';
 import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
@@ -113,15 +113,15 @@ class PostDetailsScreen extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (
-      !!nextProps.listPostComments &&
-      this.props.listPostComments !== nextProps.listPostComments
-    ) {
-      this.setState({
-        listPostComments: nextProps.listPostComments,
-        loadingRefresh: false,
-      });
-    }
+    // if (
+    //   !!nextProps.listPostComments &&
+    //   this.props.listPostComments !== nextProps.listPostComments
+    // ) {
+    //   this.setState({
+    //     listPostComments: nextProps.listPostComments,
+    //     loadingRefresh: false,
+    //   });
+    // }
   }
 
   componentWillUnmount() {
@@ -143,6 +143,11 @@ class PostDetailsScreen extends Component {
 
   onBackScreen = () => {
     backToLastScreen(this.props.componentId);
+    const param = {
+      id_post: get(this.props.row, 'id_post'),
+      number: this.state.listPostComments.length,
+    };
+    this.props.onUpdatePost && this.props.onUpdatePost(param);
   };
 
   onChooseImage = () => {
@@ -214,6 +219,7 @@ class PostDetailsScreen extends Component {
 
       this.props.doCreatePostComment(payload, {
         callbackOnSuccess: () => {
+          Keyboard.dismiss();
           this.onGetListPostComment();
           this.setState({loading: false, fileSource: null, textComment: ''});
         },
@@ -231,7 +237,14 @@ class PostDetailsScreen extends Component {
     const payload = {
       id_post: get(this.props.row, 'id_post', null),
     };
-    this.props.doGetPostComment(payload);
+    this.props.doGetPostComment(payload, {
+      callbackOnSuccess: (listPostComments) => {
+        this.setState({listPostComments, loadingRefresh: false});
+      },
+      callbackOnFail: () => {
+        this.setState({loadingRefresh: false});
+      },
+    });
   };
 
   onRefreshPostComment = () => {
@@ -373,7 +386,7 @@ class PostDetailsScreen extends Component {
                   <Text>Trả lời:</Text>
                 ) : (
                   <Text style={{textAlign: 'center'}}>
-                    Hãy là người đầu tiên trả lời
+                    Hãy là người đầu tiên bình luận
                   </Text>
                 )}
                 {get(row, 'image', null) ? (
@@ -440,7 +453,6 @@ class PostDetailsScreen extends Component {
             style={styles.textInput}
             placeholder={'Nhập nội dung'}
             onChangeText={(text) => this.setState({textComment: text})}
-            returnKeyType={'done'}
           />
           <View style={styles.wrapBtnFooter}>
             <TouchableOpacity onPress={this.onChooseImage}>
@@ -464,14 +476,14 @@ class PostDetailsScreen extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  listPostComments: getAllPostCommentSelector(),
+  // listPostComments: getAllPostCommentSelector(),
   account: getAccountSelector(),
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    doGetPostComment: (payload) => {
-      dispatch(getPostCommentAction(payload));
+    doGetPostComment: (payload, callbacks) => {
+      dispatch(getPostCommentAction(payload, callbacks));
     },
     doCreatePostComment: (payload, callbacks) => {
       dispatch(createPostCommentAction(payload, callbacks));
