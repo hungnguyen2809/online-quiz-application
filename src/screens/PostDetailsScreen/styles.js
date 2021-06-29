@@ -96,6 +96,16 @@ const styles = StyleSheet.create({
     top: SCREEN_WIDTH / 4,
     left: SCREEN_WIDTH / 4 - 10,
   },
+  wrapNotiInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageLoading: {
+    height: 35,
+    width: 30,
+  },
 });
 
 export {styles};

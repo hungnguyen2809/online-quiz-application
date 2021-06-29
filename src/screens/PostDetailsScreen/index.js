@@ -1,7 +1,7 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable react-native/no-inline-styles */
-import {get, isEmpty, size, trim} from 'lodash';
+import {debounce, get, isEmpty, size, trim} from 'lodash';
 import React, {Component} from 'react';
 import {
   ActivityIndicator,
@@ -18,8 +18,10 @@ import {
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
+import ImageView from 'react-native-image-viewing';
 import Spinner from 'react-native-loading-spinner-overlay';
 import uuid from 'react-native-uuid';
+import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 // import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import {createStructuredSelector} from 'reselect';
@@ -33,11 +35,18 @@ import {
   createPostCommentAction,
   getPostCommentAction,
 } from '../../redux/Post/actions';
+import {
+  SOCKET_CLIENT_SEND_JOIN_ROOM_POST,
+  SOCKET_CLIENT_SEND_LEAVE_ROOM_POST,
+  SOCKET_CLIENT_SEND_USER_FOCUS_POSTCOMMENT,
+  SOCKET_CLIENT_SEND_USER_UNFOCUS_POSTCOMMENT,
+  SOCKET_SERVER_SEND_USER_FOCUS_POSTCOMMENT,
+  SOCKET_SERVER_SEND_USER_UNFOCUS_POSTCOMMENT,
+} from '../../socketIO/constant';
 // import {getAllPostCommentSelector} from '../../redux/Post/selectors';
 import {backToLastScreen} from '../MethodScreen';
+import SocketManager from './../../socketIO';
 import {styles} from './styles';
-import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
-import ImageView from 'react-native-image-viewing';
 
 class PostDetailsScreen extends Component {
   static options(props) {
@@ -72,6 +81,8 @@ class PostDetailsScreen extends Component {
       account: {},
       listPostComments: [],
       showImageView: false,
+
+      otherUserComment: false,
     };
 
     this.keyBroadHide = null;
@@ -110,7 +121,29 @@ class PostDetailsScreen extends Component {
 
     this.onGetListPostComment();
     this.onRegisterEventKeybroad();
+    this.onRegisterEventSocket();
   }
+
+  onRegisterEventSocket = () => {
+    //JOIN ROOM POST
+    SocketManager.emit(SOCKET_CLIENT_SEND_JOIN_ROOM_POST, {
+      id_post: get(this.props.row, 'id_post'),
+    });
+
+    //When other people input
+    SocketManager.on(
+      SOCKET_SERVER_SEND_USER_FOCUS_POSTCOMMENT,
+      debounce(() => {
+        this.setState({otherUserComment: true});
+      }, 300),
+    );
+    SocketManager.on(
+      SOCKET_SERVER_SEND_USER_UNFOCUS_POSTCOMMENT,
+      debounce(() => {
+        this.setState({otherUserComment: false});
+      }, 300),
+    );
+  };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     // if (
@@ -127,6 +160,10 @@ class PostDetailsScreen extends Component {
   componentWillUnmount() {
     this.keyBroadHide && this.keyBroadHide.remove();
     this.keyBroadShow && this.keyBroadShow.remove();
+    // Leave room post
+    SocketManager.emit(SOCKET_CLIENT_SEND_LEAVE_ROOM_POST, {
+      id_post: get(this.props.row, 'id_post'),
+    });
   }
 
   onRegisterEventKeybroad = () => {
@@ -307,6 +344,14 @@ class PostDetailsScreen extends Component {
   //   }
   // };
 
+  onFocusInputComment = () => {
+    SocketManager.emit(SOCKET_CLIENT_SEND_USER_FOCUS_POSTCOMMENT);
+  };
+
+  onUnFocusInputCommnet = () => {
+    SocketManager.emit(SOCKET_CLIENT_SEND_USER_UNFOCUS_POSTCOMMENT);
+  };
+
   render() {
     const {row} = this.props;
     return (
@@ -421,6 +466,17 @@ class PostDetailsScreen extends Component {
             }}
           /> */}
         </View>
+        {this.state.otherUserComment ? (
+          <View style={styles.wrapNotiInput}>
+            <Text style={{lineHeight: 25, marginRight: 10, fontSize: 15}}>
+              Có người đang bình luận
+            </Text>
+            <Image
+              style={styles.imageLoading}
+              source={require('./../../assets/animated/loadding.gif')}
+            />
+          </View>
+        ) : null}
         {this.state.fileSource ? (
           <View style={{marginLeft: 10}}>
             <Image
@@ -448,6 +504,8 @@ class PostDetailsScreen extends Component {
             },
           ]}>
           <TextInput
+            onFocus={debounce(this.onFocusInputComment, 300)}
+            onBlur={debounce(this.onUnFocusInputCommnet, 300)}
             value={this.state.textComment}
             multiline={true}
             style={styles.textInput}

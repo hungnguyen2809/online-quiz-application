@@ -110,7 +110,7 @@ class ForumScreen extends Component {
     if (!!nextProps.listPosts && this.props.listPosts !== nextProps.listPosts) {
       this.setState({listPosts: nextProps.listPosts}, () => {
         if (!!nextProps.pagePost && nextProps.pagePost === 1) {
-          setTimeout(this.onScrollToTop, 300);
+          setTimeout(this.onScrollToTop, 500);
         }
       });
     }

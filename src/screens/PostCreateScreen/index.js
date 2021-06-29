@@ -171,7 +171,6 @@ class PostCreateScreen extends Component {
             multiline={true}
             style={styles.textInput}
             placeholder={'Nhập nội dung'}
-            returnKeyType={'done'}
             onChangeText={(text) => {
               this.setState({textDes: text});
             }}

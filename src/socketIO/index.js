@@ -14,12 +14,7 @@ class SocketIOManager {
   }
 
   emit = (key, data = {}) => {
-    let dataSend = '';
-    if (typeof data !== 'string') {
-      dataSend = JSON.stringify(data);
-    }
-    dataSend = data;
-    this.socket.emit(key, dataSend);
+    this.socket.emit(key, data);
   };
 
   on = (key, callback = () => {}) => {
