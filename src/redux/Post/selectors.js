@@ -10,6 +10,12 @@ export const getAllPostSelector = () => {
   });
 };
 
+export const getPagePost = () => {
+  return createSelector(getStatePost(), (state) => {
+    return state.get('pagePost');
+  });
+};
+
 export const getAllPostCommentSelector = () => {
   return createSelector(getStatePost(), (state) => {
     return state.get('listPostComments');

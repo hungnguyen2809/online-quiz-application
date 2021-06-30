@@ -1,11 +1,11 @@
+import {get, isEmpty, map} from 'lodash';
 import React, {Component} from 'react';
+import {RefreshControl, ScrollView, Text, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
-import {ScrollView, Text, View, RefreshControl} from 'react-native';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {getAccountToStorage} from '../../common/asyncStorage';
 import HeadTopBar from '../../components/HeadTopBar';
-import {get, isEmpty, map} from 'lodash';
 import {
   getListPercentTopicAction,
   getListRateUserAction,
@@ -14,6 +14,8 @@ import {
   getListPercentTopicSelector,
   getListRateUserSelector,
 } from '../../redux/UserQuestion/selectors';
+import SocketManager from '../../socketIO';
+import {SOCKET_CLIENT_SEND_PROFILE} from '../../socketIO/constant';
 import AchievementUser from './components/AchievementUser';
 import RatingUser from './components/RatingUser';
 import {styles} from './styles';
@@ -46,7 +48,17 @@ class HomeScreen extends Component {
     };
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    const account = await getAccountToStorage();
+    const payload = {
+      id_user: get(account, 'id'),
+      name: get(account, 'name'),
+      email: get(account, 'email'),
+      image: get(account, 'image'),
+      phone: get(account, 'phone'),
+    };
+    SocketManager.emit(SOCKET_CLIENT_SEND_PROFILE, JSON.stringify(payload));
+  }
 
   componentDidAppear() {
     this.props.doGetListRateUser();

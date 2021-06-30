@@ -22,6 +22,8 @@ import {makeUploadImage} from '../../api/createApiService';
 import {onToastAlert} from '../../common/validate';
 import HeaderBar from '../../components/HeaderBar';
 import {createNewPostAction} from '../../redux/Post/actions';
+import SocketManager from '../../socketIO';
+import {SOCKET_CLIENT_SEND_NEW_POST} from '../../socketIO/constant';
 import {styles} from './styles';
 
 class PostCreateScreen extends Component {
@@ -123,9 +125,11 @@ class PostCreateScreen extends Component {
 
       this.props.doCreateNewPost(payload, {
         callbackOnSuccess: () => {
-          this.props.onRefreshPost && this.props.onRefreshPost();
-          this.setState({loading: false, textDes: ''});
-          this._goBackScreen();
+          this.setState({loading: false, textDes: ''}, () => {
+            SocketManager.emit(SOCKET_CLIENT_SEND_NEW_POST);
+            this._goBackScreen();
+            this.props.onRefreshPost && this.props.onRefreshPost();
+          });
         },
         callbackOnFail: () => {
           this.setState({loading: false});
@@ -167,7 +171,6 @@ class PostCreateScreen extends Component {
             multiline={true}
             style={styles.textInput}
             placeholder={'Nhập nội dung'}
-            returnKeyType={'done'}
             onChangeText={(text) => {
               this.setState({textDes: text});
             }}

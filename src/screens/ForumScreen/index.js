@@ -1,6 +1,6 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
-import {debounce, get, size} from 'lodash';
+import {debounce, get, map, size} from 'lodash';
 import React, {Component} from 'react';
 import {
   ActivityIndicator,
@@ -15,11 +15,14 @@ import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import {createStructuredSelector} from 'reselect';
+import AlertNoti from '../../components/AlertNoti';
 // import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import PostItem from '../../components/PostItem';
 import {getAccountSelector} from '../../redux/Account/selectors';
 import {getAllPostAction} from '../../redux/Post/actions';
-import {getAllPostSelector} from '../../redux/Post/selectors';
+import {getAllPostSelector, getPagePost} from '../../redux/Post/selectors';
+import SocketManager from '../../socketIO';
+import {SOCKET_SERVER_SEND_NEW_POST} from '../../socketIO/constant';
 import {appScreens} from '../config-screen';
 import {goToScreenWithPassProps} from '../MethodScreen';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
@@ -51,6 +54,9 @@ class ForumScreen extends Component {
       loading: false,
       loadingAvt: false,
       listPosts: [],
+      showNewPost: false,
+      curPage: 1,
+      loadMore: false,
     };
 
     this.layoutProvider = new LayoutProvider(
@@ -70,16 +76,28 @@ class ForumScreen extends Component {
         }
       },
     );
+
+    this.isDidAppear = false;
+    this.refListPost = React.createRef();
   }
 
   componentDidMount() {
     if (get(this.props.account, 'size') !== 0) {
       this.setState({account: this.props.account});
     }
+    //Handle Socket
+    SocketManager.on(SOCKET_SERVER_SEND_NEW_POST, () => {
+      if (!this.state.showNewPost) {
+        this.openCloseAlertNoti();
+      }
+    });
   }
 
   componentDidAppear() {
-    this.onGetListAllPost();
+    if (this.isDidAppear === false) {
+      this.onGetListAllPost();
+      this.isDidAppear = true;
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -87,18 +105,41 @@ class ForumScreen extends Component {
       if (this.props.account !== nextProps.account) {
         this.setState({account: nextProps.account});
       }
+    }
 
-      if (
-        !!nextProps.listPosts &&
-        this.props.listPosts !== nextProps.listPosts
-      ) {
-        this.setState({listPosts: nextProps.listPosts, loading: false});
-      }
+    if (!!nextProps.listPosts && this.props.listPosts !== nextProps.listPosts) {
+      this.setState({listPosts: nextProps.listPosts}, () => {
+        if (!!nextProps.pagePost && nextProps.pagePost === 1) {
+          setTimeout(this.onScrollToTop, 500);
+        }
+      });
     }
   }
 
-  onGetListAllPost = () => {
-    this.props.doGetListAllPost();
+  onGetListAllPost = (page = 1) => {
+    let offset = page * 10 - 10;
+    const payload = {offset};
+    this.props.doGetListAllPost(payload, page, {
+      callbackOnSuccess: ({isNull}) => {
+        if (!isNull) {
+          this.setState({
+            curPage: page,
+            loading: false,
+            showNewPost: false,
+            loadMore: false,
+          });
+        } else {
+          this.setState({loading: false, showNewPost: false, loadMore: false});
+        }
+      },
+      callbackOnFail: () => {
+        this.setState({loading: false, showNewPost: false, loadMore: false});
+      },
+    });
+  };
+
+  onScrollToTop = () => {
+    this.refListPost.current.scrollToOffset(0, 0, true);
   };
 
   _renderListNonData = () => {
@@ -120,8 +161,8 @@ class ForumScreen extends Component {
             style={{width: 150, height: 150}}
             source={require('./../../assets/images/no_data.png')}
           />
-          <Text>Không có bài viết</Text>
-          <Text>Hãy là người tạo mới bài viết</Text>
+          {/* <Text>Không có bài viết</Text> */}
+          <Text>Vuốt để cập nhật bài viết</Text>
         </ScrollView>
       </View>
     );
@@ -159,8 +200,20 @@ class ForumScreen extends Component {
       appScreens.PostDetailsScreen.name,
       {
         row,
-        onRefreshPost: this._onRefreshPost,
         parentComponentId: this.props.componentId,
+        onUpdatePost: ({id_post, number}) => {
+          const mapPosts = map(this.state.listPosts, (item) => {
+            if (item.id_post === id_post && item.number !== number) {
+              return {
+                ...item,
+                number,
+              };
+            } else {
+              return {...item};
+            }
+          });
+          this.setState({listPosts: mapPosts});
+        },
       },
     );
   };
@@ -171,8 +224,10 @@ class ForumScreen extends Component {
       appScreens.PostCreatesScreen.name,
       {
         account: this.props.account,
-        onRefreshPost: this.onGetListAllPost,
         parentComponentId: this.props.componentId,
+        onRefreshPost: () => {
+          this.onGetListAllPost();
+        },
       },
     );
   };
@@ -182,21 +237,34 @@ class ForumScreen extends Component {
     this.onGetListAllPost();
   };
 
+  openCloseAlertNoti = () => {
+    this.setState({showNewPost: !this.state.showNewPost});
+  };
+
+  handlePressAlertNoti = () => {
+    // this.refListPost.current.scrollToOffset(0, 0, true);
+    this.onGetListAllPost();
+  };
+
+  _renderFooterLoadMore = () => {
+    return this.state.loadMore ? (
+      <ActivityIndicator color={'red'} style={{marginBottom: 10}} />
+    ) : (
+      <View />
+    );
+  };
+
+  onLoadMoreData = () => {
+    this.setState({loadMore: true}, () =>
+      this.onGetListAllPost(this.state.curPage + 1),
+    );
+  };
+
   render() {
     const {account} = this.state;
     return (
       <View style={styles.container}>
         <HeadTopBar />
-        {/* <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>Đang phát triển</Text>
-          <Animatable.Text
-            animation="pulse"
-            easing="ease-out"
-            iterationCount="infinite"
-            style={{textAlign: 'center'}}>
-            ❤️
-          </Animatable.Text>
-        </View> */}
         <View style={{flex: 1}}>
           <View style={styles.wrapHeader}>
             <TouchableOpacity
@@ -226,13 +294,11 @@ class ForumScreen extends Component {
               )}
               <Text style={styles.textQuestion}>Bạn muốn hỏi gì ?</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity style={styles.btnFilter}>
-              <FontAwesome name={'filter'} size={30} color={'#f39c12'} />
-            </TouchableOpacity> */}
           </View>
           <View style={styles.wrapContent}>
             {size(this.state.listPosts) ? (
               <RecyclerListView
+                ref={this.refListPost}
                 dataProvider={this._dataProvider()}
                 layoutProvider={this._layoutProvider()}
                 rowRenderer={this._renderRowItem}
@@ -246,12 +312,21 @@ class ForumScreen extends Component {
                     />
                   ),
                 }}
+                renderFooter={this._renderFooterLoadMore}
+                onEndReachedThreshold={50}
+                onEndReached={this.onLoadMoreData}
               />
             ) : (
               this._renderListNonData()
             )}
           </View>
         </View>
+        <AlertNoti
+          visible={this.state.showNewPost}
+          title={'Bạn có bài viết mới'}
+          onClose={this.openCloseAlertNoti}
+          onPress={this.handlePressAlertNoti}
+        />
       </View>
     );
   }
@@ -260,12 +335,13 @@ class ForumScreen extends Component {
 const mapStateToProps = createStructuredSelector({
   account: getAccountSelector(),
   listPosts: getAllPostSelector(),
+  pagePost: getPagePost(),
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    doGetListAllPost: () => {
-      dispatch(getAllPostAction());
+    doGetListAllPost: (payload, page, callbacks) => {
+      dispatch(getAllPostAction(payload, page, callbacks));
     },
   };
 };
