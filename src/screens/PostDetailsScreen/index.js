@@ -38,8 +38,10 @@ import {
 import {
   SOCKET_CLIENT_SEND_JOIN_ROOM_POST,
   SOCKET_CLIENT_SEND_LEAVE_ROOM_POST,
+  SOCKET_CLIENT_SEND_NEW_POSTCOMMENT,
   SOCKET_CLIENT_SEND_USER_FOCUS_POSTCOMMENT,
   SOCKET_CLIENT_SEND_USER_UNFOCUS_POSTCOMMENT,
+  SOCKET_SERVER_SEND_NEW_POSTCOMMENT,
   SOCKET_SERVER_SEND_USER_FOCUS_POSTCOMMENT,
   SOCKET_SERVER_SEND_USER_UNFOCUS_POSTCOMMENT,
 } from '../../socketIO/constant';
@@ -141,6 +143,15 @@ class PostDetailsScreen extends Component {
       SOCKET_SERVER_SEND_USER_UNFOCUS_POSTCOMMENT,
       debounce(() => {
         this.setState({otherUserComment: false});
+      }, 300),
+    );
+    // Add comment realtime
+    SocketManager.on(
+      SOCKET_SERVER_SEND_NEW_POSTCOMMENT,
+      debounce((data) => {
+        const listPostComments = [...this.state.listPostComments];
+        listPostComments.unshift(data);
+        this.setState({listPostComments});
       }, 300),
     );
   };
@@ -255,7 +266,11 @@ class PostDetailsScreen extends Component {
       };
 
       this.props.doCreatePostComment(payload, {
-        callbackOnSuccess: () => {
+        callbackOnSuccess: (post_cmt) => {
+          SocketManager.emit(
+            SOCKET_CLIENT_SEND_NEW_POSTCOMMENT,
+            get(post_cmt, '0', {}),
+          );
           Keyboard.dismiss();
           this.onGetListPostComment();
           this.setState({loading: false, fileSource: null, textComment: ''});

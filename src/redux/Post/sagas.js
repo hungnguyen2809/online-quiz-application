@@ -82,10 +82,10 @@ function* workerCreatePostComment(action) {
   try {
     const response = yield call(createPostCommentAPI, action.payload.data);
     if (response.error === false && response.status === 200) {
-      yield callbackOnSuccess();
+      yield callbackOnSuccess(response.payload);
     } else {
-      Alert.alert('Có lỗi', response.message);
       yield callbackOnFail();
+      Alert.alert('Có lỗi', response.message);
     }
   } catch (error) {
     Alert.alert('Đã xảy ra lỗi', error.message);
