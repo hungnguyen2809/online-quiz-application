@@ -20,7 +20,7 @@ import ItemQuestion from './components/ItemQuestion';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 import {goToScreenWithPassProps} from './../MethodScreen';
 import {appScreens} from './../config-screen';
-import {forEach, get, map} from 'lodash';
+import {debounce, forEach, get, map} from 'lodash';
 import {getAccountSelector} from './../../redux/Account/selectors';
 import {addQuestionToDB, getQuestionsByQS} from './../../realm/questions';
 // import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
@@ -53,8 +53,6 @@ class ChooseQuestionScreen extends Component {
       listQuestions: [],
       idTopic: 0,
       loading: false,
-      progress: 0,
-      showProgress: false,
       account: null,
       listInfoExam: [],
     };
@@ -78,7 +76,7 @@ class ChooseQuestionScreen extends Component {
     );
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     if (this.props.account) {
       this.setState({account: this.props.account}, () => {
         if (this.props.topic) {
@@ -240,7 +238,9 @@ class ChooseQuestionScreen extends Component {
 
   _renderSubComponentButtonLeft = () => {
     return (
-      <TouchableOpacity key={'btn'} onPress={this.onGoBackScreen}>
+      <TouchableOpacity
+        key={'btn'}
+        onPress={debounce(this.onGoBackScreen, 300)}>
         <Image
           style={{width: 25, height: 25}}
           source={require('./../../assets/icons/icons-left.png')}

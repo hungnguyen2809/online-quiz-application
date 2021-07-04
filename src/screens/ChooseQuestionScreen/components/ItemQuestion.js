@@ -119,6 +119,7 @@ class ItemQuestion extends Component {
           <Progress.Pie progress={this.state.progress} size={35} />
         ) : (
           <TouchableWithoutFeedback
+            disabled={islocal}
             onPress={debounce(this.onPressDowload, 200)}>
             <Image
               style={[styles.image, islocal ? {} : {tintColor: 'red'}]}
