@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import {debounce, get} from 'lodash';
 import React, {Component} from 'react';
 import {
   FlatList,
@@ -10,17 +11,16 @@ import {
   View,
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
-import HeadTopBar from '../../components/HeadTopBar';
-import {goToScreenWithPassProps} from './../MethodScreen';
-import {appScreens} from './../config-screen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Colors} from './../../common/Colors';
-import {styles} from './styles';
+import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
+import HeadTopBar from '../../components/HeadTopBar';
+import {Colors} from './../../common/Colors';
 import {getAllTopicsAction} from './../../redux/Topics/actions';
 import {listTopicsSelector} from './../../redux/Topics/selectors';
-import {connect} from 'react-redux';
-import {get} from 'lodash';
+import {appScreens} from './../config-screen';
+import {goToScreenWithPassProps} from './../MethodScreen';
+import {styles} from './styles';
 
 class ChooseTopicScreen extends Component {
   static options(props) {
@@ -86,7 +86,7 @@ class ChooseTopicScreen extends Component {
 
   renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={() => this._startExam(item)}>
+      <TouchableOpacity onPress={debounce(() => this._startExam(item), 300)}>
         <View style={styles.itemExam}>
           <Image style={styles.imageLabel} source={{uri: get(item, 'image')}} />
           <View style={styles.wrapLabel}>

@@ -1,6 +1,7 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
+import {debounce, forEach, get, map} from 'lodash';
 import {
   Alert,
   Image,
@@ -10,24 +11,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {createStructuredSelector} from 'reselect';
 import {connect} from 'react-redux';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
-import HeadTopBar from './../../components/HeadTopBar';
-import {backToLastScreen} from './../MethodScreen';
-import {styles} from './styles';
-import ItemQuestion from './components/ItemQuestion';
+import {createStructuredSelector} from 'reselect';
+import NotificationManager from '../../notifications/NotificationManager';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
-import {goToScreenWithPassProps} from './../MethodScreen';
-import {appScreens} from './../config-screen';
-import {forEach, get, map} from 'lodash';
-import {getAccountSelector} from './../../redux/Account/selectors';
+import HeadTopBar from './../../components/HeadTopBar';
 import {addQuestionToDB, getQuestionsByQS} from './../../realm/questions';
+import {getAccountSelector} from './../../redux/Account/selectors';
 // import {questionSetGetDataAction} from './../../redux/QuestionSet/actions';
 // import {listQuestionSetSelector} from './../../redux/QuestionSet/selectors';
 import {getQuestionsByQSAction} from './../../redux/Questions/actions';
-import {getListInfoExamSelector} from './../../redux/UserQuestion/selectors';
 import {getListInfoExamByUserTopicAction} from './../../redux/UserQuestion/actions';
+import {getListInfoExamSelector} from './../../redux/UserQuestion/selectors';
+import {appScreens} from './../config-screen';
+import {backToLastScreen, goToScreenWithPassProps} from './../MethodScreen';
+import ItemQuestion from './components/ItemQuestion';
+import {styles} from './styles';
 
 class ChooseQuestionScreen extends Component {
   static options(props) {
@@ -53,11 +53,11 @@ class ChooseQuestionScreen extends Component {
       listQuestions: [],
       idTopic: 0,
       loading: false,
-      progress: 0,
-      showProgress: false,
       account: null,
       listInfoExam: [],
     };
+
+    this.notifManager = new NotificationManager();
 
     this.layoutProvider = new LayoutProvider(
       (index) => {
@@ -78,12 +78,11 @@ class ChooseQuestionScreen extends Component {
     );
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     if (this.props.account) {
       this.setState({account: this.props.account}, () => {
         if (this.props.topic) {
           this.setState({idTopic: get(this.props.topic, 'id')}, () => {
-            // this.onGetListQuestionSet();
             this.onGetListInfoExam();
           });
         }
@@ -95,24 +94,6 @@ class ChooseQuestionScreen extends Component {
     if (this.props.topic !== nextProps.topic) {
       this.setState({idTopic: get(nextProps.topic, 'id')});
     }
-
-    // if (this.props.listQuestionSet !== nextProps.listQuestionSet) {
-    //   let mapData = [];
-    //   let count = 0;
-    //   let total = [...nextProps.listQuestionSet].length;
-    //   forEach(nextProps.listQuestionSet, async (item, index) => {
-    //     count++;
-    //     const response = await getQuestionsByQS(get(item, 'id'));
-    //     let islocal = get(response.data, 'length', 0) > 0;
-    //     mapData.push({
-    //       islocal,
-    //       ...item,
-    //     });
-    //     if (count === total) {
-    //       this.setState({listQuestionSet: mapData, loading: false});
-    //     }
-    //   });
-    // }
 
     if (this.props.listInfoExam !== nextProps.listInfoExam) {
       let mapData = [];
@@ -132,17 +113,6 @@ class ChooseQuestionScreen extends Component {
       });
     }
   }
-
-  // onGetListQuestionSet = () => {
-  //   const payload = {
-  //     id_topic: this.state.idTopic,
-  //   };
-  //   this.setState({loading: true});
-  //   this.props.doGetQuestionSet(payload, {
-  //     callbacksOnSuccess: () => {},
-  //     callbacksOnFail: () => {},
-  //   });
-  // };
 
   onGetListInfoExam = () => {
     const payload = {
@@ -181,7 +151,12 @@ class ChooseQuestionScreen extends Component {
     this.props.doGetQuestionByQs(payload, {
       callbacksOnSuccess: (data) => {
         this.setState({listQuestions: data}, () => {
-          callbacksOnSuccessDow();
+          callbacksOnSuccessDow(() => {
+            this.notifManager.showNotification(
+              'Thông báo',
+              'Bộ đề thi đã được tải về thành công',
+            );
+          });
           this.onAddQuestionRealmDB(payload.id_qs);
         });
       },
@@ -240,7 +215,9 @@ class ChooseQuestionScreen extends Component {
 
   _renderSubComponentButtonLeft = () => {
     return (
-      <TouchableOpacity key={'btn'} onPress={this.onGoBackScreen}>
+      <TouchableOpacity
+        key={'btn'}
+        onPress={debounce(this.onGoBackScreen, 300)}>
         <Image
           style={{width: 25, height: 25}}
           source={require('./../../assets/icons/icons-left.png')}
@@ -283,8 +260,6 @@ class ChooseQuestionScreen extends Component {
     subComponentButtonLeft.push(this._renderSubComponentButtonLeft());
     const dataProvider = this._dataProviderFacetory();
     const layoutProvider = this._layoutProvider();
-
-    // console.log('ABC: ', this.state.listQuestionSet);
 
     return (
       <View style={styles.container}>
