@@ -1,5 +1,5 @@
 import PushNotification from 'react-native-push-notification';
-// import {Platform} from 'react-native';
+import {Platform} from 'react-native';
 
 class NotificationHandler {
   constructor() {}
@@ -62,7 +62,7 @@ PushNotification.configure({
     sound: true,
   },
   popInitialNotification: true,
-  requestPermissions: true,
+  requestPermissions: Platform.OS === 'ios',
 });
 
 export default handler;
