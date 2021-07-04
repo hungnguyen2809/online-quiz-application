@@ -342,6 +342,8 @@ PODS:
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
+  - RNCPushNotificationIOS (1.8.0):
+    - React-Core
   - RNDeviceInfo (8.0.1):
     - React-Core
   - RNPermissions (3.0.2):
@@ -419,6 +421,7 @@ DEPENDENCIES:
   - RealmJS (from `../node_modules/realm`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
+  - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNSmtpMailer (from `../node_modules/react-native-smtp-mailer/ios`)
@@ -525,6 +528,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-community/clipboard"
+  RNCPushNotificationIOS:
+    :path: "../node_modules/@react-native-community/push-notification-ios"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNPermissions:
@@ -593,6 +598,7 @@ SPEC CHECKSUMS:
   RealmJS: ca9b0c1677d5248c6c360bc1b733ed087d345c2f
   RNCAsyncStorage: da95b83e241a7f5efe3da1a949b3ec3175380be0
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
+  RNCPushNotificationIOS: 61a7c72bd1ebad3568025957d001e0f0e7b32191
   RNDeviceInfo: 921a809eaf9de79645a24de1c6ca90db6cb91786
   RNPermissions: 58c1eb5638504e3afda963a8b0f43b6752132b05
   RNSmtpMailer: f8654a7cd1a25b0009e2f28c70bc34bb9e4040e6

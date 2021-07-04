@@ -39,7 +39,7 @@ class ItemQuestion extends Component {
 
   onPressDowload = () => {
     this.props.onPressDow(this.props.row, {
-      callbacksOnSuccessDow: () => {
+      callbacksOnSuccessDow: (callback) => {
         this.setState({showProgress: true}, () => {
           let progress = 0;
           this.clearTimeProgess = setInterval(() => {
@@ -49,6 +49,9 @@ class ItemQuestion extends Component {
             } else {
               this.setState({progress: 0, showProgress: false}, () => {
                 clearInterval(this.clearTimeProgess);
+                if (typeof callback === 'function') {
+                  callback();
+                }
               });
             }
           }, 200);
