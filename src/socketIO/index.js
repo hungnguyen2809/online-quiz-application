@@ -23,5 +23,4 @@ class SocketIOManager {
 }
 
 const SocketManager = new SocketIOManager();
-
 export default SocketManager;

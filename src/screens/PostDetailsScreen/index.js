@@ -38,6 +38,7 @@ import {
 import {
   SOCKET_CLIENT_SEND_JOIN_ROOM_POST,
   SOCKET_CLIENT_SEND_LEAVE_ROOM_POST,
+  SOCKET_CLIENT_SEND_MEMBER_COMMENT_POST,
   SOCKET_CLIENT_SEND_NEW_POSTCOMMENT,
   SOCKET_CLIENT_SEND_USER_FOCUS_POSTCOMMENT,
   SOCKET_CLIENT_SEND_USER_UNFOCUS_POSTCOMMENT,
@@ -271,6 +272,14 @@ class PostDetailsScreen extends Component {
             SOCKET_CLIENT_SEND_NEW_POSTCOMMENT,
             get(post_cmt, '0', {}),
           );
+          const params = {
+            id_post: get(this.props.row, 'id_post'),
+            id_user: get(this.props.row, 'id_user'),
+            user_id_cmt: get(this.props.account, 'id'),
+            user_name_cmt: get(this.props.account, 'name'),
+            user_avatar_cmt: get(this.props.account, 'image'),
+          };
+          SocketManager.emit(SOCKET_CLIENT_SEND_MEMBER_COMMENT_POST, params);
           Keyboard.dismiss();
           this.onGetListPostComment();
           this.setState({loading: false, fileSource: null, textComment: ''});
