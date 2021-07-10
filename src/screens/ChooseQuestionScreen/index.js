@@ -1,7 +1,7 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable react-native/no-inline-styles */
-import React, {Component} from 'react';
 import {debounce, forEach, get, map} from 'lodash';
+import React, {Component} from 'react';
 import {
   Alert,
   Image,
@@ -14,7 +14,7 @@ import {
 import {connect} from 'react-redux';
 import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import {createStructuredSelector} from 'reselect';
-import NotificationManager from '../../notifications/NotificationManager';
+import NotifiManager from '../../notifications/NotificationManager';
 import {SCREEN_WIDTH} from './../../common/dimensionScreen';
 import HeadTopBar from './../../components/HeadTopBar';
 import {addQuestionToDB, getQuestionsByQS} from './../../realm/questions';
@@ -56,8 +56,6 @@ class ChooseQuestionScreen extends Component {
       account: null,
       listInfoExam: [],
     };
-
-    this.notifManager = new NotificationManager();
 
     this.layoutProvider = new LayoutProvider(
       (index) => {
@@ -152,7 +150,7 @@ class ChooseQuestionScreen extends Component {
       callbacksOnSuccess: (data) => {
         this.setState({listQuestions: data}, () => {
           callbacksOnSuccessDow(() => {
-            this.notifManager.showNotification(
+            NotifiManager.showNotification(
               'Thông báo',
               'Bộ đề thi đã được tải về thành công',
             );

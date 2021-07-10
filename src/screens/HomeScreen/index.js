@@ -57,7 +57,7 @@ class HomeScreen extends Component {
       image: get(account, 'image'),
       phone: get(account, 'phone'),
     };
-    SocketManager.emit(SOCKET_CLIENT_SEND_PROFILE, JSON.stringify(payload));
+    SocketManager.emit(SOCKET_CLIENT_SEND_PROFILE, payload);
   }
 
   componentDidAppear() {

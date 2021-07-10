@@ -1,183 +1,103 @@
-import {Platform} from 'react-native';
-import PushNotification, {Importance} from 'react-native-push-notification';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import NotificationHandler from './NotificationHandler';
+import {clone, get} from 'lodash';
+import {Navigation} from 'react-native-navigation';
+import {getAccountToStorage} from '../common/asyncStorage';
+import {appScreens, screenMainName} from '../screens/config-screen';
+import {goToScreenWithPassProps} from '../screens/MethodScreen';
+import SocketManager from '../socketIO';
+import {SOCKET_SERVER_SEND_MEMBER_COMMENT_POST} from '../socketIO/constant';
+import NotificationService from './NotificationService';
 
-export default class NotificationManager {
-  constructor(onRegister = (token) => {}, onNotification = (noti) => {}) {
-    this.lastId = 0;
-    this.lastChannelCounter = 0;
+const screenIgnoreName = [appScreens.ExamQuestions.name];
 
-    this.createDefaultChannels();
+class NotificationManager extends NotificationService {
+  #componentId = '';
+  #componentName = '';
+  #componentIdMain = '';
+  #passProps = {};
+  #paramsUpdProps = {};
+  #commandName = '';
 
-    NotificationHandler.attachRegister(onRegister);
-    NotificationHandler.attachNotification(onNotification);
-
-    this.clearIconBadgeNumber();
+  constructor() {
+    super(
+      (token) => this.#onRegister(token),
+      (notification) => this.#onNotification(notification),
+    );
+    Navigation.events().registerComponentDidAppearListener(
+      ({componentId, componentName, passProps}) => {
+        if (screenMainName.includes(componentName)) {
+          this.#componentIdMain = componentId;
+        }
+        this.#componentId = componentId;
+        this.#componentName = componentName;
+        this.#passProps = clone(passProps);
+      },
+    );
+    Navigation.events().registerCommandListener((name, param) => {
+      this.#commandName = name;
+      this.#paramsUpdProps = clone(param);
+    });
   }
 
-  createDefaultChannels = () => {
-    PushNotification.createChannel(
-      {
-        channelId: 'default-channel-id', // (required)
-        channelName: 'Default channel', // (required)
-        channelDescription: 'A default channel', // (optional) default: undefined.
-        soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
-        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-        vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-      },
-      (created) => {
-        // (optional) callback returns whether the channel was created, false means it already existed.
-        // console.log(`createChannel 'default-channel-id' returned '${created}'`);
-      },
-    );
+  #onRegister = (token) => {
+    console.log('[onRegister]: ', token);
   };
 
-  createOrUpdateChannel = () => {
-    this.lastChannelCounter++;
-    PushNotification.createChannel(
-      {
-        channelId: 'custom-channel-id', // (required)
-        channelName: `Custom channel - Counter: ${this.lastChannelCounter}`, // (required)
-        channelDescription: `A custom channel to categorise your custom notifications. Updated at: ${Date.now()}`, // (optional) default: undefined.
-        soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
-        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-        vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-      },
-      (created) => {
-        // (optional) callback returns whether the channel was created, false means it already existed.
-        // console.log(`createChannel returned '${created}'`);
-      },
-    );
-  };
-
-  getChannels = (cb) => {
-    PushNotification.getChannels((channels) => {
-      // console.log('channels: ', {channels});
-      cb(channels);
-    });
-  };
-
-  popInitialNotification = () => {
-    PushNotification.popInitialNotification((notification) =>
-      console.log('InitialNotication:', notification),
-    );
-  };
-
-  showNotification = (title, message, data = {}, options = {}) => {
-    this.lastId++;
-    PushNotification.localNotification({
-      //other options
-      ...options,
-      /* Android Only Properties */
-      channelId: 'default-channel-id',
-      autoCancel: true,
-      largeIcon: options.largeIcon || 'ic_launcher',
-      smallIcon: options.smallIcon || 'ic_launcher',
-      bigText: message || '',
-      subText: title || '',
-      color: options.color || '#FFAE00',
-      vibrate: options.vibrate || false,
-      vibration: options.vibration || 300,
-      // actions: ['Yes', 'No'],
-      invokeApp: true,
-      importance: options.importance || 'high',
-      visibility: options.visibility || 'private',
-
-      /* iOS only properties */
-      category: options.category || '',
-      subtitle: options.subTitleIOS || '',
-
-      /* iOS and Android properties */
-      id: this.lastId,
-      title: title,
-      message: message,
-      userInfo: data,
-      playSound: options.playSound || true,
-      soundName: options.soundName || 'default',
-    });
-  };
-
-  scheduleNotification = (
-    title,
-    message,
-    time = 5,
-    data = {},
-    options = {},
-  ) => {
-    this.lastId++;
-    PushNotification.localNotificationSchedule({
-      date: new Date(Date.now() + time * 1000), // in 'time' secs
-
-      //other options
-      ...options,
-      /* Android Only Properties */
-      channelId: 'default-channel-id',
-      autoCancel: true,
-      largeIcon: options.largeIcon || 'ic_launcher',
-      smallIcon: options.smallIcon || 'ic_launcher',
-      bigText: message || '',
-      subText: title || '',
-      color: options.color || 'red',
-      vibrate: options.vibrate || false,
-      vibration: options.vibration || 300,
-      actions: ['Yes', 'No'],
-      invokeApp: true,
-      importance: options.importance || 'high',
-      visibility: options.visibility || 'private',
-
-      /* iOS only properties */
-      category: options.category || '',
-
-      /* iOS and Android properties */
-      id: this.lastId,
-      title: title,
-      message: message,
-      userInfo: data,
-      playSound: options.playSound || true,
-      soundName: options.soundName || 'default',
-    });
-  };
-
-  checkPermission = (cbk) => {
-    return PushNotification.checkPermissions(cbk);
-  };
-
-  requestPermissions = () => {
-    return PushNotification.requestPermissions();
-  };
-
-  cancelNotif() {
-    PushNotification.cancelLocalNotifications({id: '' + this.lastId});
-  }
-
-  cancelAllNotif = () => {
-    if (Platform.OS === 'ios') {
-      PushNotificationIOS.removeAllDeliveredNotifications();
-    } else {
-      PushNotification.cancelAllLocalNotifications();
+  #onNotification = (notification) => {
+    switch (get(notification.data, 'type')) {
+      case 'reply_cmt':
+        if (this.#componentIdMain) {
+          if (
+            get(this.#passProps.row, 'id_post') !==
+              get(notification.data, 'id_post') &&
+            this.#componentName === appScreens.PostDetailsScreen.name
+          ) {
+            Navigation.updateProps(this.#componentId, {
+              row: {
+                id_user: get(notification.data, 'id_user', ''),
+                id_post: get(notification.data, 'id_post', ''),
+              },
+              parentComponentId: this.#componentIdMain,
+            });
+          } else {
+            goToScreenWithPassProps(
+              this.#componentIdMain,
+              appScreens.PostDetailsScreen.name,
+              {
+                row: {
+                  id_user: get(notification.data, 'id_user', ''),
+                  id_post: get(notification.data, 'id_post', ''),
+                },
+                parentComponentId: this.#componentIdMain,
+              },
+            );
+          }
+        }
+        break;
+      default:
+        break;
     }
-    this.clearIconBadgeNumber();
   };
 
-  clearIconBadgeNumber = () => {
-    // Clear badge number at start
-    PushNotification.getApplicationIconBadgeNumber((number) => {
-      if (number > 0) {
-        PushNotification.setApplicationIconBadgeNumber(0);
+  RegisterEvent = () => {
+    SocketManager.on(SOCKET_SERVER_SEND_MEMBER_COMMENT_POST, async (data) => {
+      if (screenIgnoreName.includes(this.#componentName)) {
+        return;
+      }
+      const account = await getAccountToStorage();
+      if (
+        get(account, 'id') !== get(data, 'user_id_cmt') &&
+        get(this.#passProps.row, 'id_post') !== get(data, 'id_post') &&
+        get(this.#paramsUpdProps, 'props.row.id_post') !== get(data, 'id_post')
+      ) {
+        NotifiManager.showNotification(
+          get(data, 'user_name_cmt', ''),
+          'Đã trả lời bài viết của bạn',
+          {...data, type: 'reply_cmt'},
+        );
       }
     });
   };
-
-  abandonPermissions = () => {
-    PushNotification.abandonPermissions();
-  };
-
-  getScheduledLocalNotifications = (callback) => {
-    PushNotification.getScheduledLocalNotifications(callback);
-  };
-
-  getDeliveredNotifications = (callback) => {
-    PushNotification.getDeliveredNotifications(callback);
-  };
 }
+
+const NotifiManager = new NotificationManager();
+export default NotifiManager;

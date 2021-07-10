@@ -20,6 +20,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import ImageView from 'react-native-image-viewing';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {Navigation} from 'react-native-navigation';
 import uuid from 'react-native-uuid';
 import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -33,11 +34,13 @@ import PostItemComment from '../../components/PostItemComment';
 import {getAccountSelector} from '../../redux/Account/selectors';
 import {
   createPostCommentAction,
+  getPostByIdAction,
   getPostCommentAction,
 } from '../../redux/Post/actions';
 import {
   SOCKET_CLIENT_SEND_JOIN_ROOM_POST,
   SOCKET_CLIENT_SEND_LEAVE_ROOM_POST,
+  SOCKET_CLIENT_SEND_MEMBER_COMMENT_POST,
   SOCKET_CLIENT_SEND_NEW_POSTCOMMENT,
   SOCKET_CLIENT_SEND_USER_FOCUS_POSTCOMMENT,
   SOCKET_CLIENT_SEND_USER_UNFOCUS_POSTCOMMENT,
@@ -71,6 +74,7 @@ class PostDetailsScreen extends Component {
     super(props);
 
     this.state = {
+      postDetails: {},
       loadingAvt: false,
       showKeybroad: false,
       heightKeybroad: 0,
@@ -89,6 +93,7 @@ class PostDetailsScreen extends Component {
 
     this.keyBroadHide = null;
     this.keyBroadShow = null;
+    this.eventCommand = null;
 
     // this.layouyProvider = new LayoutProvider(
     //   (index) => {
@@ -121,6 +126,23 @@ class PostDetailsScreen extends Component {
       this.setState({account: this.props.account});
     }
 
+    this.eventCommand = Navigation.events().registerCommandListener(
+      (name, params) => {
+        if (name === 'updateProps') {
+          //Khi update cần leave room trước đó, sau đo join lại
+          SocketManager.emit(SOCKET_CLIENT_SEND_LEAVE_ROOM_POST, {
+            id_post: get(this.props.row, 'id_post'),
+          });
+          SocketManager.emit(SOCKET_CLIENT_SEND_JOIN_ROOM_POST, {
+            id_post: get(this.props.row, 'id_post'),
+          });
+          this.onGetDetailsPost();
+          this.onGetListPostComment();
+        }
+      },
+    );
+
+    this.onGetDetailsPost();
     this.onGetListPostComment();
     this.onRegisterEventKeybroad();
     this.onRegisterEventSocket();
@@ -171,6 +193,7 @@ class PostDetailsScreen extends Component {
   componentWillUnmount() {
     this.keyBroadHide && this.keyBroadHide.remove();
     this.keyBroadShow && this.keyBroadShow.remove();
+    this.eventCommand && this.eventCommand.remove();
     // Leave room post
     SocketManager.emit(SOCKET_CLIENT_SEND_LEAVE_ROOM_POST, {
       id_post: get(this.props.row, 'id_post'),
@@ -271,6 +294,14 @@ class PostDetailsScreen extends Component {
             SOCKET_CLIENT_SEND_NEW_POSTCOMMENT,
             get(post_cmt, '0', {}),
           );
+          const params = {
+            id_post: get(this.props.row, 'id_post'),
+            id_user: get(this.props.row, 'id_user'),
+            user_id_cmt: get(this.props.account, 'id'),
+            user_name_cmt: get(this.props.account, 'name'),
+            user_avatar_cmt: get(this.props.account, 'image'),
+          };
+          SocketManager.emit(SOCKET_CLIENT_SEND_MEMBER_COMMENT_POST, params);
           Keyboard.dismiss();
           this.onGetListPostComment();
           this.setState({loading: false, fileSource: null, textComment: ''});
@@ -283,6 +314,18 @@ class PostDetailsScreen extends Component {
       Alert.alert('Đã xảy ra lỗi', error.message);
       this.setState({loading: false});
     }
+  };
+
+  onGetDetailsPost = () => {
+    const payload = {
+      id_post: get(this.props.row, 'id_post', null),
+    };
+    this.props.doGetPostById(payload, {
+      callbackOnSuccess: (detailsPost) => {
+        this.setState({postDetails: get(detailsPost, '0', {})});
+      },
+      callbackOnFail: () => {},
+    });
   };
 
   onGetListPostComment = () => {
@@ -368,7 +411,6 @@ class PostDetailsScreen extends Component {
   };
 
   render() {
-    const {row} = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.wrapHeader}>
@@ -378,11 +420,11 @@ class PostDetailsScreen extends Component {
               source={require('./../../assets/icons/arrow.png')}
             />
           </TouchableOpacity>
-          {get(row, 'avatar') ? (
+          {get(this.state.postDetails, 'avatar') ? (
             <>
               <Image
                 style={styles.avatar}
-                source={{uri: get(row, 'avatar')}}
+                source={{uri: get(this.state.postDetails, 'avatar')}}
                 onLoadStart={() => this.setState({loadingAvt: true})}
                 onLoad={() => this.setState({loadingAvt: false})}
               />
@@ -401,13 +443,14 @@ class PostDetailsScreen extends Component {
               allowFontScaling={false}
               style={styles.textName}
               numberOfLines={1}>
-              {get(row, 'name', '')}
+              {get(this.state.postDetails, 'name', '')}
             </Text>
             <Text allowFontScaling={false} style={styles.textTime}>
-              {getTimeFromNow(get(row, 'date_create', ''))}
+              {getTimeFromNow(get(this.state.postDetails, 'date_create', ''))}
             </Text>
           </View>
-          {get(this.state.account, 'id', -1) === get(row, 'id_user', -2) ? (
+          {get(this.state.account, 'id', -1) ===
+          get(this.state.postDetails, 'id_user', -2) ? (
             <TouchableOpacity style={{marginRight: 10}}>
               <MateriaIcon name={'more-vert'} size={20} />
             </TouchableOpacity>
@@ -418,9 +461,9 @@ class PostDetailsScreen extends Component {
             ListHeaderComponent={
               <View>
                 <Text style={styles.textContent}>
-                  {get(row, 'content', '')}
+                  {get(this.state.postDetails, 'content', '')}
                 </Text>
-                {get(row, 'image', null) ? (
+                {get(this.state.postDetails, 'image', null) ? (
                   <View>
                     <TouchableOpacity
                       activeOpacity={0.8}
@@ -428,7 +471,7 @@ class PostDetailsScreen extends Component {
                       onPress={() => this.setState({showImageView: true})}>
                       <Image
                         style={styles.imagePost}
-                        source={{uri: get(row, 'image')}}
+                        source={{uri: get(this.state.postDetails, 'image')}}
                         onLoadStart={() => this.setState({loadingImage: true})}
                         onLoad={() => this.setState({loadingImage: false})}
                       />
@@ -449,9 +492,9 @@ class PostDetailsScreen extends Component {
                     Hãy là người đầu tiên bình luận
                   </Text>
                 )}
-                {get(row, 'image', null) ? (
+                {get(this.state.postDetails, 'image', null) ? (
                   <ImageView
-                    images={[{uri: get(row, 'image')}]}
+                    images={[{uri: get(this.state.postDetails, 'image')}]}
                     visible={this.state.showImageView}
                     imageIndex={0}
                     onRequestClose={() => this.setState({showImageView: false})}
@@ -560,6 +603,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     doCreatePostComment: (payload, callbacks) => {
       dispatch(createPostCommentAction(payload, callbacks));
+    },
+    doGetPostById: (payload, callbacks) => {
+      dispatch(getPostByIdAction(payload, callbacks));
     },
   };
 };

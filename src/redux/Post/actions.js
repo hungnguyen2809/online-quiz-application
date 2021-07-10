@@ -5,6 +5,7 @@ import {
   POST_CREATE_NEW_POST,
   POST_GET_ALL_POST,
   POST_GET_ALL_POST_DONE,
+  POST_GET_POST_BY_ID,
 } from './constants';
 
 export const getAllPostAction = (
@@ -23,6 +24,14 @@ export const getAllPostActionDone = (data, page) => {
   return {
     type: POST_GET_ALL_POST_DONE,
     payload: {data, page},
+  };
+};
+
+export const getPostByIdAction = (data, callbacks) => {
+  return {
+    type: POST_GET_POST_BY_ID,
+    payload: {data},
+    callbacks,
   };
 };
 
