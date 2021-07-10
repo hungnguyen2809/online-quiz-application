@@ -78,6 +78,13 @@ export const screenAuth = {
   },
 };
 
+export const screenMainName = [
+  appScreens.Home.name,
+  appScreens.ChooseTopicScreen.name,
+  appScreens.ForumScreen.name,
+  appScreens.Profile.name,
+];
+
 export const screenMain = {
   root: {
     bottomTabs: {

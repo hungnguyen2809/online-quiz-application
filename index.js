@@ -1,14 +1,14 @@
 import GlobalFont from 'react-native-global-font';
 import {Navigation} from 'react-native-navigation';
 import {fonts} from './src/common/fonts';
-import RegisterEventNotiSocket from './src/notifications/NotificationSocket';
+import NotifiManager from './src/notifications/NotificationManager';
 import {screenAuth} from './src/screens/config-screen';
 import RegisterScreenComponent from './src/screens/RegisterScreensComponent';
 
 GlobalFont.applyGlobal(fonts.OpenSans);
 
 RegisterScreenComponent();
-RegisterEventNotiSocket();
+NotifiManager.RegisterEvent();
 
 Navigation.setDefaultOptions({
   bottomTab: {

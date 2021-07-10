@@ -8,6 +8,14 @@ export const getAllPostAPI = (args) => {
   });
 };
 
+export const getPostByIdAPI = (args) => {
+  return apis.makeAuthRequest({
+    url: '/post/get-post-id',
+    method: 'GET',
+    params: args,
+  });
+};
+
 export const createNewPostAPI = (args) => {
   return apis.makeAuthRequest({
     url: '/post/create-post',
