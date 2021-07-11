@@ -23,11 +23,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {makeUploadImage} from '../../api/createApiService';
-import {deleteAccountToStorage} from './../../common/asyncStorage';
+import {
+  deleteAccountToStorage,
+  deleteTokenToStorage,
+  getTokenToStorage,
+} from './../../common/asyncStorage';
 import {formatPhone} from './../../common/format';
 import Toast from './../../components/Toast';
 import {
   LogoutAccountAction,
+  unregisterRefreshTokenAction,
   updateAvatarAction,
 } from './../../redux/Account/actions';
 import {getAccountSelector} from './../../redux/Account/selectors';
@@ -202,9 +207,17 @@ class ProfileScreen extends Component {
         text: 'Đồng ý',
         style: 'destructive',
         onPress: async () => {
-          await deleteAccountToStorage();
-          await Navigation.setRoot(screenAuth);
-          LogoutAccountAction();
+          const tokenStorage = await getTokenToStorage();
+          const payload = {token: get(tokenStorage, 'tokenRefresh', '')};
+          this.props.doUnregisterRefreshToken(payload, {
+            callbacksOnSuccess: async () => {
+              await deleteTokenToStorage();
+              await deleteAccountToStorage();
+              await Navigation.setRoot(screenAuth);
+              LogoutAccountAction();
+            },
+            callbacksOnFail: () => {},
+          });
         },
       },
       {
@@ -314,6 +327,9 @@ const mapDispatchToProps = (dispatch) => {
     dispatch,
     doUpdateAvatar: (data, callbacks) => {
       dispatch(updateAvatarAction(data, callbacks));
+    },
+    doUnregisterRefreshToken: (data, callbacks) => {
+      dispatch(unregisterRefreshTokenAction(data, callbacks));
     },
   };
 };

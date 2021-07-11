@@ -70,6 +70,7 @@ instanceAxios.interceptors.response.use(
 
 let refreshTokenRequest = null;
 let tokenAuth = '';
+let setTokenStorage = null;
 const _makeAuthRequest = (instanceRequest) => async (args) => {
   try {
     const {token, tokenRefresh} = await getTokenToStorage();
@@ -83,16 +84,17 @@ const _makeAuthRequest = (instanceRequest) => async (args) => {
         : apis.makeNonAuthRequest({
             url: '/refresh-token',
             method: 'POST',
-            data: {id_user: -1, token: tokenRefresh},
+            data: {id_user: decodeToken.id, token: tokenRefresh},
           });
       const responseToken = await refreshTokenRequest;
       refreshTokenRequest = null;
 
       if (responseToken.error === false && responseToken.status === 200) {
-        // Cần cancel lưu lại, do có 3 api call cùng lúc thì nó sẽ bị gọi lại 3 lần => lưu 3 lần
-        // trong khi đó chỉ cần một lần duy nhất để lưu lại
-        // => chưa giải quyết được
-        await setTokenToStorage(responseToken.payload);
+        setTokenStorage = setTokenStorage
+          ? setTokenStorage
+          : setTokenToStorage(responseToken.payload);
+        await setTokenStorage;
+        setTokenStorage = null;
         tokenAuth = responseToken.payload.token;
       }
     }

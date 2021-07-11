@@ -31,6 +31,14 @@ export const registerAccountAPI = (agrs) => {
   });
 };
 
+export const unregisterRefreshTokenAPI = (agrs) => {
+  return apis.makeAuthRequest({
+    url: '/unregister-token',
+    method: 'POST',
+    data: agrs,
+  });
+};
+
 export const updateAvatarAccountAPI = (agrs) => {
   return apis.makeAuthRequest({
     url: API_USER_AVATAR,

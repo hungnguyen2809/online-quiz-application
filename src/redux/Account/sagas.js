@@ -5,6 +5,7 @@ import {
   hasEmailAccountAPI,
   LoginApi,
   registerAccountAPI,
+  unregisterRefreshTokenAPI,
   updateAvatarAccountAPI,
   updateInfoAccountAPI,
 } from './../../api/ApiAccount';
@@ -24,6 +25,7 @@ import {
   ACCOUNT_HAS_EMAIL,
   ACCOUNT_LOGIN,
   ACCOUNT_REGISTER,
+  ACCOUNT_UNREGISTER_TOKEN_REFRESH,
   ACCOUNT_UPDATE_AVATAR,
   ACCOUNT_UPDATE_INFO,
 } from './constants';
@@ -113,7 +115,6 @@ function* WorkUpdateAvatar(action) {
   } catch (error) {
     if (error.response) {
       const {status} = error.response;
-
       yield callbacksOnFail(status);
     } else {
       Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
@@ -177,6 +178,33 @@ function* WatcherForgetPassAccount() {
   yield takeLatest(ACCOUNT_FORGET_PASSWORD, WorkForgetPassAccount);
 }
 
+function* WorkUnregisterTokenRefresh(action) {
+  const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
+  try {
+    const response = yield call(unregisterRefreshTokenAPI, action.payload.data);
+    if (response.status === 200 && response.error === false) {
+      yield callbacksOnSuccess();
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo', response.message);
+    }
+  } catch (error) {
+    if (error.response) {
+      yield callbacksOnFail();
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
+  }
+}
+
+function* WatcherUnregisterTokenRefresh() {
+  yield takeLatest(
+    ACCOUNT_UNREGISTER_TOKEN_REFRESH,
+    WorkUnregisterTokenRefresh,
+  );
+}
+
 export default function* AccountSagas() {
   yield fork(WatchLoginAccount);
   yield fork(WatcherRegisterAccount);
@@ -184,4 +212,5 @@ export default function* AccountSagas() {
   yield fork(WatcherUpdateAvatar);
   yield fork(WatcherUpdateInfoAccount);
   yield fork(WatcherForgetPassAccount);
+  yield fork(WatcherUnregisterTokenRefresh);
 }
