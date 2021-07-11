@@ -1,36 +1,32 @@
-import {takeLatest, put, fork, call} from 'redux-saga/effects';
+import {Alert} from 'react-native';
+import {call, fork, put, takeLatest} from 'redux-saga/effects';
 import {
-  LoginApi,
+  forgetPasswordAccountAPI,
   hasEmailAccountAPI,
+  LoginApi,
   registerAccountAPI,
   updateAvatarAccountAPI,
   updateInfoAccountAPI,
-  forgetPasswordAccountAPI,
 } from './../../api/ApiAccount';
 import {
-  ACCOUNT_LOGIN,
-  ACCOUNT_REGISTER,
-  ACCOUNT_HAS_EMAIL,
-  ACCOUNT_UPDATE_AVATAR,
-  ACCOUNT_UPDATE_INFO,
-  ACCOUNT_FORGET_PASSWORD,
-} from './constants';
+  setAccountToStorage,
+  setTokenToStorage,
+} from './../../common/asyncStorage';
 import {
+  forgetPasswordAccountActionSuccess,
   LoginAccountActionSuccess,
   registerAccountActionSuccess,
   updateAvatarActionSuccess,
   updateInfoAccountActionSuccess,
-  forgetPasswordAccountActionSuccess,
 } from './actions';
-import _ from 'lodash';
-import {Alert} from 'react-native';
 import {
-  setAccountToStorage,
-  deleteAccountToStorage,
-  setTokenToStorage,
-  deleteTokenToStorage,
-} from './../../common/asyncStorage';
-import {switchScreenLogin} from './../../screens/MethodScreen';
+  ACCOUNT_FORGET_PASSWORD,
+  ACCOUNT_HAS_EMAIL,
+  ACCOUNT_LOGIN,
+  ACCOUNT_REGISTER,
+  ACCOUNT_UPDATE_AVATAR,
+  ACCOUNT_UPDATE_INFO,
+} from './constants';
 
 function* WorkLoginAccount(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
@@ -38,14 +34,13 @@ function* WorkLoginAccount(action) {
     const response = yield call(LoginApi, action.payload.data);
     // console.log('DATA: ', response);
     if (response.error === false) {
-      yield put(LoginAccountActionSuccess(response.payload));
-      yield setTokenToStorage(response.payload.token);
-      yield callbacksOnSuccess(response.payload);
+      yield put(LoginAccountActionSuccess(response.payload.userInfo));
+      yield setTokenToStorage(response.payload.userToken);
+      yield callbacksOnSuccess(response.payload.userInfo);
     } else {
       Alert.alert('Có lỗi !', response.message);
     }
   } catch (error) {
-    // console.log('Error: ', error.response);
     if (error.response) {
       const {status} = error.response;
       yield callbacksOnFail(status);
@@ -63,14 +58,12 @@ function* WorkHasEmailAccount(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(hasEmailAccountAPI, action.payload.data);
-    // console.log('DATA: ', response);
     if (response.payload.exists === true) {
       yield callbacksOnSuccess(response.payload);
     } else {
       yield callbacksOnSuccess(response.payload);
     }
   } catch (error) {
-    // console.log('DATA: ', error.response);
     yield callbacksOnFail(-1);
   }
 }
@@ -83,17 +76,15 @@ function* WorkRegisterAccount(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(registerAccountAPI, action.payload.data);
-    // console.log('DATA: ', response);
     if (response.error === false && response.status === 201) {
-      yield put(registerAccountActionSuccess(response.payload));
-      yield setAccountToStorage(response.payload);
-      yield setTokenToStorage(response.payload.token);
+      yield put(registerAccountActionSuccess(response.payload.userInfo));
+      yield setAccountToStorage(response.payload.userInfo);
+      yield setTokenToStorage(response.payload.userToken);
       yield callbacksOnSuccess();
     } else {
       Alert.alert('Có lỗi !', response.message);
     }
   } catch (error) {
-    // console.log('Error: ', error.response);
     if (error.response) {
       const {status} = error.response;
       yield callbacksOnFail(status);
@@ -108,11 +99,9 @@ function* WatcherRegisterAccount() {
 }
 
 function* WorkUpdateAvatar(action) {
-  // console.log('ACTION: ', action);
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(updateAvatarAccountAPI, action.payload.data);
-    // console.log(response);
     if (response.error === false && response.status === 200) {
       yield put(updateAvatarActionSuccess(response.payload));
       yield setAccountToStorage(response.payload);
@@ -123,20 +112,8 @@ function* WorkUpdateAvatar(action) {
     }
   } catch (error) {
     if (error.response) {
-      const {status, data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
+      const {status} = error.response;
+
       yield callbacksOnFail(status);
     } else {
       Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
@@ -149,11 +126,9 @@ function* WatcherUpdateAvatar() {
 }
 
 function* WorkUpdateInfoAccount(action) {
-  // console.log('ACTION: ', action);
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(updateInfoAccountAPI, action.payload.data);
-    // console.log(response);
     if (response.error === false && response.status === 200) {
       yield put(updateInfoAccountActionSuccess(response.payload));
       yield setAccountToStorage(response.payload);
@@ -164,20 +139,7 @@ function* WorkUpdateInfoAccount(action) {
     }
   } catch (error) {
     if (error.response) {
-      const {status, data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
+      const {status} = error.response;
       yield callbacksOnFail(status);
     } else {
       Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
@@ -190,11 +152,9 @@ function* WatcherUpdateInfoAccount() {
 }
 
 function* WorkForgetPassAccount(action) {
-  // console.log('ACTION: ', action);
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(forgetPasswordAccountAPI, action.payload.data);
-    // console.log(response);
     if (response.error === false && response.status === 200) {
       yield put(forgetPasswordAccountActionSuccess(response.payload));
       yield setAccountToStorage(response.payload);
@@ -205,20 +165,7 @@ function* WorkForgetPassAccount(action) {
     }
   } catch (error) {
     if (error.response) {
-      const {status, data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
+      const {status} = error.response;
       yield callbacksOnFail(status);
     } else {
       Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');

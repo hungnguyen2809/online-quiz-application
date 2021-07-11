@@ -5,7 +5,7 @@ const ACCESS_TOKEN = 'ASCESS_TOKEN';
 
 const setTokenToStorage = async (token) => {
   try {
-    await AsyncStorage.setItem(ACCESS_TOKEN, token);
+    await AsyncStorage.setItem(ACCESS_TOKEN, JSON.stringify(token));
     return true;
   } catch (error) {
     return null;
@@ -15,7 +15,7 @@ const setTokenToStorage = async (token) => {
 const getTokenToStorage = async () => {
   try {
     let token = await AsyncStorage.getItem(ACCESS_TOKEN);
-    return token !== null ? token : null;
+    return token !== null ? JSON.parse(token) : null;
   } catch (error) {
     return null;
   }

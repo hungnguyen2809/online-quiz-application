@@ -1,5 +1,5 @@
-/* eslint-disable no-new */
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 import {get} from 'lodash';
 import queryString from 'query-string';
 import {Alert} from 'react-native';
@@ -10,6 +10,7 @@ import {
   deleteAccountToStorage,
   deleteTokenToStorage,
   getTokenToStorage,
+  setTokenToStorage,
 } from './../common/asyncStorage';
 
 export const isProduct = false;
@@ -22,8 +23,6 @@ const BaseAPI = {
 
 const urlUpload = 'https://api.cloudinary.com/v1_1/hungnguyen2809/image/upload';
 
-const CancelToken = axios.CancelToken;
-
 const instanceAxios = axios.create({
   baseURL: BaseAPI.BaseUrl,
   timeout: 10000,
@@ -31,21 +30,14 @@ const instanceAxios = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 
-let cancelRequest = null;
 // Custom request ...
-instanceAxios.interceptors.request.use(async (config) => {
-  if (cancelRequest) {
-    cancelRequest();
-  }
+instanceAxios.interceptors.request.use((config) => {
   return config;
 });
 
 // Custom response ...
 instanceAxios.interceptors.response.use(
-  async (response) => {
-    if (cancelRequest) {
-      cancelRequest = null;
-    }
+  (response) => {
     if (response && response.data) {
       return {
         status: response.status,
@@ -54,54 +46,67 @@ instanceAxios.interceptors.response.use(
     }
     return response;
   },
-  async (error) => {
+  (error) => {
     if (error.response) {
       const {response} = error;
       const {data} = response;
-
-      if (response.status === 400) {
-        if (get(data, 'token_invalid') === true) {
-          if (cancelRequest === null) {
-            new CancelToken((cancel) => {
-              cancelRequest = cancel;
-            });
-            Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-              {
-                text: 'OK',
-                style: 'destructive',
-                onPress: async () => {
-                  await deleteAccountToStorage();
-                  await deleteTokenToStorage();
-                  await switchScreenLogin();
-                },
-              },
-            ]);
-          }
-          return {data};
-        }
+      if (get(data, 'token_invalid')) {
+        Alert.alert('Thông báo', 'Bạn cần đăng nhập lại !', [
+          {
+            text: 'Đồng ý',
+            style: 'destructive',
+            onPress: async () => {
+              await deleteAccountToStorage();
+              await deleteTokenToStorage();
+              await switchScreenLogin();
+            },
+          },
+        ]);
       }
     }
     throw error;
   },
 );
 
+let refreshTokenRequest = null;
+let tokenAuth = '';
 const _makeAuthRequest = (instanceRequest) => async (args) => {
-  const requestHeaders = args.headers ? args.headers : {};
-
-  const token = await getTokenToStorage();
-  const authHeaders = {
-    'AuthToken-VTNH': token,
-  };
-
-  const options = {
-    ...args,
-    headers: {
-      ...requestHeaders,
-      ...authHeaders,
-    },
-  };
-
   try {
+    const {token, tokenRefresh} = await getTokenToStorage();
+    tokenAuth = token;
+    const decodeToken = jwt_decode(token);
+    const expiresToken = Date.now() / 1000 >= decodeToken.exp;
+
+    if (expiresToken) {
+      refreshTokenRequest = refreshTokenRequest
+        ? refreshTokenRequest
+        : apis.makeNonAuthRequest({
+            url: '/refresh-token',
+            method: 'POST',
+            data: {id_user: -1, token: tokenRefresh},
+          });
+      const responseToken = await refreshTokenRequest;
+      refreshTokenRequest = null;
+
+      if (responseToken.error === false && responseToken.status === 200) {
+        // Cần cancel lưu lại, do có 3 api call cùng lúc thì nó sẽ bị gọi lại 3 lần => lưu 3 lần
+        // trong khi đó chỉ cần một lần duy nhất để lưu lại
+        // => chưa giải quyết được
+        await setTokenToStorage(responseToken.payload);
+        tokenAuth = responseToken.payload.token;
+      }
+    }
+
+    const requestHeaders = args.headers ? args.headers : {};
+    const authHeaders = {'AuthToken-VTNH': tokenAuth};
+    const options = {
+      ...args,
+      headers: {
+        ...requestHeaders,
+        ...authHeaders,
+      },
+    };
+
     return await instanceRequest(options);
   } catch (error) {
     throw error;
