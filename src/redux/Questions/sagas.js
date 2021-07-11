@@ -1,14 +1,8 @@
-import {call, put, fork, takeLatest} from 'redux-saga/effects';
-import {QUESTIONS_GET_BY_QUESTIONSET} from './constants';
-import {getQuestionsByQSActionDone} from './actions';
-import {getQuestionsByQSAPI} from './../../api/ApiQuestion';
-import _ from 'lodash';
+import {isEmpty} from 'lodash';
 import {Alert} from 'react-native';
-import {
-  deleteAccountToStorage,
-  deleteTokenToStorage,
-} from '../../common/asyncStorage';
-import {switchScreenLogin} from './../../screens/MethodScreen';
+import {call, fork, takeLatest} from 'redux-saga/effects';
+import {getQuestionsByQSAPI} from './../../api/ApiQuestion';
+import {QUESTIONS_GET_BY_QUESTIONSET} from './constants';
 
 function* WorkGetListQuestions(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
@@ -18,7 +12,7 @@ function* WorkGetListQuestions(action) {
     if (
       response.status === 200 &&
       response.error === false &&
-      !_.isEmpty(response.payload)
+      !isEmpty(response.payload)
     ) {
       // yield put(getQuestionsByQSActionDone(response.payload));
       yield callbacksOnSuccess(response.payload);
@@ -27,24 +21,7 @@ function* WorkGetListQuestions(action) {
     }
   } catch (error) {
     yield callbacksOnFail();
-    if (error.response) {
-      const {data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
   }
 }
 

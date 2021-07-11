@@ -1,14 +1,9 @@
-import {takeLatest, call, put, fork} from 'redux-saga/effects';
-import {getAllTopicsAPI} from './../../api/ApiTopic';
-import {TOPIC_GET_ALL_TOPICS} from './constants';
-import {getAllTopicsActionDone} from './actions';
-import _ from 'lodash';
+import {isEmpty} from 'lodash';
 import {Alert} from 'react-native';
-import {
-  deleteAccountToStorage,
-  deleteTokenToStorage,
-} from '../../common/asyncStorage';
-import {switchScreenLogin} from '../../screens/MethodScreen';
+import {call, fork, put, takeLatest} from 'redux-saga/effects';
+import {getAllTopicsAPI} from './../../api/ApiTopic';
+import {getAllTopicsActionDone} from './actions';
+import {TOPIC_GET_ALL_TOPICS} from './constants';
 
 function* WorkGetAllTopics(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
@@ -18,31 +13,14 @@ function* WorkGetAllTopics(action) {
     if (
       response.status === 200 &&
       response.error === false &&
-      !_.isEmpty(response.payload)
+      !isEmpty(response.payload)
     ) {
       yield put(getAllTopicsActionDone(response.payload));
       yield callbacksOnSuccess();
     }
   } catch (error) {
     yield callbacksOnFail();
-    if (error.response) {
-      const {data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
   }
 }
 

@@ -1,4 +1,18 @@
-import {takeLatest, put, call, fork} from 'redux-saga/effects';
+import {isEmpty} from 'lodash';
+import {Alert} from 'react-native';
+import {call, fork, put, takeLatest} from 'redux-saga/effects';
+import {
+  createUserQuestionAPI,
+  getListInfoExamByUserTopicAPI,
+  getListPercentTopicAPI,
+  getListRateUserAPI,
+  updateUserQuestionAPI,
+} from './../../api/ApiUserQuestion';
+import {
+  getListInfoExamByUserTopicActionDone,
+  getListPercentTopicActionDone,
+  getListRateUserActionDone,
+} from './actions';
 import {
   USER_QUESTION_CREATE,
   USER_QUESTION_GETLIST_INFO_EXAM,
@@ -6,28 +20,8 @@ import {
   USER_QUESTION_GETLIST_RATE_USER,
   USER_QUESTION_UPDATE,
 } from './constants';
-import {
-  getListInfoExamByUserTopicActionDone,
-  getListPercentTopicActionDone,
-  getListRateUserActionDone,
-} from './actions';
-import {
-  getListInfoExamByUserTopicAPI,
-  getListRateUserAPI,
-  getListPercentTopicAPI,
-  createUserQuestionAPI,
-  updateUserQuestionAPI,
-} from './../../api/ApiUserQuestion';
-import _ from 'lodash';
-import {Alert} from 'react-native';
-import {
-  deleteAccountToStorage,
-  deleteTokenToStorage,
-} from '../../common/asyncStorage';
-import {switchScreenLogin} from '../../screens/MethodScreen';
 
 function* WorkGetListInfoExam(action) {
-  // const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
   try {
     const response = yield call(
       getListInfoExamByUserTopicAPI,
@@ -36,31 +30,14 @@ function* WorkGetListInfoExam(action) {
     if (
       response.status === 200 &&
       response.error === false &&
-      !_.isEmpty(response.payload)
+      !isEmpty(response.payload)
     ) {
       yield put(getListInfoExamByUserTopicActionDone(response.payload));
     } else {
       Alert.alert('Thông báo', response.message);
     }
   } catch (error) {
-    if (error.response) {
-      const {data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
   }
 }
 
@@ -80,24 +57,7 @@ function* WorkGetListRateUser(action) {
       Alert.alert(response.message);
     }
   } catch (error) {
-    if (error.response) {
-      const {data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
   }
 }
 
@@ -117,24 +77,7 @@ function* WorkGetListPercentTopic(action) {
       Alert.alert(response.message);
     }
   } catch (error) {
-    if (error.response) {
-      const {data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
   }
 }
 
@@ -153,26 +96,10 @@ function* WorkCreateUserQuestion(action) {
       yield callbacksOnSuccess();
     } else {
       yield callbacksOnFail();
+      Alert.alert(response.message);
     }
   } catch (error) {
-    if (error.response) {
-      const {data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
   }
 }
 
@@ -188,26 +115,10 @@ function* WorkUpdateUserQuestion(action) {
       yield callbacksOnSuccess();
     } else {
       yield callbacksOnFail();
+      Alert.alert(response.message);
     }
   } catch (error) {
-    if (error.response) {
-      const {data} = error.response;
-      if (_.get(data, 'token_invalid') === true) {
-        Alert.alert('Thông báo', 'Phiên đăng nhập hết hạn !', [
-          {
-            text: 'OK',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteAccountToStorage();
-              await deleteTokenToStorage();
-              await switchScreenLogin();
-            },
-          },
-        ]);
-      }
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
   }
 }
 
