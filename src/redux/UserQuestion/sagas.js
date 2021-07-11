@@ -37,7 +37,12 @@ function* WorkGetListInfoExam(action) {
       Alert.alert('Thông báo', response.message);
     }
   } catch (error) {
-    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
+    if (error.response) {
+      // const {status} = error.response;
+      // yield callbacksOnFail(status);
+    } else {
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
   }
 }
 
@@ -57,7 +62,13 @@ function* WorkGetListRateUser(action) {
       Alert.alert(response.message);
     }
   } catch (error) {
-    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
+    if (error.response) {
+      const {status} = error.response;
+      yield callbacksOnFail(status);
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
   }
 }
 
@@ -77,7 +88,12 @@ function* WorkGetListPercentTopic(action) {
       Alert.alert(response.message);
     }
   } catch (error) {
-    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
+    if (error.response) {
+      const {status} = error.response;
+      yield callbacksOnFail(status);
+    } else {
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
   }
 }
 
@@ -99,7 +115,13 @@ function* WorkCreateUserQuestion(action) {
       Alert.alert(response.message);
     }
   } catch (error) {
-    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
+    if (error.response) {
+      const {status} = error.response;
+      yield callbacksOnFail(status);
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
   }
 }
 
@@ -118,7 +140,13 @@ function* WorkUpdateUserQuestion(action) {
       Alert.alert(response.message);
     }
   } catch (error) {
-    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
+    if (error.response) {
+      const {status} = error.response;
+      yield callbacksOnFail(status);
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
   }
 }
 

@@ -20,8 +20,13 @@ function* WorkGetListQuestions(action) {
       yield callbacksOnFail();
     }
   } catch (error) {
-    yield callbacksOnFail();
-    Alert.alert('Thông báo', 'Đã có lỗi xảy ra, Vui lòng thử lại sau');
+    if (error.response) {
+      const {status} = error.response;
+      yield callbacksOnFail(status);
+    } else {
+      yield callbacksOnFail();
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
+    }
   }
 }
 

@@ -11,6 +11,7 @@ import {
   ACCOUNT_UPDATE_INFO_SUCCESS,
   ACCOUNT_FORGET_PASSWORD,
   ACCOUNT_FORGET_PASSWORD_SUCCESS,
+  ACCOUNT_UNREGISTER_TOKEN_REFRESH,
 } from './constants.js';
 
 export const LoginAccountAction = (
@@ -139,5 +140,13 @@ export const forgetPasswordAccountActionSuccess = (data) => {
     payload: {
       data,
     },
+  };
+};
+
+export const unregisterRefreshTokenAction = (data, callbacks) => {
+  return {
+    type: ACCOUNT_UNREGISTER_TOKEN_REFRESH,
+    payload: {data},
+    callbacks,
   };
 };
