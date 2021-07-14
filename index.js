@@ -1,3 +1,5 @@
+import {AppState} from 'react-native';
+import CodePush from 'react-native-code-push';
 import GlobalFont from 'react-native-global-font';
 import {Navigation} from 'react-native-navigation';
 import {fonts} from './src/common/fonts';
@@ -31,6 +33,40 @@ Navigation.setDefaultOptions({
   },
 });
 
-Navigation.events().registerAppLaunchedListener(async () => {
-  Navigation.setRoot(screenAuth);
+Navigation.events().registerAppLaunchedListener(() => {
+  start();
 });
+
+const checkCodePushUpdate = () => {
+  return CodePush.sync({
+    updateDialog: true,
+    installMode: CodePush.InstallMode.IMMEDIATE,
+    checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
+  });
+};
+
+const start = () => {
+  checkCodePushUpdate()
+    .then((status) => {
+      //Có sự thay đổi cập nhật
+      console.log('Start: codePush.sync completed with status: ', status);
+      startApp();
+    })
+    .catch(() => {
+      //Không có sự thay đổi cập nhật
+      startApp();
+    });
+};
+
+const startApp = () => {
+  startNavigation();
+  AppState.addEventListener('change', (state) => {
+    if (state === 'active') {
+      checkCodePushUpdate();
+    }
+  });
+};
+
+const startNavigation = () => {
+  Navigation.setRoot(screenAuth);
+};

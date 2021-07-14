@@ -1,9 +1,15 @@
 PODS:
+  - Base64 (1.1.2)
   - boost-for-react-native (1.63.0)
   - BVLinearGradient (2.5.6):
     - React
   - CocoaAsyncSocket (7.6.5)
   - CocoaLibEvent (1.0.0)
+  - CodePush (7.0.1):
+    - Base64 (~> 1.1)
+    - JWT (~> 3.0.0-beta.12)
+    - React-Core
+    - SSZipArchive (~> 2.2.2)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.63.4)
   - FBReactNativeSpec (0.63.4):
@@ -72,6 +78,8 @@ PODS:
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
   - glog (0.3.5)
+  - JWT (3.0.0-beta.14):
+    - Base64 (~> 1.1.2)
   - lottie-ios (3.1.9)
   - lottie-react-native (3.5.0):
     - lottie-ios (~> 3.1.8)
@@ -355,12 +363,14 @@ PODS:
     - React
   - RNVectorIcons (8.0.0):
     - React-Core
+  - SSZipArchive (2.2.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
+  - CodePush (from `../node_modules/react-native-code-push`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
@@ -431,6 +441,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Base64
     - boost-for-react-native
     - CocoaAsyncSocket
     - CocoaLibEvent
@@ -442,14 +453,18 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - GCDWebServer
+    - JWT
     - lottie-ios
     - mailcore2-ios
     - OpenSSL-Universal
+    - SSZipArchive
     - YogaKit
 
 EXTERNAL SOURCES:
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
+  CodePush:
+    :path: "../node_modules/react-native-code-push"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -544,10 +559,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
+  CodePush: 9bb93f52a44ee80b72739d89dead9c7e86c3bd3a
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
   FBReactNativeSpec: f2c97f2529dd79c083355182cc158c9f98f4bd6e
@@ -561,6 +578,7 @@ SPEC CHECKSUMS:
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
   lottie-ios: 3a3758ef5a008e762faec9c9d50a39842f26d124
   lottie-react-native: 1fb4ce21d6ad37dab8343eaff8719df76035bd93
   mailcore2-ios: 3ff0be2fa553d4da9c11d39c11d51863c768f24f
@@ -604,6 +622,7 @@ SPEC CHECKSUMS:
   RNSmtpMailer: f8654a7cd1a25b0009e2f28c70bc34bb9e4040e6
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: f67a1abce2ec73e62fe4606e8110e95a832bc859
+  SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
