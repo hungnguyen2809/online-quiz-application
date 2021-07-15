@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Navigation} from 'react-native-navigation';
-import SplashScreen from 'react-native-splash-screen';
+// import SplashScreen from 'react-native-splash-screen';
 import {connect} from 'react-redux';
 import {checkEmail, checkEmpty} from '../../common/validate';
 import {
@@ -63,7 +63,7 @@ class LoginScreen extends Component {
       this.isConnectedInternet = state.isInternetReachable;
     });
 
-    SplashScreen.hide();
+    // SplashScreen.hide();
     setTimeout(() => {
       this.setState({showLottie: false}, () => {
         if (this.isConnectedInternet) {
@@ -263,8 +263,8 @@ class LoginScreen extends Component {
   }
 
   componentWillUnmount() {
-    Keyboard.removeListener(this.eventHideKeyboard);
-    Keyboard.removeListener(this.eventShowKeyboard);
+    this.eventHideKeyboard && this.eventHideKeyboard.remove();
+    this.eventShowKeyboard && this.eventShowKeyboard.remove();
     this.unsubscribeEventNetInfo && this.unsubscribeEventNetInfo();
   }
 }

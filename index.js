@@ -1,14 +1,16 @@
-import {AppState} from 'react-native';
-import CodePush from 'react-native-code-push';
+// import {AppState} from 'react-native';
+// import CodePush from 'react-native-code-push';
 import GlobalFont from 'react-native-global-font';
 import {Navigation} from 'react-native-navigation';
+import App from './App';
 import {fonts} from './src/common/fonts';
 import NotifiManager from './src/notifications/NotificationManager';
-import {screenAuth} from './src/screens/config-screen';
+// import {screenAuth} from './src/screens/config-screen';
 import RegisterScreenComponent from './src/screens/RegisterScreensComponent';
 
 GlobalFont.applyGlobal(fonts.OpenSans);
 
+Navigation.registerComponent('AppRootScreen', () => App);
 RegisterScreenComponent();
 NotifiManager.RegisterEvent();
 
@@ -34,39 +36,46 @@ Navigation.setDefaultOptions({
 });
 
 Navigation.events().registerAppLaunchedListener(() => {
-  start();
+  Navigation.setRoot({
+    root: {
+      component: {
+        id: 'app.screen.AppRoot',
+        name: 'AppRootScreen',
+      },
+    },
+  });
 });
 
-const checkCodePushUpdate = () => {
-  return CodePush.sync({
-    updateDialog: true,
-    installMode: CodePush.InstallMode.IMMEDIATE,
-    checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
-  });
-};
+// const checkCodePushUpdate = () => {
+//   return CodePush.sync({
+//     updateDialog: true,
+//     installMode: CodePush.InstallMode.IMMEDIATE,
+//     checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
+//   });
+// };
 
-const start = () => {
-  checkCodePushUpdate()
-    .then((status) => {
-      //Có sự thay đổi cập nhật
-      console.log('Start: codePush.sync completed with status: ', status);
-      startApp();
-    })
-    .catch(() => {
-      //Không có sự thay đổi cập nhật
-      startApp();
-    });
-};
+// const start = () => {
+//   checkCodePushUpdate()
+//     .then((status) => {
+//       //Có sự thay đổi cập nhật
+//       console.log('Start: codePush.sync completed with status: ', status);
+//       startApp();
+//     })
+//     .catch(() => {
+//       //Không có sự thay đổi cập nhật
+//       startApp();
+//     });
+// };
 
-const startApp = () => {
-  startNavigation();
-  AppState.addEventListener('change', (state) => {
-    if (state === 'active') {
-      checkCodePushUpdate();
-    }
-  });
-};
+// const startApp = () => {
+//   startNavigation();
+//   AppState.addEventListener('change', (state) => {
+//     if (state === 'active') {
+//       checkCodePushUpdate();
+//     }
+//   });
+// };
 
-const startNavigation = () => {
-  Navigation.setRoot(screenAuth);
-};
+// const startNavigation = () => {
+//   Navigation.setRoot(screenAuth);
+// };

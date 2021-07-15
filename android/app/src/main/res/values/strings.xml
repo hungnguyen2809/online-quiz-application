@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">Online Quiz</string>
-    <string moduleConfig="true" name="CodePushDeploymentKey">e1B47kSKt_0dxzUEu-gTh3L1CdZb2yjv8jxN7</string>
 </resources>
