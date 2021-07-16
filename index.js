@@ -1,12 +1,13 @@
-import GlobalFont from 'react-native-global-font';
+import App from './App';
 import {Navigation} from 'react-native-navigation';
+import GlobalFont from 'react-native-global-font';
 import {fonts} from './src/common/fonts';
 import NotifiManager from './src/notifications/NotificationManager';
-import {screenAuth} from './src/screens/config-screen';
 import RegisterScreenComponent from './src/screens/RegisterScreensComponent';
 
 GlobalFont.applyGlobal(fonts.OpenSans);
 
+Navigation.registerComponent('AppRootScreen', () => App);
 RegisterScreenComponent();
 NotifiManager.RegisterEvent();
 
@@ -26,11 +27,15 @@ Navigation.setDefaultOptions({
   bottomTabs: {
     backgroundColor: '#6a89cc',
   },
-  statusBar: {
-    style: 'dark',
-  },
 });
 
-Navigation.events().registerAppLaunchedListener(async () => {
-  Navigation.setRoot(screenAuth);
+Navigation.events().registerAppLaunchedListener(() => {
+  Navigation.setRoot({
+    root: {
+      component: {
+        id: 'app.screen.AppRoot',
+        name: 'AppRootScreen',
+      },
+    },
+  });
 });
