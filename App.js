@@ -81,10 +81,10 @@ class App extends Component {
   onStatusCodePush = (status) => {
     if (status === CodePush.SyncStatus.DOWNLOADING_PACKAGE) {
       console.log('Download Package');
-      this.setState({disabled: true});
+      this.setState({disableBtn: true});
     }
     if (status === CodePush.SyncStatus.UNKNOWN_ERROR) {
-      this.setState({disabled: false});
+      this.setState({disableBtn: false});
       Alert.alert('Thông báo', 'Cập nhật thất bại. Vui lòng thử lại');
     }
   };
