@@ -229,9 +229,7 @@ class ProfileScreen extends Component {
   };
 
   render() {
-    // const {account} = this.state;
-    const {account} = this.props;
-    // console.log('data: ', account);
+    const {account} = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.circle} />
@@ -289,17 +287,17 @@ class ProfileScreen extends Component {
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'person'}
-              text={get(account, 'name', '')}
+              text={get(account, 'name', ' ')}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'smartphone'}
-              text={formatPhone(get(account, 'phone', ''))}
+              text={formatPhone(get(account, 'phone', ' '))}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'email'}
-              text={get(account, 'email', '')}
+              text={get(account, 'email', ' ')}
             />
           </ScrollView>
         </View>
