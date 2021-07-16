@@ -90,7 +90,7 @@ class App extends Component {
   };
 
   onProgressDownload = (progress) => {
-    // console.log('Progress', progress);
+    console.log('Progress', progress);
     this.setState({
       progress: Math.round(
         (progress.receivedBytes / progress.totalBytes) * 100,
