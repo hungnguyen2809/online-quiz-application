@@ -16,9 +16,11 @@ import {
 } from '../../redux/UserQuestion/selectors';
 import SocketManager from '../../socketIO';
 import {SOCKET_CLIENT_SEND_PROFILE} from '../../socketIO/constant';
+import CodePushManager from './../../codepush';
 import AchievementUser from './components/AchievementUser';
 import RatingUser from './components/RatingUser';
 import {styles} from './styles';
+import {LoginAccountActionSuccess} from './../../redux/Account/actions';
 
 class HomeScreen extends Component {
   static options(props) {
@@ -33,6 +35,7 @@ class HomeScreen extends Component {
       statusBar: {
         drawBehind: true,
         backgroundColor: 'transparent',
+        style: 'dark',
       },
     };
   }
@@ -50,6 +53,8 @@ class HomeScreen extends Component {
 
   async componentDidMount() {
     const account = await getAccountToStorage();
+    this.props.dispatch(LoginAccountActionSuccess(account));
+
     const payload = {
       id_user: get(account, 'id'),
       name: get(account, 'name'),
@@ -134,6 +139,7 @@ class HomeScreen extends Component {
             </View>
           </View>
         </ScrollView>
+        <CodePushManager />
       </View>
     );
   }
@@ -146,6 +152,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dispatch,
     doGetListRateUser: () => {
       dispatch(getListRateUserAction());
     },

@@ -28,6 +28,7 @@ class ResultExamScreen extends Component {
       statusBar: {
         drawBehind: true,
         backgroundColor: 'transparent',
+        style: 'dark',
       },
     };
   }

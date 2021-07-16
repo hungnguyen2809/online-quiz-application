@@ -8,7 +8,7 @@ import {Colors} from '../../common/Colors';
 const isIOS = Platform.OS === 'ios';
 
 const ModalAppUpdate = (props) => {
-  const {visible, progress = 0, onPressUpdate, disabled} = props;
+  const {visible, progress = 0, onPressUpdate, disabled, isProduct} = props;
   const [widthProgess, setWidthProgess] = useState(0);
 
   const handlePressUpdate = () => {
@@ -52,6 +52,7 @@ const ModalAppUpdate = (props) => {
             <Text style={styles.btnTitle}>Cập nhật ngay</Text>
           </TouchableOpacity>
         </View>
+        <Text style={styles.textEnv}>{isProduct ? 'stable' : 'dev'}</Text>
       </View>
     </Modal>
   );
@@ -64,6 +65,7 @@ ModalAppUpdate.propTypes = {
   progress: PropTypes.number,
   onPressUpdate: PropTypes.func,
   disabled: PropTypes.bool,
+  isProduct: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({
@@ -117,5 +119,8 @@ const styles = StyleSheet.create({
     color: '#0F3852',
     textAlign: 'center',
     marginVertical: 2,
+  },
+  textEnv: {
+    textAlign: 'right',
   },
 });

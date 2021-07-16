@@ -15,18 +15,11 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Navigation} from 'react-native-navigation';
-// import SplashScreen from 'react-native-splash-screen';
 import {connect} from 'react-redux';
 import {checkEmail, checkEmpty} from '../../common/validate';
-import {
-  getAccountToStorage,
-  setAccountToStorage,
-} from './../../common/asyncStorage';
+import {setAccountToStorage} from './../../common/asyncStorage';
 import {Encript} from './../../common/encoding';
-import {
-  LoginAccountAction,
-  LoginAccountActionSuccess,
-} from './../../redux/Account/actions';
+import {LoginAccountAction} from './../../redux/Account/actions';
 import {appScreens, screenMain} from './../config-screen';
 import InputEmailComponent from './components/InputEmailComponent';
 import InputPasswordComponent from './components/InputPasswordComponent';
@@ -63,12 +56,9 @@ class LoginScreen extends Component {
       this.isConnectedInternet = state.isInternetReachable;
     });
 
-    // SplashScreen.hide();
     setTimeout(() => {
       this.setState({showLottie: false}, () => {
-        if (this.isConnectedInternet) {
-          this._handleExistsAccount();
-        } else {
+        if (!this.isConnectedInternet) {
           Alert.alert('Thông báo', 'Không có kết nối internet');
         }
       });
@@ -111,16 +101,6 @@ class LoginScreen extends Component {
     } else {
       return true;
     }
-  };
-
-  _handleExistsAccount = async () => {
-    this.setState({loading: true});
-    const result = await getAccountToStorage();
-    if (result !== null) {
-      Navigation.setRoot(screenMain);
-      this.props.dispatch(LoginAccountActionSuccess(result));
-    }
-    this.setState({loading: false});
   };
 
   _handleSubmitLogin = (email, passwordHas) => {

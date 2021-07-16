@@ -30,6 +30,7 @@ class ExamQuestionsScreen extends Component {
       statusBar: {
         drawBehind: true,
         backgroundColor: 'transparent',
+        style: 'dark',
       },
     };
   }
