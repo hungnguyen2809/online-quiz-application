@@ -59,15 +59,17 @@ class App extends Component {
   }
 
   onCheckCodePushUpdate = () => {
-    CodePush.checkForUpdate()
+    const key = isProduct ? codePushKeys.production : codePushKeys.staging;
+    CodePush.checkForUpdate(key)
       .then((value) => {
-        if (!value.failedInstall) {
-          this.setState({showModalUpdate: true});
+        console.log('Status Update: ', value);
+        if (value) {
+          if (!value.failedInstall) {
+            this.setState({showModalUpdate: true});
+          } else {
+            this.handleExistsAccount();
+          }
         } else {
-          this.handleExistsAccount();
-        }
-
-        if (value.isFirstRun) {
           this.handleExistsAccount();
         }
       })
@@ -88,7 +90,7 @@ class App extends Component {
   };
 
   onProgressDownload = (progress) => {
-    console.log('Progress', progress);
+    // console.log('Progress', progress);
     this.setState({
       progress: Math.round(
         (progress.receivedBytes / progress.totalBytes) * 100,
@@ -110,7 +112,13 @@ class App extends Component {
             },
             this.onStatusCodePush,
             this.onProgressDownload,
-          );
+          )
+            .then((status) => {
+              console.log('Status', status === CodePush.SyncStatus.UP_TO_DATE);
+            })
+            .catch(() => {
+              console.log('Đã cập nhật');
+            });
         } else {
           CodePush.sync(
             {
@@ -119,7 +127,13 @@ class App extends Component {
             },
             this.onStatusCodePush,
             this.onProgressDownload,
-          );
+          )
+            .then((status) => {
+              console.log('Status', status === CodePush.SyncStatus.UP_TO_DATE);
+            })
+            .catch(() => {
+              console.log('Đã cập nhật');
+            });
         }
       });
   };
