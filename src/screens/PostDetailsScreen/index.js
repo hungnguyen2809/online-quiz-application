@@ -16,11 +16,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import ImageView from 'react-native-image-viewing';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Navigation} from 'react-native-navigation';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 import uuid from 'react-native-uuid';
 import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -29,6 +34,10 @@ import {createStructuredSelector} from 'reselect';
 import {makeUploadImage} from '../../api/createApiService';
 // import {SCREEN_WIDTH} from '../../common/dimensionScreen';
 import {getTimeFromNow} from '../../common/format';
+import {
+  onChooseImageLibrary,
+  onTakePhotoCamera,
+} from '../../common/imageCameraPicker';
 import {onToastAlert} from '../../common/validate';
 import PostItemComment from '../../components/PostItemComment';
 import {getAccountSelector} from '../../redux/Account/selectors';
@@ -222,22 +231,15 @@ class PostDetailsScreen extends Component {
   };
 
   onChooseImage = () => {
-    try {
-      launchImageLibrary(
-        {
-          mediaType: 'photo',
-          quality: 1,
-        },
-        (response) => {
-          if (response.didCancel) {
-            return;
-          }
-          this.setState({fileSource: response});
-        },
-      );
-    } catch (error) {
-      Alert.alert('Thông báo !', 'Lỗi không thể chọn ảnh. Vui lòng thử lại !');
-    }
+    onChooseImageLibrary((fileSource) => {
+      this.setState({fileSource});
+    });
+  };
+
+  onTakePhoto = () => {
+    onTakePhotoCamera((fileSource) => {
+      this.setState({fileSource});
+    });
   };
 
   onSubmitSendComment = async () => {
@@ -571,12 +573,29 @@ class PostDetailsScreen extends Component {
             onChangeText={(text) => this.setState({textComment: text})}
           />
           <View style={styles.wrapBtnFooter}>
-            <TouchableOpacity onPress={this.onChooseImage}>
-              <Image
-                style={{width: 23, height: 23}}
-                source={require('./../../assets/icons/icons-camera.png')}
-              />
-            </TouchableOpacity>
+            <Menu key={'pop-menu-post-details'}>
+              <MenuTrigger>
+                <Image
+                  style={{width: 23, height: 23}}
+                  source={require('./../../assets/icons/icons-camera.png')}
+                />
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption
+                  style={styles.menuOption}
+                  onSelect={debounce(this.onTakePhoto, 300)}>
+                  <MateriaIcon name={'photo-camera'} size={25} />
+                  <Text>Chụp ảnh</Text>
+                </MenuOption>
+                <View style={styles.divider2} />
+                <MenuOption
+                  style={styles.menuOption}
+                  onSelect={debounce(this.onChooseImage, 300)}>
+                  <MateriaIcon name={'photo-library'} size={25} />
+                  <Text>Thư viện</Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
             <TouchableOpacity onPress={this.onSubmitSendComment}>
               <Image
                 style={{width: 30, height: 30}}

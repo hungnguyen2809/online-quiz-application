@@ -13,16 +13,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import DocumentPicker from 'react-native-document-picker';
-import {launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Navigation} from 'react-native-navigation';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 import uuid from 'react-native-uuid';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {makeUploadImage} from '../../api/createApiService';
+import {
+  onChooseImageLibrary,
+  onTakePhotoCamera,
+} from '../../common/imageCameraPicker';
 import {
   deleteAccountToStorage,
   deleteTokenToStorage,
@@ -87,30 +95,38 @@ class ProfileScreen extends Component {
     }
   }
 
-  _handleChooseImage = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        quality: 1,
-      },
-      (response) => {
-        if (response.didCancel) {
-          return;
-        }
-        Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
-          {
-            text: 'Hủy',
-            style: 'destructive',
-            onPress: () => {},
-          },
-          {
-            text: 'Đồng ý',
-            style: 'default',
-            onPress: () => this._handleSaveChangeAvatar(response),
-          },
-        ]);
-      },
-    );
+  onChooseImage = () => {
+    onChooseImageLibrary((fileSource) => {
+      Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
+        {
+          text: 'Hủy',
+          style: 'destructive',
+          onPress: () => {},
+        },
+        {
+          text: 'Đồng ý',
+          style: 'default',
+          onPress: () => this._handleSaveChangeAvatar(fileSource),
+        },
+      ]);
+    });
+  };
+
+  onTakePhoto = () => {
+    onTakePhotoCamera((fileSource) => {
+      Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
+        {
+          text: 'Hủy',
+          style: 'destructive',
+          onPress: () => {},
+        },
+        {
+          text: 'Đồng ý',
+          style: 'default',
+          onPress: () => this._handleSaveChangeAvatar(fileSource),
+        },
+      ]);
+    });
   };
 
   _handleSaveChangeAvatar = async (fileImage) => {
@@ -229,9 +245,7 @@ class ProfileScreen extends Component {
   };
 
   render() {
-    // const {account} = this.state;
-    const {account} = this.props;
-    // console.log('data: ', account);
+    const {account} = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.circle} />
@@ -278,9 +292,26 @@ class ProfileScreen extends Component {
               />
             )}
             <View style={styles.btnChangeAvatar}>
-              <TouchableOpacity onPress={this._handleChooseImage}>
-                <MaterialIcons name={'edit'} size={20} />
-              </TouchableOpacity>
+              <Menu key={'pop-menu-change-avatar'}>
+                <MenuTrigger>
+                  <MaterialIcons name={'edit'} size={20} />
+                </MenuTrigger>
+                <MenuOptions>
+                  <MenuOption
+                    style={styles.menuOption}
+                    onSelect={debounce(this.onTakePhoto, 300)}>
+                    <MaterialIcons name={'photo-camera'} size={25} />
+                    <Text>Chụp ảnh</Text>
+                  </MenuOption>
+                  <View style={styles.divider} />
+                  <MenuOption
+                    style={styles.menuOption}
+                    onSelect={debounce(this.onChooseImage, 300)}>
+                    <MaterialIcons name={'photo-library'} size={25} />
+                    <Text>Thư viện</Text>
+                  </MenuOption>
+                </MenuOptions>
+              </Menu>
             </View>
           </View>
         </View>
@@ -289,17 +320,17 @@ class ProfileScreen extends Component {
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'person'}
-              text={get(account, 'name', '')}
+              text={get(account, 'name', ' ')}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'smartphone'}
-              text={formatPhone(get(account, 'phone', ''))}
+              text={formatPhone(get(account, 'phone', ' '))}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'email'}
-              text={get(account, 'email', '')}
+              text={get(account, 'email', ' ')}
             />
           </ScrollView>
         </View>

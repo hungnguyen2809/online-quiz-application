@@ -4,6 +4,10 @@ import moment from 'moment';
 import 'moment/locale/vi';
 moment().locale('vi');
 
+export const dateFormat = 'DD/MM/YYYY';
+
+export const fonts = {OpenSans: 'Open Sans Regular'};
+
 export const formatPhone = (number) => {
   let phone = toString(number);
   let res = '';

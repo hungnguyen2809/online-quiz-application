@@ -100,6 +100,16 @@ const styles = StyleSheet.create({
     top: SCREEN_HEIGHT / 2 - 300 / 2,
     opacity: 0.2,
   },
+  menuOption: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: Colors.PEACE,
+  },
 });
 
 export {styles};

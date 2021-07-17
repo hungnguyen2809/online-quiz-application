@@ -22,7 +22,7 @@ import {createStructuredSelector} from 'reselect';
 import {getAccountSelector} from '../../redux/Account/selectors';
 import {debounce, get, isEmpty, trim} from 'lodash';
 import moment from 'moment';
-import {dateFormat} from './../../common/formatDate';
+import {dateFormat} from './../../common/format';
 import {updateInfoAccountAction} from '../../redux/Account/actions';
 import Toast from './../../components/Toast';
 

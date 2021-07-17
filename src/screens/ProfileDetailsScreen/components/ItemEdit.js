@@ -4,7 +4,7 @@ import {Text, View, TextInput, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import {styles} from './../styles';
-import {dateFormat} from './../../../common/formatDate';
+import {dateFormat} from './../../../common/format';
 
 class ItemEdit extends Component {
   constructor(props) {
