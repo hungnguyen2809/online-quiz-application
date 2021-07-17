@@ -13,7 +13,7 @@ import {
   setTokenToStorage,
 } from './../common/asyncStorage';
 
-export const isProduct = false;
+export const isProduct = true;
 
 const BaseAPI = {
   BaseUrl: isProduct
