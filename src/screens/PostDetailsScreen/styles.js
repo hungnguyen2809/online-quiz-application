@@ -106,6 +106,16 @@ const styles = StyleSheet.create({
     height: 33,
     width: 33,
   },
+  menuOption: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  divider2: {
+    height: 1,
+    width: '100%',
+    backgroundColor: Colors.PEACE,
+  },
 });
 
 export {styles};

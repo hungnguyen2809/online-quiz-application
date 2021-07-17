@@ -11,14 +11,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Navigation} from 'react-native-navigation';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 import uuid from 'react-native-uuid';
+import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {makeUploadImage} from '../../api/createApiService';
+import {
+  onChooseImageLibrary,
+  onTakePhotoCamera,
+} from '../../common/imageCameraPicker';
 import {onToastAlert} from '../../common/validate';
 import HeaderBar from '../../components/HeaderBar';
 import {createNewPostAction} from '../../redux/Post/actions';
@@ -60,22 +70,15 @@ class PostCreateScreen extends Component {
   };
 
   onChooseImage = () => {
-    try {
-      launchImageLibrary(
-        {
-          mediaType: 'photo',
-          quality: 1,
-        },
-        (response) => {
-          if (response.didCancel) {
-            return;
-          }
-          this.setState({fileSource: response});
-        },
-      );
-    } catch (error) {
-      Alert.alert('Thông báo !', 'Lỗi không thể chọn ảnh. Vui lòng thử lại !');
-    }
+    onChooseImageLibrary((fileSource) => {
+      this.setState({fileSource});
+    });
+  };
+
+  onTakePhoto = () => {
+    onTakePhotoCamera((fileSource) => {
+      this.setState({fileSource});
+    });
   };
 
   _onSubmitCreatePost = async () => {
@@ -177,15 +180,32 @@ class PostCreateScreen extends Component {
             maxLength={1000}
           />
           <View style={{display: 'flex', flexDirection: 'row', marginTop: 10}}>
-            <TouchableOpacity
-              onPress={this.onChooseImage}
-              style={styles.btnChooseImage}>
-              <Text>Chọn ảnh</Text>
-              <Image
-                style={{width: 20, height: 20, marginLeft: 5}}
-                source={require('./../../assets/icons/icons-camera.png')}
-              />
-            </TouchableOpacity>
+            <Menu key={'pop-menu-choose-image'} style={{marginTop: 10}}>
+              <MenuTrigger>
+                <View style={styles.btnChooseImage}>
+                  <Text>Chọn ảnh</Text>
+                  <Image
+                    style={{width: 20, height: 20, marginLeft: 5}}
+                    source={require('./../../assets/icons/icons-camera.png')}
+                  />
+                </View>
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption
+                  style={styles.menuOption}
+                  onSelect={debounce(this.onTakePhoto, 300)}>
+                  <MateriaIcon name={'photo-camera'} size={25} />
+                  <Text>Chụp ảnh</Text>
+                </MenuOption>
+                <View style={styles.divider} />
+                <MenuOption
+                  style={styles.menuOption}
+                  onSelect={debounce(this.onChooseImage, 300)}>
+                  <MateriaIcon name={'photo-library'} size={25} />
+                  <Text>Thư viện</Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
             {this.state.fileSource ? (
               <View style={{marginLeft: 10, marginTop: 10}}>
                 <Image

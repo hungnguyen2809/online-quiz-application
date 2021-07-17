@@ -6869,6 +6869,11 @@ react-native-permissions@^3.0.2:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.0.2.tgz#df3abb6b71f20bc3c12f7ed95c61187562798d2b"
   integrity sha512-Uvye5evur8prriN/OxPyYOVoY1DaIh9980OgF9vXTPflQwvmpdygDHBOOmeFMUuMPAc+kNdi++BkV2PJCGvSSQ==
 
+react-native-popup-menu@^0.15.11:
+  version "0.15.11"
+  resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.15.11.tgz#df96b1a909ecbba84487821061ce6e29e7c7bb20"
+  integrity sha512-f5q2GoDN99bkA24wHiwasaErcdQEgyqYZ8IYuZPOrZNFr66E4rg6f4LElSVBA3EZJTSq5OddVeaOcU340bSTEg==
+
 react-native-progress@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-4.1.2.tgz#ffb2264ddfeba409c730e36a9791bb7bbe07a00d"

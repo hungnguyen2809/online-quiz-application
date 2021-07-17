@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {Colors} from '../../common/Colors';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#dcdcdc',
     borderRadius: 6,
-    marginTop: 10,
     width: 100,
     height: 100,
   },
@@ -38,6 +38,16 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     left: 95,
     top: -5,
+  },
+  menuOption: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: Colors.PEACE,
   },
 });
 

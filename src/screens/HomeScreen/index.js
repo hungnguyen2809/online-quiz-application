@@ -139,7 +139,8 @@ class HomeScreen extends Component {
             </View>
           </View>
         </ScrollView>
-        <CodePushManager />
+        {/* Code push update app manager */}
+        {/* <CodePushManager /> */}
       </View>
     );
   }

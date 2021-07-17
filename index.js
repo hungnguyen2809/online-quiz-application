@@ -1,13 +1,12 @@
-import App from './App';
 import {Navigation} from 'react-native-navigation';
 import GlobalFont from 'react-native-global-font';
-import {fonts} from './src/common/fonts';
+import {fonts} from './src/common/format';
 import NotifiManager from './src/notifications/NotificationManager';
+import {appScreens} from './src/screens/config-screen';
 import RegisterScreenComponent from './src/screens/RegisterScreensComponent';
 
 GlobalFont.applyGlobal(fonts.OpenSans);
 
-Navigation.registerComponent('AppRootScreen', () => App);
 RegisterScreenComponent();
 NotifiManager.RegisterEvent();
 
@@ -33,8 +32,8 @@ Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
       component: {
-        id: 'app.screen.AppRoot',
-        name: 'AppRootScreen',
+        id: appScreens.AppRoot.id,
+        name: appScreens.AppRoot.name,
       },
     },
   });

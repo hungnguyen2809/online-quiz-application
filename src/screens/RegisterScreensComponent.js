@@ -1,9 +1,11 @@
 import React from 'react';
 import {Navigation} from 'react-native-navigation';
 import {Provider} from 'react-redux';
+import {MenuProvider} from 'react-native-popup-menu';
 import stores from './../redux/stores';
 import {appScreens} from './config-screen';
 
+import App from '../../App';
 import ChooseTopicScreen from './ChooseTopicScreen';
 import ForgetPasswordScreen from './ForgetPasswordScreen';
 import HomeScreen from './HomeScreen';
@@ -28,7 +30,9 @@ const registerComponentWithRedux = (srceenName, ComponentProvider, store) => {
     srceenName,
     () => (props) => (
       <Provider store={store}>
-        <ComponentProvider {...props} />
+        <MenuProvider skipInstanceCheck={true}>
+          <ComponentProvider {...props} />
+        </MenuProvider>
       </Provider>
     ),
     () => ComponentProvider,
@@ -36,6 +40,7 @@ const registerComponentWithRedux = (srceenName, ComponentProvider, store) => {
 };
 
 const RegisterScreenComponent = () => {
+  registerComponentWithRedux(appScreens.AppRoot.name, App, stores);
   registerComponentWithRedux(appScreens.Login.name, LoginScreen, stores);
   registerComponentWithRedux(appScreens.Register.name, RegisterScreen, stores);
   registerComponentWithRedux(

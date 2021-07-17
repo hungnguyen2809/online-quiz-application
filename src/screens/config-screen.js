@@ -2,6 +2,10 @@ export const appScreens = {
   Navigate: {
     id: 'app.navigate.main',
   },
+  AppRoot: {
+    id: 'app.screen.AppRoot',
+    name: 'AppRootScreen',
+  },
   Login: {
     id: 'app.screen.Login',
     name: 'LoginScreen',
