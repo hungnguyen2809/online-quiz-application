@@ -32,6 +32,10 @@ import {connect} from 'react-redux';
 // import {DataProvider, LayoutProvider, RecyclerListView} from 'recyclerlistview';
 import {createStructuredSelector} from 'reselect';
 import {makeUploadImage} from '../../api/createApiService';
+import {
+  checkPermissionsCamera,
+  checkPermissionsPhoto,
+} from '../../common/checkPermission';
 // import {SCREEN_WIDTH} from '../../common/dimensionScreen';
 import {getTimeFromNow} from '../../common/format';
 import {
@@ -230,16 +234,22 @@ class PostDetailsScreen extends Component {
     this.props.onUpdatePost && this.props.onUpdatePost(param);
   };
 
-  onChooseImage = () => {
-    onChooseImageLibrary((fileSource) => {
-      this.setState({fileSource});
-    });
+  onChooseImage = async () => {
+    const permission = await checkPermissionsPhoto();
+    if (permission) {
+      onChooseImageLibrary((fileSource) => {
+        this.setState({fileSource});
+      });
+    }
   };
 
-  onTakePhoto = () => {
-    onTakePhotoCamera((fileSource) => {
-      this.setState({fileSource});
-    });
+  onTakePhoto = async () => {
+    const permission = await checkPermissionsCamera();
+    if (permission) {
+      onTakePhotoCamera((fileSource) => {
+        this.setState({fileSource});
+      });
+    }
   };
 
   onSubmitSendComment = async () => {

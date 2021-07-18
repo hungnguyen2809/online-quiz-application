@@ -26,6 +26,10 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {makeUploadImage} from '../../api/createApiService';
 import {
+  checkPermissionsCamera,
+  checkPermissionsPhoto,
+} from '../../common/checkPermission';
+import {
   onChooseImageLibrary,
   onTakePhotoCamera,
 } from '../../common/imageCameraPicker';
@@ -69,16 +73,22 @@ class PostCreateScreen extends Component {
     Navigation.pop(this.props.componentId);
   };
 
-  onChooseImage = () => {
-    onChooseImageLibrary((fileSource) => {
-      this.setState({fileSource});
-    });
+  onChooseImage = async () => {
+    const permission = await checkPermissionsPhoto();
+    if (permission) {
+      onChooseImageLibrary((fileSource) => {
+        this.setState({fileSource});
+      });
+    }
   };
 
-  onTakePhoto = () => {
-    onTakePhotoCamera((fileSource) => {
-      this.setState({fileSource});
-    });
+  onTakePhoto = async () => {
+    const permission = await checkPermissionsCamera();
+    if (permission) {
+      onTakePhotoCamera((fileSource) => {
+        this.setState({fileSource});
+      });
+    }
   };
 
   _onSubmitCreatePost = async () => {

@@ -110,6 +110,23 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: Colors.PEACE,
   },
+  warpReviewAvt: {
+    width: '100%',
+    height: '100%',
+    padding: 10,
+  },
+  imageReview: {
+    width: '100%',
+    height: '50%',
+    borderRadius: 6,
+  },
+  wrapBtnReviewAvt: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop: 20,
+  },
 });
 
 export {styles};

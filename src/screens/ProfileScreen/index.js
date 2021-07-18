@@ -28,9 +28,14 @@ import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {makeUploadImage} from '../../api/createApiService';
 import {
+  checkPermissionsCamera,
+  checkPermissionsPhoto,
+} from '../../common/checkPermission';
+import {
   onChooseImageLibrary,
   onTakePhotoCamera,
 } from '../../common/imageCameraPicker';
+import ModalBase from '../../components/ModalBase';
 import {
   deleteAccountToStorage,
   deleteTokenToStorage,
@@ -76,6 +81,8 @@ class ProfileScreen extends Component {
       loadingBg: false,
       loadingAvt: false,
       loadingUpdateAvt: false,
+      showReviewAvt: false,
+      fileSource: null,
     };
 
     this.refToast = React.createRef();
@@ -95,38 +102,58 @@ class ProfileScreen extends Component {
     }
   }
 
-  onChooseImage = () => {
-    onChooseImageLibrary((fileSource) => {
-      Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
-        {
-          text: 'Hủy',
-          style: 'destructive',
-          onPress: () => {},
-        },
-        {
-          text: 'Đồng ý',
-          style: 'default',
-          onPress: () => this._handleSaveChangeAvatar(fileSource),
-        },
-      ]);
+  onChooseImage = async () => {
+    const permission = await checkPermissionsPhoto();
+    if (permission) {
+      onChooseImageLibrary((fileSource) => {
+        // Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
+        //   {
+        //     text: 'Hủy',
+        //     style: 'destructive',
+        //     onPress: () => {},
+        //   },
+        //   {
+        //     text: 'Đồng ý',
+        //     style: 'default',
+        //     onPress: () => this._handleSaveChangeAvatar(fileSource),
+        //   },
+        // ]);
+        this.setState({fileSource, showReviewAvt: true});
+      });
+    }
+  };
+
+  onTakePhoto = async () => {
+    const permission = await checkPermissionsCamera();
+    if (permission) {
+      onTakePhotoCamera((fileSource) => {
+        // Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
+        //   {
+        //     text: 'Hủy',
+        //     style: 'destructive',
+        //     onPress: () => {},
+        //   },
+        //   {
+        //     text: 'Đồng ý',
+        //     style: 'default',
+        //     onPress: () => this._handleSaveChangeAvatar(fileSource),
+        //   },
+        // ]);
+        this.setState({fileSource, showReviewAvt: true});
+      });
+    }
+  };
+
+  onDiscardChangeAvatar = () => {
+    this.setState({showReviewAvt: false}, () => {
+      this.setState({fileSource: null});
     });
   };
 
-  onTakePhoto = () => {
-    onTakePhotoCamera((fileSource) => {
-      Alert.alert('Thông báo', 'Bạn có muốn thay đổi ảnh đại diện mới ?', [
-        {
-          text: 'Hủy',
-          style: 'destructive',
-          onPress: () => {},
-        },
-        {
-          text: 'Đồng ý',
-          style: 'default',
-          onPress: () => this._handleSaveChangeAvatar(fileSource),
-        },
-      ]);
-    });
+  onSubmitChangeAvatar = () => {
+    if (this.state.fileSource) {
+      this._handleSaveChangeAvatar(this.state.fileSource);
+    }
   };
 
   _handleSaveChangeAvatar = async (fileImage) => {
@@ -342,6 +369,46 @@ class ProfileScreen extends Component {
             <Text style={styles.titleLogout}>Đăng xuất</Text>
           </TouchableOpacity>
         </View>
+        {this.state.fileSource ? (
+          <ModalBase visible={this.state.showReviewAvt}>
+            <View style={styles.warpReviewAvt}>
+              <Image
+                source={{uri: this.state.fileSource.uri}}
+                style={styles.imageReview}
+              />
+              <View style={styles.wrapBtnReviewAvt}>
+                <TouchableOpacity
+                  onPress={debounce(this.onDiscardChangeAvatar, 300)}
+                  activeOpacity={1}
+                  style={{
+                    backgroundColor: '#F5D8D1',
+                    flex: 1,
+                    alignItems: 'center',
+                    margin: 10,
+                    borderRadius: 5,
+                  }}>
+                  <Text style={{color: '#FF3600', marginVertical: 12}}>
+                    Hủy
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={debounce(this.onSubmitChangeAvatar, 300)}
+                  activeOpacity={1}
+                  style={{
+                    backgroundColor: '#E2F0D9',
+                    flex: 1,
+                    alignItems: 'center',
+                    margin: 10,
+                    borderRadius: 5,
+                  }}>
+                  <Text style={{color: '#3CA500', marginVertical: 12}}>
+                    Xác nhận
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ModalBase>
+        ) : null}
         <Toast ref={this.refToast} />
         <Spinner visible={this.state.loadingUpdateAvt} />
       </View>

@@ -4,11 +4,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 export const onChooseImageLibrary = (callback, options = {}) => {
   try {
     launchImageLibrary(
-      {
-        mediaType: 'photo',
-        quality: 1,
-        ...options,
-      },
+      {mediaType: 'photo', quality: 1, ...options},
       (response) => {
         if (response.didCancel) {
           return;
@@ -17,7 +13,7 @@ export const onChooseImageLibrary = (callback, options = {}) => {
           Alert.alert('Thông báo', 'Ứng dụng không có quyền truy cập');
           return;
         }
-        if (response.errorCode === 'other') {
+        if (response.errorCode === 'others') {
           Alert.alert('Thông báo', response.errorMessage);
         }
         if (callback && typeof callback === 'function') {
@@ -33,7 +29,7 @@ export const onChooseImageLibrary = (callback, options = {}) => {
 export const onTakePhotoCamera = (callback, options = {}) => {
   try {
     launchCamera(
-      {mediaType: 'photo', quality: 1, includeBase64: true},
+      {mediaType: 'photo', quality: 1, includeBase64: true, ...options},
       (response) => {
         if (response.didCancel) {
           return;
@@ -46,7 +42,7 @@ export const onTakePhotoCamera = (callback, options = {}) => {
           Alert.alert('Thông báo', 'Camera triên thiết bị không khả dụng');
           return;
         }
-        if (response.errorCode === 'other') {
+        if (response.errorCode === 'others') {
           Alert.alert('Thông báo', response.errorMessage);
         }
         if (callback && typeof callback === 'function') {

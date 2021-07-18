@@ -37,18 +37,22 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+  <string>$(PRODUCT_NAME) need permission PhotoLibrary</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>$(PRODUCT_NAME) need permission PhotoLibraryAdd</string>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) need permission Camera</string>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) need permission DocumentsFolder</string>
 	<key>NSDownloadsFolderUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) need permission DownloadsFolder</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) need permission LocalNetwork</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) need permission Location</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) need permission Microphone</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Open Sans Regular.ttf</string>
