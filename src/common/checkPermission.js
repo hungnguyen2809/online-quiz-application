@@ -23,46 +23,57 @@ const alertOpenSettings = () => {
   ]);
 };
 
-export const checkPermissionsCamera = async () => {
-  const devicePermissions = Platform.select({
-    ios: PERMISSIONS.IOS.CAMERA,
-    android: PERMISSIONS.ANDROID.CAMERA,
-  });
+const requestPermissions = async (devicePermissions) => {
+  let res = false;
   try {
     const permissions = await check(devicePermissions);
-    switch (permissions) {
-      case RESULTS.GRANTED || RESULTS.LIMITED:
-        return true;
-      case RESULTS.DENIED:
-        const allowPermissions = await request(devicePermissions);
-        return allowPermissions === RESULTS.GRANTED ? true : false;
-      default:
+    if (permissions === RESULTS.GRANTED || permissions === RESULTS.LIMITED) {
+      res = true;
+    }
+    if (permissions === RESULTS.UNAVAILABLE) {
+      Alert.alert('Thông báo', 'Tính năng này không khả dụng trên thiết bị');
+    }
+    if (permissions === RESULTS.BLOCKED) {
+      alertOpenSettings();
+    }
+    if (permissions === RESULTS.DENIED) {
+      const allowPermissions = await request(devicePermissions);
+      if (allowPermissions === RESULTS.GRANTED) {
+        res = true;
+      }
+      if (allowPermissions === RESULTS.BLOCKED) {
         alertOpenSettings();
-        return false;
+      }
     }
   } catch (error) {
-    return false;
+    Alert.alert(
+      'Thông báo',
+      'Lỗi khi yêu cầu quyền thiết bị' + JSON.stringify(error),
+    );
+  }
+  return res;
+};
+
+export const checkPermissionsCamera = async () => {
+  // const devicePermissions = Platform.select({
+  //   ios: PERMISSIONS.IOS.CAMERA,
+  //   android: PERMISSIONS.ANDROID.CAMERA,
+  // });
+  if (Platform.OS === 'ios') {
+    return true;
+  } else {
+    return await requestPermissions(PERMISSIONS.ANDROID.CAMERA);
   }
 };
 
 export const checkPermissionsPhoto = async () => {
-  const devicePermissions = Platform.select({
-    ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
-    android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-  });
-  try {
-    const permissions = await check(devicePermissions);
-    switch (permissions) {
-      case RESULTS.GRANTED || RESULTS.LIMITED:
-        return true;
-      case RESULTS.DENIED:
-        const allowPermissions = await request(devicePermissions);
-        return allowPermissions === RESULTS.GRANTED ? true : false;
-      default:
-        alertOpenSettings();
-        return false;
-    }
-  } catch (error) {
-    return false;
+  // const devicePermissions = Platform.select({
+  //   ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+  //   android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+  // });
+  if (Platform.OS === 'ios') {
+    return true;
+  } else {
+    return await requestPermissions(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
   }
 };
