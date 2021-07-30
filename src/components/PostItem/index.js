@@ -11,7 +11,13 @@ import {
   View,
 } from 'react-native';
 import ImageView from 'react-native-image-viewing';
-import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
+// import {
+//   Menu,
+//   MenuOption,
+//   MenuOptions,
+//   MenuTrigger,
+// } from 'react-native-popup-menu';
+// import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from '../../common/Colors';
 import {getTimeFromNow} from '../../common/format';
 
@@ -77,11 +83,22 @@ function PostItem(props) {
             </Text>
           </View>
         </View>
-        {get(account, 'id', -1) === get(row, 'id_user', -2) ? (
-          <TouchableOpacity>
-            <MateriaIcon name={'more-vert'} size={20} />
-          </TouchableOpacity>
-        ) : null}
+        {/* {get(account, 'id', -1) === get(row, 'id_user', -2) ? (
+          <Menu key={'pop-menu-edit'}>
+            <MenuTrigger>
+              <MateriaIcon name={'more-vert'} size={20} />
+            </MenuTrigger>
+            <MenuOptions>
+              <MenuOption>
+                <Text>Chỉnh sửa</Text>
+              </MenuOption>
+              <View style={styles.dividerMemu} />
+              <MenuOption>
+                <Text>Thu hồi</Text>
+              </MenuOption>
+            </MenuOptions>
+          </Menu>
+        ) : null} */}
       </View>
       <View style={styles.wrapContent}>
         <TouchableOpacity activeOpacity={0.8} onPress={handleNavigatePost}>
@@ -180,6 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#dcdcdc',
     marginVertical: 10,
   },
+  dividerMemu: {height: 1, width: '100%', backgroundColor: Colors.PEACE},
   imagePost: {
     width: 150,
     height: 150,

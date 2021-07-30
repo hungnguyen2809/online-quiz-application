@@ -14,9 +14,9 @@ import {get} from 'lodash';
 import {useState} from 'react';
 import {getTimeFromNow} from '../../common/format';
 import {SCREEN_WIDTH} from '../../common/dimensionScreen';
-import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
-import {useSelector} from 'react-redux';
-import {getAccountSelector} from '../../redux/Account/selectors';
+// import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
+// import {useSelector} from 'react-redux';
+// import {getAccountSelector} from '../../redux/Account/selectors';
 import ImageView from 'react-native-image-viewing';
 
 PostItemComment.propTypes = {
@@ -25,7 +25,7 @@ PostItemComment.propTypes = {
 
 function PostItemComment(props) {
   const {row} = props;
-  const account = useSelector(getAccountSelector());
+  // const account = useSelector(getAccountSelector());
   const [loadingAvt, setLoadingAvt] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
   const [showImageView, setShowImageView] = useState(false);
@@ -62,11 +62,11 @@ function PostItemComment(props) {
             {getTimeFromNow(get(row, 'date_create', ''))}
           </Text>
         </View>
-        {get(account, 'id', -1) === get(row, 'id_user_cmt', -2) ? (
+        {/* {get(account, 'id', -1) === get(row, 'id_user_cmt', -2) ? (
           <TouchableOpacity>
             <MateriaIcon name={'more-vert'} size={20} />
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
       </View>
       <View
         style={{

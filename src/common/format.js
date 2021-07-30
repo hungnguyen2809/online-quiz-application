@@ -1,5 +1,5 @@
+import {isEmpty, toString} from 'lodash';
 import numeral from 'numeral';
-import {toString, isEmpty} from 'lodash';
 import moment from 'moment';
 import 'moment/locale/vi';
 moment().locale('vi');
