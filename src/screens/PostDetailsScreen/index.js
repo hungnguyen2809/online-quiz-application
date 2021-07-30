@@ -461,12 +461,13 @@ class PostDetailsScreen extends Component {
               {getTimeFromNow(get(this.state.postDetails, 'date_create', ''))}
             </Text>
           </View>
-          {get(this.state.account, 'id', -1) ===
+          {/* Option chỉnh sửa bài viết */}
+          {/* {get(this.state.account, 'id', -1) ===
           get(this.state.postDetails, 'id_user', -2) ? (
             <TouchableOpacity style={{marginRight: 10}}>
               <MateriaIcon name={'more-vert'} size={20} />
             </TouchableOpacity>
-          ) : null}
+          ) : null} */}
         </View>
         <View style={styles.wrapContent}>
           <FlatList

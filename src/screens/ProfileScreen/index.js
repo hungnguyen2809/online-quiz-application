@@ -253,14 +253,13 @@ class ProfileScreen extends Component {
           const tokenStorage = await getTokenToStorage();
           const payload = {token: get(tokenStorage, 'tokenRefresh', '')};
           this.props.doUnregisterRefreshToken(payload, {
-            callbacksOnSuccess: async () => {
-              await deleteTokenToStorage();
-              await deleteAccountToStorage();
-              await Navigation.setRoot(screenAuth);
-              LogoutAccountAction();
-            },
+            callbacksOnSuccess: () => {},
             callbacksOnFail: () => {},
           });
+          await deleteTokenToStorage();
+          await deleteAccountToStorage();
+          await Navigation.setRoot(screenAuth);
+          LogoutAccountAction();
         },
       },
       {
