@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {debounce, get} from 'lodash';
+import {debounce, get, trim} from 'lodash';
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {
@@ -20,30 +20,62 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import MateriaIcon from 'react-native-vector-icons/MaterialIcons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../common/Colors';
 import {SCREEN_WIDTH} from '../../common/dimensionScreen';
 import {getTimeFromNow} from '../../common/format';
 import {getAccountSelector} from '../../redux/Account/selectors';
+import {updatePostCommentAction} from '../../redux/Post/actions';
 
 PostItemComment.propTypes = {
   row: PropTypes.object,
+  onRemoveItem: PropTypes.func,
 };
 
 function PostItemComment(props) {
-  const {row} = props;
+  const {row, onRemoveItem} = props;
+  const dispatch = useDispatch();
   const account = useSelector(getAccountSelector());
 
   const [loadingAvt, setLoadingAvt] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
   const [showImageView, setShowImageView] = useState(false);
   const [editCmt, setEditCmt] = useState(false);
-  const [textCommnet, setTextComment] = useState(() => {
-    return get(row, 'comment', '');
-  });
+  const [textCommnet, setTextComment] = useState('');
+  const [laodingUpdate, setLoadingUpdate] = useState(false);
+
+  React.useEffect(() => {
+    setTextComment(get(row, 'comment', ''));
+  }, [row]);
 
   const onRecallComment = () => {
-    Alert.alert('Thông báo', 'Bạn có chắc muốn thu hồi câu trả lời ?');
+    Alert.alert('Thông báo', 'Bạn có chắc muốn thu hồi câu trả lời ?', [
+      {
+        style: 'default',
+        text: 'Đồng ý',
+        onPress: () => {
+          const payload = {
+            id_post_cmt: get(row, 'id_cmt'),
+            comment: 'nội dung bất kỳ',
+            image: '',
+            status: 0, //1 là cập nhật, 0 là xóa
+          };
+          dispatch(
+            updatePostCommentAction(payload, {
+              callbackOnSuccess: () => {
+                onRemoveItem && onRemoveItem(row);
+              },
+              callbackOnFail: () => {},
+            }),
+          );
+        },
+      },
+      {
+        style: 'destructive',
+        text: 'Hủy bỏ',
+        onPress: () => {},
+      },
+    ]);
   };
 
   const onEditComment = () => {
@@ -59,7 +91,30 @@ function PostItemComment(props) {
     setTextComment(get(row, 'comment', ''));
   };
 
-  const onSaveNewComment = () => {};
+  const onSaveNewComment = () => {
+    if (!trim(textCommnet)) {
+      Alert.alert('Thông báo', 'Bạn chưa nhập nội dung');
+      return;
+    }
+    const payload = {
+      id_post_cmt: get(row, 'id_cmt'),
+      comment: trim(textCommnet),
+      image: get(row, 'image') || '',
+      status: 1, //1 là cập nhật, 0 là xóa
+    };
+    setLoadingUpdate(true);
+    dispatch(
+      updatePostCommentAction(payload, {
+        callbackOnSuccess: () => {
+          setLoadingUpdate(false);
+          setEditCmt(false);
+        },
+        callbackOnFail: () => {
+          setLoadingUpdate(false);
+        },
+      }),
+    );
+  };
 
   return (
     <View>
@@ -125,19 +180,34 @@ function PostItemComment(props) {
               onChangeText={onChangeTextEditCmt}
               multiline={true}
               maxLength={150}
+              editable={!laodingUpdate}
             />
-            <View style={styles.wrapBtnEdit}>
-              <TouchableOpacity
-                style={[{backgroundColor: Colors.AMOUR}, styles.btnEdit]}
-                onPress={debounce(onCancelRecallComment, 200)}>
-                <Text style={{color: 'white'}}>Hủy</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[{backgroundColor: Colors.CLEAR_CHILL}, styles.btnEdit]}
-                onPress={debounce(onSaveNewComment, 200)}>
-                <Text style={{color: 'white'}}>Lưu</Text>
-              </TouchableOpacity>
-            </View>
+            {laodingUpdate ? (
+              <View
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  marginRight: 10,
+                }}>
+                <ActivityIndicator size={'small'} color={Colors.LEVEL_E} />
+              </View>
+            ) : (
+              <View style={styles.wrapBtnEdit}>
+                <TouchableOpacity
+                  style={[{backgroundColor: Colors.AMOUR}, styles.btnEdit]}
+                  onPress={debounce(onCancelRecallComment, 200)}>
+                  <Text style={{color: 'white'}}>Hủy</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    {backgroundColor: Colors.CLEAR_CHILL},
+                    styles.btnEdit,
+                  ]}
+                  onPress={debounce(onSaveNewComment, 200)}>
+                  <Text style={{color: 'white'}}>Lưu</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         ) : (
           <Text style={{lineHeight: 24}}>{textCommnet || ''}</Text>

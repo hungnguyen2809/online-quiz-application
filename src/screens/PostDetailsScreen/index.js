@@ -1,7 +1,7 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable react-native/no-inline-styles */
-import {debounce, get, isEmpty, size, trim} from 'lodash';
+import {debounce, filter, get, isEmpty, size, trim} from 'lodash';
 import React, {Component} from 'react';
 import {
   ActivityIndicator,
@@ -192,15 +192,15 @@ class PostDetailsScreen extends Component {
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    // if (
-    //   !!nextProps.listPostComments &&
-    //   this.props.listPostComments !== nextProps.listPostComments
-    // ) {
-    //   this.setState({
-    //     listPostComments: nextProps.listPostComments,
-    //     loadingRefresh: false,
-    //   });
-    // }
+    if (
+      !!nextProps.listPostComments &&
+      this.props.listPostComments !== nextProps.listPostComments
+    ) {
+      this.setState({
+        listPostComments: nextProps.listPostComments,
+        loadingRefresh: false,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -357,6 +357,13 @@ class PostDetailsScreen extends Component {
   onRefreshPostComment = () => {
     this.setState({loadingRefresh: true});
     this.onGetListPostComment();
+  };
+
+  onRemovePostCmtItem = (row) => {
+    const postComments = filter(this.state.listPostComments, (item) => {
+      return item.id_cmt !== row.id_cmt;
+    });
+    this.setState({listPostComments: postComments});
   };
 
   // _layoutProvider = () => {
@@ -516,7 +523,12 @@ class PostDetailsScreen extends Component {
               </View>
             }
             data={this.state.listPostComments}
-            renderItem={({item}) => <PostItemComment row={item} />}
+            renderItem={({item}) => (
+              <PostItemComment
+                onRemoveItem={this.onRemovePostCmtItem}
+                row={item}
+              />
+            )}
             keyExtractor={(item, index) => index.toString()}
             refreshControl={
               <RefreshControl
