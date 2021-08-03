@@ -179,7 +179,7 @@ class ForgetPasswordScreen extends Component {
                 ref={this.refCode}
                 icons={'key-star'}
                 returnKeyType={'go'}
-                maxLength={60}
+                maxLength={20}
                 onChangeText={this._onChangePass}
                 onSubmitEditing={this._handleSubmitFoget}
               />

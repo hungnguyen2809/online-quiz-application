@@ -207,7 +207,7 @@ class ProfileScreen extends Component {
 
       this.props.doUpdateAvatar(payload, {
         callbacksOnSuccess: () => {
-          this.setState({loadingUpdateAvt: false});
+          this.setState({loadingUpdateAvt: false, showReviewAvt: false});
           if (Platform.OS === 'ios') {
             Alert.alert('Thông báo', 'Cập nhật thành công');
           } else {
