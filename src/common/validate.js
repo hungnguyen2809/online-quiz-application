@@ -1,5 +1,7 @@
 import {Alert, Platform, ToastAndroid} from 'react-native';
 
+export const regexPhone = /(0[3|5|7|8|9])+([0-9]{8})\b/;
+
 const checkEmail = (email) => {
   const rgExEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return rgExEmail.test(String(email).toLowerCase());

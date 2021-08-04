@@ -25,6 +25,7 @@ import moment from 'moment';
 import {dateFormat} from './../../common/format';
 import {updateInfoAccountAction} from '../../redux/Account/actions';
 import Toast from './../../components/Toast';
+import {regexPhone} from '../../common/validate';
 
 class ProfileDetailsScreen extends Component {
   static options(props) {
@@ -140,11 +141,16 @@ class ProfileDetailsScreen extends Component {
   };
 
   onSubmitSaveChangeInfo = () => {
-    // console.log('Acount: ', this.state.accountUpdating);
     if (isEmpty(trim(get(this.state.accountUpdating, 'name')))) {
       Alert.alert('Thông báo', 'Tên người dùng là bắt buộc.');
       return;
     }
+    const phone = trim(get(this.state.accountUpdating, 'phone'));
+    if (!isEmpty(phone) && !regexPhone.test(phone)) {
+      Alert.alert('Thông báo', 'Số điện thoại không đúng định dạng');
+      return;
+    }
+
     Alert.alert('Thông báo', 'Bạn có chắc muốn cập nhật thông tin mới ?', [
       {
         text: 'Đồng ý',
@@ -245,7 +251,7 @@ class ProfileDetailsScreen extends Component {
                   onChangeText={(text) =>
                     this.onChangePhone(text, accountUpdating)
                   }
-                  maxLength={15}
+                  maxLength={10}
                   disabled={this.state.isDisabled}
                 />
                 <ItemEdit

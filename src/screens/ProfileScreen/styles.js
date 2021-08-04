@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 6,
     minHeight: 50,
-    marginBottom: 25,
+    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   titleInfor: {
     fontSize: 17,
     marginHorizontal: 10,
+    color: 'black',
   },
   wrapFooter: {
     marginHorizontal: '6%',

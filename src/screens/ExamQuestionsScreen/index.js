@@ -73,6 +73,31 @@ class ExamQuestionsScreen extends Component {
     this.refHeader.current.onStopTime();
   };
 
+  onSubmitModalReview = () => {
+    const isCheckFull = this.arrAnsers.some((value) => value === -1);
+    if (isCheckFull) {
+      Alert.alert(
+        'Thông báo',
+        'Bạn chưa chọn hết câu trả lời, chắc chắn nộp bài ?',
+        [
+          {
+            text: 'Đồng ý',
+            onPress: () => {
+              this._onFinishExam();
+            },
+          },
+          {
+            text: 'Hủy',
+            style: 'destructive',
+            onPress: () => {},
+          },
+        ],
+      );
+    } else {
+      this._onFinishExam();
+    }
+  };
+
   _onFinishExam = async () => {
     const {
       countCorrect,
@@ -307,7 +332,7 @@ class ExamQuestionsScreen extends Component {
           listAnswerQuestions={this.arrAnsers}
           visible={this.state.showModalReview}
           onCancel={this._openCloseReviewExam}
-          onSubmit={this._onFinishExam}
+          onSubmit={this.onSubmitModalReview}
           onPressItem={this.onScrollToQuestion}
         />
       </View>
