@@ -7,11 +7,13 @@ import {
   getAllPostAPI,
   getPostByIdAPI,
   getPostCommentAPI,
+  updatePostCommentAPI,
 } from '../../api/ApiPost';
 import {getAllPostActionDone} from './actions';
 import {
   POST_COMMENT_CREATE_POST_COMMENT,
   POST_COMMENT_GET_POST_COMMENT,
+  POST_COMMENT_UPDATE_POST_COMMENT,
   POST_CREATE_NEW_POST,
   POST_GET_ALL_POST,
   POST_GET_POST_BY_ID,
@@ -143,10 +145,35 @@ function* watcherCreatePostComment() {
   yield takeLatest(POST_COMMENT_CREATE_POST_COMMENT, workerCreatePostComment);
 }
 
+function* workerUpdatePostComment(action) {
+  const {callbackOnSuccess, callbackOnFail} = action.callbacks;
+  try {
+    const response = yield call(updatePostCommentAPI, action.payload.data);
+    if (response.status === 200 && response.error === false) {
+      yield callbackOnSuccess();
+    } else {
+      Alert.alert('Thông báo', response.message);
+      yield callbackOnFail();
+    }
+  } catch (error) {
+    if (error.response) {
+      yield callbackOnFail(error.response);
+    } else {
+      yield callbackOnFail();
+      Alert.alert('Thông báo', 'Đã có lỗi xảy ra, ' + error.message);
+    }
+  }
+}
+
+function* watcherUpdatePostCommnet() {
+  yield takeLatest(POST_COMMENT_UPDATE_POST_COMMENT, workerUpdatePostComment);
+}
+
 export default function* PostSagas() {
   yield fork(watcherGetAllPost);
   yield fork(watcherGetPostById);
   yield fork(watcherCreateNewPost);
   yield fork(watcherGetPostComment);
   yield fork(watcherCreatePostComment);
+  yield fork(watcherUpdatePostCommnet);
 }

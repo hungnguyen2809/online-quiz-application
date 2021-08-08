@@ -14,7 +14,6 @@ import {
   setTokenToStorage,
 } from './../../common/asyncStorage';
 import {
-  forgetPasswordAccountActionSuccess,
   LoginAccountActionSuccess,
   registerAccountActionSuccess,
   updateAvatarActionSuccess,
@@ -154,23 +153,15 @@ function* WatcherUpdateInfoAccount() {
 
 function* WorkForgetPassAccount(action) {
   const {callbacksOnSuccess, callbacksOnFail} = action.callbacks;
+  const response = yield call(forgetPasswordAccountAPI, action.payload.data);
   try {
-    const response = yield call(forgetPasswordAccountAPI, action.payload.data);
     if (response.error === false && response.status === 200) {
-      yield put(forgetPasswordAccountActionSuccess(response.payload));
-      yield setAccountToStorage(response.payload);
       yield callbacksOnSuccess();
     } else {
       yield callbacksOnFail();
-      Alert.alert('Thông báo !', 'Cập nhật thất bại');
     }
   } catch (error) {
-    if (error.response) {
-      const {status} = error.response;
-      yield callbacksOnFail(status);
-    } else {
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
-    }
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra ' + error.message);
   }
 }
 
@@ -189,12 +180,8 @@ function* WorkUnregisterTokenRefresh(action) {
       Alert.alert('Thông báo', response.message);
     }
   } catch (error) {
-    if (error.response) {
-      yield callbacksOnFail();
-    } else {
-      yield callbacksOnFail();
-      Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau');
-    }
+    yield callbacksOnFail();
+    Alert.alert('Thông báo', 'Đã có lỗi xảy ra ' + error.message);
   }
 }
 

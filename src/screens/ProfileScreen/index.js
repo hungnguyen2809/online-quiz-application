@@ -207,7 +207,7 @@ class ProfileScreen extends Component {
 
       this.props.doUpdateAvatar(payload, {
         callbacksOnSuccess: () => {
-          this.setState({loadingUpdateAvt: false});
+          this.setState({loadingUpdateAvt: false, showReviewAvt: false});
           if (Platform.OS === 'ios') {
             Alert.alert('Thông báo', 'Cập nhật thành công');
           } else {
@@ -346,17 +346,17 @@ class ProfileScreen extends Component {
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'person'}
-              text={get(account, 'name', ' ')}
+              text={get(account, 'name', '')}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'smartphone'}
-              text={formatPhone(get(account, 'phone', ' '))}
+              text={formatPhone(get(account, 'phone', ''))}
             />
             <ItemInfo
               onPress={this._goToScreen}
               iconName={'email'}
-              text={get(account, 'email', ' ')}
+              text={get(account, 'email', '')}
             />
           </ScrollView>
         </View>

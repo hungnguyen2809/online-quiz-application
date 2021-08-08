@@ -39,3 +39,11 @@ export const createPostCommentAPI = (args) => {
     data: args,
   });
 };
+
+export const updatePostCommentAPI = (args) => {
+  return apis.makeAuthRequest({
+    url: '/post-cmt/update-post-cmt',
+    method: 'POST',
+    data: args,
+  });
+};

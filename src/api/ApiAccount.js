@@ -32,8 +32,16 @@ export const registerAccountAPI = (agrs) => {
 };
 
 export const unregisterRefreshTokenAPI = (agrs) => {
-  return apis.makeAuthRequest({
+  return apis.makeNonAuthRequest({
     url: '/unregister-token',
+    method: 'POST',
+    data: agrs,
+  });
+};
+
+export const forgetPasswordAccountAPI = (agrs) => {
+  return apis.makeNonAuthRequest({
+    url: API_USER_FORGET_PASSWORD,
     method: 'POST',
     data: agrs,
   });
@@ -53,14 +61,6 @@ export const updateAvatarAccountAPI = (agrs) => {
 export const updateInfoAccountAPI = (agrs) => {
   return apis.makeAuthRequest({
     url: API_USER_INFO,
-    method: 'POST',
-    data: agrs,
-  });
-};
-
-export const forgetPasswordAccountAPI = (agrs) => {
-  return apis.makeAuthRequest({
-    url: API_USER_FORGET_PASSWORD,
     method: 'POST',
     data: agrs,
   });

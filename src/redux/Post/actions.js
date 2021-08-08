@@ -2,6 +2,7 @@ import {
   POST_COMMENT_CREATE_POST_COMMENT,
   POST_COMMENT_GET_POST_COMMENT,
   POST_COMMENT_GET_POST_COMMENT_DONE,
+  POST_COMMENT_UPDATE_POST_COMMENT,
   POST_CREATE_NEW_POST,
   POST_GET_ALL_POST,
   POST_GET_ALL_POST_DONE,
@@ -70,6 +71,17 @@ export const createPostCommentAction = (
 ) => {
   return {
     type: POST_COMMENT_CREATE_POST_COMMENT,
+    payload: {data},
+    callbacks,
+  };
+};
+
+export const updatePostCommentAction = (
+  data,
+  callbacks = {callbackOnSuccess: () => {}, callbackOnFail: () => {}},
+) => {
+  return {
+    type: POST_COMMENT_UPDATE_POST_COMMENT,
     payload: {data},
     callbacks,
   };
