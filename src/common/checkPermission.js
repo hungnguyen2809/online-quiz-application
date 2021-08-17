@@ -16,19 +16,19 @@ const alertOpenSettings = () => {
     },
     {
       text: 'Đồng ý',
-      onPress: async () => {
-        await openSettings();
+      onPress: () => {
+        openSettings();
       },
     },
   ]);
 };
 
 const requestPermissions = async (devicePermissions) => {
-  let res = false;
+  let result = false;
   try {
     const permissions = await check(devicePermissions);
     if (permissions === RESULTS.GRANTED || permissions === RESULTS.LIMITED) {
-      res = true;
+      result = true;
     }
     if (permissions === RESULTS.UNAVAILABLE) {
       Alert.alert('Thông báo', 'Tính năng này không khả dụng trên thiết bị');
@@ -39,7 +39,7 @@ const requestPermissions = async (devicePermissions) => {
     if (permissions === RESULTS.DENIED) {
       const allowPermissions = await request(devicePermissions);
       if (allowPermissions === RESULTS.GRANTED) {
-        res = true;
+        result = true;
       }
       if (allowPermissions === RESULTS.BLOCKED) {
         alertOpenSettings();
@@ -48,32 +48,27 @@ const requestPermissions = async (devicePermissions) => {
   } catch (error) {
     Alert.alert(
       'Thông báo',
-      'Lỗi khi yêu cầu quyền thiết bị' + JSON.stringify(error),
+      'Lỗi khi yêu cầu quyền thiết bị ' + JSON.stringify(error),
     );
   }
-  return res;
+  return result;
 };
 
+// device permissions can set null if don't need permission
+// examp: { ios: null, android: PERMISSIONS.ANDROID.SEND_SMS }
+
 export const checkPermissionsCamera = async () => {
-  // const devicePermissions = Platform.select({
-  //   ios: PERMISSIONS.IOS.CAMERA,
-  //   android: PERMISSIONS.ANDROID.CAMERA,
-  // });
-  if (Platform.OS === 'ios') {
-    return true;
-  } else {
-    return await requestPermissions(PERMISSIONS.ANDROID.CAMERA);
-  }
+  const devicePermissions = Platform.select({
+    ios: PERMISSIONS.IOS.CAMERA,
+    android: PERMISSIONS.ANDROID.CAMERA,
+  });
+  return await requestPermissions(devicePermissions);
 };
 
 export const checkPermissionsPhoto = async () => {
-  // const devicePermissions = Platform.select({
-  //   ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
-  //   android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-  // });
-  if (Platform.OS === 'ios') {
-    return true;
-  } else {
-    return await requestPermissions(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
-  }
+  const devicePermissions = Platform.select({
+    ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+    android: PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+  });
+  return await requestPermissions(devicePermissions);
 };
